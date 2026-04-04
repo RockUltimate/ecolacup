@@ -64,12 +64,29 @@ class ReportController extends Controller
         ]);
     }
 
-    public function startky(Udalost $udalost)
+    public function startky(Udalost $udalost, Request $request)
     {
-        $moznosti = $udalost->moznosti()->get()->map(function ($moznost) use ($udalost) {
+        $selectedMoznostId = (int) $request->query('moznost_id', 0);
+        $search = trim((string) $request->query('q', ''));
+        $needle = $search !== '' ? '%'.$search.'%' : null;
+
+        $moznosti = $udalost->moznosti()
+            ->when($selectedMoznostId > 0, fn ($query) => $query->where('id', $selectedMoznostId))
+            ->get()
+            ->map(function ($moznost) use ($udalost, $needle) {
             $registrations = $this->basePrihlaskyQuery($udalost)
                 ->where('smazana', false)
                 ->whereHas('polozky', fn ($query) => $query->where('moznost_id', $moznost->id))
+                ->when($needle !== null, function ($query) use ($needle) {
+                    $query->where(function ($subQuery) use ($needle) {
+                        $subQuery
+                            ->whereHas('osoba', fn ($osobaQuery) => $osobaQuery
+                                ->where('jmeno', 'like', $needle)
+                                ->orWhere('prijmeni', 'like', $needle))
+                            ->orWhereHas('kun', fn ($kunQuery) => $kunQuery
+                                ->where('jmeno', 'like', $needle));
+                    });
+                })
                 ->orderBy('start_cislo')
                 ->get();
 
@@ -82,6 +99,11 @@ class ReportController extends Controller
         return view('admin.reports.startky', [
             'udalost' => $udalost,
             'moznostiSeStartkami' => $moznosti,
+            'startkyFilters' => [
+                'moznost_id' => $selectedMoznostId,
+                'q' => $search,
+            ],
+            'moznostiOptions' => $udalost->moznosti()->get(['id', 'nazev']),
         ]);
     }
 
