@@ -36,6 +36,13 @@
                 <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="text-indigo-600 underline">Export startky</a>
                 <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="text-indigo-600 underline">Export počty</a>
             </div>
+            <div class="panel p-3 text-sm text-gray-700">
+                @if($moznostiSeStartkami->total() > 0)
+                    Zobrazeno {{ $moznostiSeStartkami->firstItem() }}–{{ $moznostiSeStartkami->lastItem() }} z {{ $moznostiSeStartkami->total() }} disciplín.
+                @else
+                    Zobrazeno 0 z 0 disciplín.
+                @endif
+            </div>
             @forelse($moznostiSeStartkami as $block)
                 <div class="bg-white shadow sm:rounded-lg overflow-hidden">
                     <div class="p-4 border-b border-gray-200 font-semibold text-gray-900">{{ $block['moznost']->nazev }}</div>

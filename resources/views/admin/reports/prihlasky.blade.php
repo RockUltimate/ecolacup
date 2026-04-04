@@ -59,6 +59,13 @@
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.kone', $udalost) }}">Export vet</a>
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.bulk-pdf', $udalost) }}">Bulk PDF ZIP</a>
             </div>
+            <div class="panel p-3 text-sm text-gray-700">
+                @if($prihlasky->total() > 0)
+                    Zobrazeno {{ $prihlasky->firstItem() }}–{{ $prihlasky->lastItem() }} z {{ $prihlasky->total() }} přihlášek.
+                @else
+                    Zobrazeno 0 z 0 přihlášek.
+                @endif
+            </div>
             <div class="bg-white shadow sm:rounded-lg overflow-hidden">
                 <div class="divide-y divide-gray-200">
                     @forelse($prihlasky as $p)

@@ -37,6 +37,13 @@
             <div class="panel p-3 text-sm">
                 <a href="{{ route('admin.reports.export.ubytovani', $udalost) }}" class="text-indigo-600 underline">Export ustájení/ubytování</a>
             </div>
+            <div class="panel p-3 text-sm text-gray-700">
+                @if($optionsPagination->total() > 0)
+                    Zobrazeno {{ $optionsPagination->firstItem() }}–{{ $optionsPagination->lastItem() }} z {{ $optionsPagination->total() }} položek.
+                @else
+                    Zobrazeno 0 z 0 položek.
+                @endif
+            </div>
             @foreach($typeLabels as $type => $label)
                 @if($ubytovaniFilters['typ'] !== 'all' && $ubytovaniFilters['typ'] !== $type)
                     @continue
