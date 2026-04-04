@@ -1,0 +1,247 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Prihlaska;
+use App\Models\Udalost;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
+use ZipArchive;
+
+class ReportController extends Controller
+{
+    public function prihlasky(Udalost $udalost)
+    {
+        return view('admin.reports.prihlasky', [
+            'udalost' => $udalost,
+            'prihlasky' => $this->basePrihlaskyQuery($udalost)
+                ->where('smazana', false)
+                ->orderBy('start_cislo')
+                ->get(),
+        ]);
+    }
+
+    public function smazane(Udalost $udalost)
+    {
+        return view('admin.reports.prihlasky', [
+            'udalost' => $udalost,
+            'showDeleted' => true,
+            'prihlasky' => $this->basePrihlaskyQuery($udalost)
+                ->where('smazana', true)
+                ->orderBy('start_cislo')
+                ->get(),
+        ]);
+    }
+
+    public function startky(Udalost $udalost)
+    {
+        $moznosti = $udalost->moznosti()->get()->map(function ($moznost) use ($udalost) {
+            $registrations = $this->basePrihlaskyQuery($udalost)
+                ->where('smazana', false)
+                ->whereHas('polozky', fn ($query) => $query->where('moznost_id', $moznost->id))
+                ->orderBy('start_cislo')
+                ->get();
+
+            return [
+                'moznost' => $moznost,
+                'registrations' => $registrations,
+            ];
+        });
+
+        return view('admin.reports.startky', [
+            'udalost' => $udalost,
+            'moznostiSeStartkami' => $moznosti,
+        ]);
+    }
+
+    public function ubytovani(Udalost $udalost)
+    {
+        $options = $udalost->ustajeniMoznosti()->get();
+        $byType = $options->groupBy('typ')->map(function ($items) use ($udalost) {
+            return $items->map(function ($option) use ($udalost) {
+                $registrations = $this->basePrihlaskyQuery($udalost)
+                    ->where('smazana', false)
+                    ->whereHas('ustajeniChoices', fn ($query) => $query->where('ustajeni_id', $option->id))
+                    ->orderBy('start_cislo')
+                    ->get();
+
+                return [
+                    'option' => $option,
+                    'registrations' => $registrations,
+                ];
+            });
+        });
+
+        return view('admin.reports.ubytovani', [
+            'udalost' => $udalost,
+            'ustajeniByTyp' => $byType,
+        ]);
+    }
+
+    public function exportSeznam(Udalost $udalost): Response
+    {
+        $prihlasky = $this->basePrihlaskyQuery($udalost)
+            ->where('smazana', false)
+            ->orderBy('start_cislo')
+            ->get();
+
+        return $this->xlsResponse(
+            view('exports.seznam-prihlasenych', compact('udalost', 'prihlasky'))->render(),
+            'Seznam_prihlasenych_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportDiscipliny(Udalost $udalost): Response
+    {
+        $prihlasky = $this->basePrihlaskyQuery($udalost)
+            ->where('smazana', false)
+            ->orderBy('start_cislo')
+            ->get();
+        $moznosti = $udalost->moznosti()->orderBy('poradi')->get();
+        $ustajeniOptions = $udalost->ustajeniMoznosti()->get();
+
+        return $this->xlsResponse(
+            view('exports.discipliny', compact('udalost', 'prihlasky', 'moznosti', 'ustajeniOptions'))->render(),
+            'Prihlaseni_a_jejich_discipliny_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportEmaily(Udalost $udalost): Response
+    {
+        $prihlasky = $this->basePrihlaskyQuery($udalost)
+            ->where('smazana', false)
+            ->get()
+            ->sortBy(fn (Prihlaska $prihlaska) => (string) $prihlaska->user?->email)
+            ->values();
+
+        return $this->xlsResponse(
+            view('exports.emaily', compact('udalost', 'prihlasky'))->render(),
+            'Emaily_prihlasenych_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportKone(Udalost $udalost): Response
+    {
+        $kone = $udalost->prihlasky()
+            ->where('smazana', false)
+            ->with('kun')
+            ->get()
+            ->pluck('kun')
+            ->filter()
+            ->unique('id')
+            ->sortBy('jmeno')
+            ->values();
+
+        return $this->xlsResponse(
+            view('exports.vet-prejimka', compact('udalost', 'kone'))->render(),
+            'Kone_vet_prejimka_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportStartky(Udalost $udalost): Response
+    {
+        $moznostiSeDisciplinami = $udalost->moznosti()->get()->map(function ($moznost) use ($udalost) {
+            $registrations = $this->basePrihlaskyQuery($udalost)
+                ->where('smazana', false)
+                ->whereHas('polozky', fn ($query) => $query->where('moznost_id', $moznost->id))
+                ->orderBy('start_cislo')
+                ->get();
+
+            return (object) [
+                'nazev' => $moznost->nazev,
+                'registrations' => $registrations,
+            ];
+        });
+
+        return $this->xlsResponse(
+            view('exports.seznam-startek', compact('udalost', 'moznostiSeDisciplinami'))->render(),
+            'Seznam_startek_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportDisciplinyPocty(Udalost $udalost): Response
+    {
+        $pocty = [];
+        foreach ($udalost->moznosti()->orderBy('poradi')->get() as $moznost) {
+            $pocty[$moznost->nazev] = $moznost->prihlaskyPolozky()
+                ->whereHas('prihlaska', fn ($query) => $query->where('udalost_id', $udalost->id)->where('smazana', false))
+                ->count();
+        }
+        $totalStartu = array_sum($pocty);
+
+        return $this->xlsResponse(
+            view('exports.discipliny-pocty', compact('udalost', 'pocty', 'totalStartu'))->render(),
+            'Seznam_disciplin_a_pocet_startu_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportUstajeni(Udalost $udalost): Response
+    {
+        $options = $udalost->ustajeniMoznosti()->get();
+        $ustajeniByTyp = $options->groupBy('typ')->map(function ($items) use ($udalost) {
+            return $items->map(function ($option) use ($udalost) {
+                $registrations = $this->basePrihlaskyQuery($udalost)
+                    ->where('smazana', false)
+                    ->whereHas('ustajeniChoices', fn ($query) => $query->where('ustajeni_id', $option->id))
+                    ->orderBy('start_cislo')
+                    ->get();
+
+                return (object) [
+                    'option' => $option,
+                    'registrations' => $registrations,
+                ];
+            });
+        });
+
+        return $this->xlsResponse(
+            view('exports.ustajeni', compact('udalost', 'ustajeniByTyp'))->render(),
+            'Ustajeni_ubytovani_strava_'.$udalost->id.'.xls'
+        );
+    }
+
+    public function exportBulkPdf(Udalost $udalost)
+    {
+        $prihlasky = $this->basePrihlaskyQuery($udalost)
+            ->where('smazana', false)
+            ->orderBy('start_cislo')
+            ->get();
+
+        $tmpDir = storage_path('app/tmp/bulk-pdf-'.$udalost->id.'-'.now()->timestamp);
+        File::ensureDirectoryExists($tmpDir);
+        $zipPath = $tmpDir.'/prihlasky_'.$udalost->id.'.zip';
+
+        $zip = new ZipArchive;
+        $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        foreach ($prihlasky as $prihlaska) {
+            $pdfBytes = Pdf::loadView('prihlasky.pdf', ['prihlaska' => $prihlaska])->output();
+            $zip->addFromString('prihlaska_'.$prihlaska->id.'.pdf', $pdfBytes);
+        }
+        $zip->close();
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
+
+    private function basePrihlaskyQuery(Udalost $udalost)
+    {
+        return $udalost->prihlasky()
+            ->with([
+                'osoba',
+                'kun',
+                'kunTandem',
+                'user',
+                'polozky',
+                'ustajeniChoices',
+            ]);
+    }
+
+    private function xlsResponse(string $html, string $filename): Response
+    {
+        return response($html)
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="'.$filename.'"')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
+}

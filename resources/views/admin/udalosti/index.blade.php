@@ -26,6 +26,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
+                                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Reporty</a>
                                 <form method="POST" action="{{ route('admin.udalosti.destroy', $udalost) }}" onsubmit="return confirm('Opravdu smazat událost?');">
                                     @csrf
                                     @method('DELETE')

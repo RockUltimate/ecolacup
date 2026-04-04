@@ -1,6 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Upravit událost</h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Upravit událost</h2>
+            <div class="text-sm flex items-center gap-3">
+                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" class="text-indigo-600 underline">Přihlášky</a>
+                <a href="{{ route('admin.reports.startky', $udalost) }}" class="text-indigo-600 underline">Startky</a>
+                <a href="{{ route('admin.reports.ubytovani', $udalost) }}" class="text-indigo-600 underline">Ubytování</a>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">

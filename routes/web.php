@@ -7,6 +7,7 @@ use App\Http\Controllers\UdalostController;
 use App\Http\Controllers\PrihlaskaController;
 use App\Http\Controllers\ClenstviCmtController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
+use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UdalostController::class, 'index']);
@@ -76,6 +77,20 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
 
     Route::post('/udalosti/{udalost}/ustajeni', [AdminUdalostController::class, 'storeUstajeni'])->name('udalosti.ustajeni.store');
     Route::delete('/udalosti/{udalost}/ustajeni/{ustajeni}', [AdminUdalostController::class, 'destroyUstajeni'])->name('udalosti.ustajeni.destroy');
+
+    Route::get('/udalosti/{udalost}/prihlasky', [ReportController::class, 'prihlasky'])->name('reports.prihlasky');
+    Route::get('/udalosti/{udalost}/prihlasky/smazane', [ReportController::class, 'smazane'])->name('reports.smazane');
+    Route::get('/udalosti/{udalost}/startky', [ReportController::class, 'startky'])->name('reports.startky');
+    Route::get('/udalosti/{udalost}/ubytovani', [ReportController::class, 'ubytovani'])->name('reports.ubytovani');
+
+    Route::get('/udalosti/{udalost}/prihlasky/export/seznam', [ReportController::class, 'exportSeznam'])->name('reports.export.seznam');
+    Route::get('/udalosti/{udalost}/prihlasky/export/discipliny', [ReportController::class, 'exportDiscipliny'])->name('reports.export.discipliny');
+    Route::get('/udalosti/{udalost}/prihlasky/export/emaily', [ReportController::class, 'exportEmaily'])->name('reports.export.emaily');
+    Route::get('/udalosti/{udalost}/prihlasky/export/kone', [ReportController::class, 'exportKone'])->name('reports.export.kone');
+    Route::get('/udalosti/{udalost}/prihlasky/export/bulk-pdf', [ReportController::class, 'exportBulkPdf'])->name('reports.export.bulk-pdf');
+    Route::get('/udalosti/{udalost}/startky/export', [ReportController::class, 'exportStartky'])->name('reports.export.startky');
+    Route::get('/udalosti/{udalost}/startky/export/discipliny', [ReportController::class, 'exportDisciplinyPocty'])->name('reports.export.discipliny-pocty');
+    Route::get('/udalosti/{udalost}/ubytovani/export', [ReportController::class, 'exportUstajeni'])->name('reports.export.ubytovani');
 });
 
 require __DIR__.'/auth.php';
