@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasMany(Kun::class);
     }
 
+    public function prihlasky(): HasMany
+    {
+        return $this->hasMany(Prihlaska::class);
+    }
+
     public function celeJmeno(): string
     {
         if ($this->jmeno && $this->prijmeni) {

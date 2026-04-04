@@ -4,6 +4,7 @@ use App\Http\Controllers\OsobaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KunController;
 use App\Http\Controllers\UdalostController;
+use App\Http\Controllers\PrihlaskaController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/kone/{kun}/edit', [KunController::class, 'edit'])->name('kone.edit');
     Route::put('/kone/{kun}', [KunController::class, 'update'])->name('kone.update');
     Route::delete('/kone/{kun}', [KunController::class, 'destroy'])->name('kone.destroy');
+
+    Route::get('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'create'])->name('prihlasky.create');
+    Route::post('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'store'])->name('prihlasky.store');
+
+    Route::get('/prihlasky', [PrihlaskaController::class, 'index'])->name('prihlasky.index');
+    Route::get('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'show'])->name('prihlasky.show');
+    Route::get('/prihlasky/{prihlaska}/edit', [PrihlaskaController::class, 'edit'])->name('prihlasky.edit');
+    Route::put('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'update'])->name('prihlasky.update');
+    Route::delete('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'destroy'])->name('prihlasky.destroy');
+    Route::get('/prihlasky/{prihlaska}/pdf', [PrihlaskaController::class, 'pdf'])->name('prihlasky.pdf');
+
+    Route::get('/ajax/osoba/{osoba}/polozky', [PrihlaskaController::class, 'ajaxOsobaPolozky']);
+    Route::get('/ajax/osoba/{osoba}/clenstvi-img', [PrihlaskaController::class, 'ajaxClenstviStatus']);
+    Route::get('/ajax/kun/{kun}/ockovani', [PrihlaskaController::class, 'ajaxKunOckovani']);
+    Route::get('/ajax/udalost/{udalost}/admin-poplatek', [PrihlaskaController::class, 'ajaxAdminPoplatek']);
 });
 
 Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {

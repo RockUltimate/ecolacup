@@ -14,6 +14,17 @@
                 </p>
                 <p class="text-sm text-gray-600 mt-1">Uzávěrka přihlášek: {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') }}</p>
                 <p class="text-sm text-gray-600 mt-1">Počet přihlášek: {{ $udalost->pocet_prihlasek }} • Počet startů: {{ $udalost->pocet_startu }}</p>
+                <div class="mt-4">
+                    @auth
+                        <a href="{{ route('prihlasky.create', $udalost) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+                            Přihlásit se na akci
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+                            Přihlaste se pro registraci
+                        </a>
+                    @endauth
+                </div>
                 @if($udalost->popis)
                     <p class="mt-4 text-gray-800 whitespace-pre-line">{{ $udalost->popis }}</p>
                 @endif

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UdalostMoznost extends Model
 {
@@ -39,5 +40,10 @@ class UdalostMoznost extends Model
     public function udalost(): BelongsTo
     {
         return $this->belongsTo(Udalost::class);
+    }
+
+    public function prihlaskyPolozky(): HasMany
+    {
+        return $this->hasMany(PrihlaskaPolozka::class, 'moznost_id');
     }
 }
