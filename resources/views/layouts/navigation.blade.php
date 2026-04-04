@@ -47,6 +47,9 @@
 
                     <x-slot name="content">
                         @if(Auth::user()->is_admin)
+                            <x-dropdown-link :href="route('admin.dashboard')">
+                                Admin dashboard
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.udalosti.index')">
                                 Admin události
                             </x-dropdown-link>
@@ -110,6 +113,9 @@
                     Koně
                 </x-responsive-nav-link>
                 @if(Auth::user()->is_admin)
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        Admin dashboard
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.udalosti.index')" :active="request()->routeIs('admin.udalosti.*')">
                         Admin události
                     </x-responsive-nav-link>

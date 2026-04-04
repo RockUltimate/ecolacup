@@ -8,6 +8,7 @@ use App\Http\Controllers\PrihlaskaController;
 use App\Http\Controllers\ClenstviCmtController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UdalostController::class, 'index']);
@@ -68,6 +69,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
+    Route::get('/', AdminDashboardController::class)->name('dashboard');
     Route::get('/udalosti', [AdminUdalostController::class, 'index'])->name('udalosti.index');
     Route::get('/udalosti/nova', [AdminUdalostController::class, 'create'])->name('udalosti.create');
     Route::post('/udalosti', [AdminUdalostController::class, 'store'])->name('udalosti.store');
