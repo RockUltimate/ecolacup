@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --brand-green: #3d6b4f;
+        --brand-brown: #7b5230;
+        --brand-cream: #f5f0e8;
+        --brand-sand: #d4b896;
+        --brand-dark: #1c1c1c;
+    }
+
+    body {
+        background: radial-gradient(circle at 10% 10%, #fff8ee 0%, var(--brand-cream) 55%, #ede2d2 100%);
+        color: var(--brand-dark);
+        font-family: "Manrope", "Segoe UI", sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: "Fraunces", "Georgia", serif;
+        letter-spacing: 0.01em;
+    }
+}
+
+@layer components {
+    .panel {
+        @apply bg-white/90 backdrop-blur-sm shadow-sm rounded-xl border border-[#e7dcc9];
+    }
+
+    .brand-pill {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+        background-color: #e8f2ec;
+        color: var(--brand-green);
+    }
+
+    .brand-link {
+        @apply underline underline-offset-4 hover:opacity-80 transition;
+        color: var(--brand-brown);
+    }
+}

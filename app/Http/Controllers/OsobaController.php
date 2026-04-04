@@ -17,6 +17,7 @@ class OsobaController extends Controller
         return view('osoby.index', [
             'osoby' => auth()->user()
                 ->osoby()
+                ->with(['aktivniClenstviCmt', 'clenstviCmt'])
                 ->latest()
                 ->get(),
         ]);

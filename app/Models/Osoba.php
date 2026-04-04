@@ -70,4 +70,17 @@ class Osoba extends Model
             ->where('aktivni', true)
             ->latestOfMany('rok');
     }
+
+    public function getCmtStatusAttribute(): string
+    {
+        if ($this->relationLoaded('aktivniClenstviCmt') && $this->aktivniClenstviCmt) {
+            return 'active';
+        }
+
+        $hasAny = $this->relationLoaded('clenstviCmt')
+            ? $this->clenstviCmt->isNotEmpty()
+            : $this->clenstviCmt()->exists();
+
+        return $hasAny ? 'inactive' : 'none';
+    }
 }

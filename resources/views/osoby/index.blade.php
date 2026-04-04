@@ -12,15 +12,9 @@
 
     <div class="py-12">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            @if (session('status'))
-                <div class="mb-4 p-4 rounded-md bg-green-50 text-green-700 text-sm">
-                    @if (session('status') === 'osoba-created') Osoba byla vytvořena. @endif
-                    @if (session('status') === 'osoba-updated') Osoba byla upravena. @endif
-                    @if (session('status') === 'osoba-deleted') Osoba byla smazána. @endif
-                </div>
-            @endif
+            <x-flash-message />
 
-            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+            <div class="panel overflow-hidden">
                 <div class="divide-y divide-gray-200">
                     @forelse ($osoby as $osoba)
                         <div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -28,6 +22,9 @@
                                 <p class="font-medium text-gray-900">{{ $osoba->prijmeni }} {{ $osoba->jmeno }}</p>
                                 <p class="text-sm text-gray-600">Datum narození: {{ $osoba->datum_narozeni?->format('d.m.Y') }}</p>
                                 <p class="text-sm text-gray-600">Stáj: {{ $osoba->staj }}</p>
+                                <div class="mt-2">
+                                    <x-badge-cmt :status="$osoba->cmt_status" />
+                                </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <a href="{{ route('osoby.edit', $osoba) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
