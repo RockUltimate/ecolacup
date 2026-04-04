@@ -24,8 +24,9 @@ class PrihlaskaController extends Controller
         return view('prihlasky.index', [
             'prihlasky' => $request->user()
                 ->prihlasky()
+                ->withTrashed()
                 ->with(['udalost', 'osoba', 'kun', 'polozky', 'ustajeniChoices'])
-                ->latest()
+                ->orderByDesc('created_at')
                 ->get(),
         ]);
     }
