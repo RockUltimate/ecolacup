@@ -7,36 +7,37 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-100 text-gray-900">
+    <body class="antialiased text-gray-900">
         <div class="min-h-screen">
-            <header class="bg-white border-b border-gray-200">
+            <header class="bg-white/90 backdrop-blur border-b border-[#e8dfd0]">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                    <a href="{{ route('udalosti.index') }}" class="font-semibold text-gray-900">EcolaCup</a>
+                    <a href="{{ route('udalosti.index') }}" class="font-semibold text-[#7b5230] tracking-wide">EcolaCup</a>
                     <nav class="flex items-center gap-4 text-sm">
-                        <a href="{{ route('udalosti.index') }}" class="text-gray-700 hover:text-gray-900">Události</a>
+                        <a href="{{ route('udalosti.index') }}" class="brand-link">Události</a>
                         @auth
-                            <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900">Aplikace</a>
+                            <a href="{{ route('dashboard') }}" class="brand-link">Aplikace</a>
                         @else
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Přihlášení</a>
-                            <a href="{{ route('register') }}" class="text-gray-700 hover:text-gray-900">Registrace</a>
+                            <a href="{{ route('login') }}" class="brand-link">Přihlášení</a>
+                            <a href="{{ route('register') }}" class="brand-link">Registrace</a>
                         @endauth
                     </nav>
                 </div>
             </header>
 
             @isset($header)
-                <header class="bg-white shadow">
+                <header class="bg-white/80 border-b border-[#ece2d4]">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
-
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <main>
                 {{ $slot }}
             </main>
