@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecolacup-app
+    ports:
+      - "8082:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: http://localhost:8082
+      APP_NAME: EcolaCup
+      APP_LOCALE: cs
+      APP_FALLBACK_LOCALE: cs
+      APP_FAKER_LOCALE: cs_CZ
+      APP_TIMEZONE: Europe/Prague
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ecolacup
+      DB_USERNAME: ecolacup
+      DB_PASSWORD: ecolacup
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecolacup-postgres
+    environment:
+      POSTGRES_DB: ecolacup
+      POSTGRES_USER: ecolacup
+      POSTGRES_PASSWORD: ecolacup
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecolacup -d ecolacup"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  pgdata:

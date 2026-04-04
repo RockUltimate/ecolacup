@@ -1,0 +1,7 @@
+services:
+  app:
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+    volumes:
+      - ./:/var/www/html
