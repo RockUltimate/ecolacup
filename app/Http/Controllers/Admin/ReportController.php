@@ -6,31 +6,32 @@ use App\Http\Controllers\Controller;
 use App\Models\Prihlaska;
 use App\Models\Udalost;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 
 class ReportController extends Controller
 {
-    public function prihlasky(Udalost $udalost)
+    public function prihlasky(Udalost $udalost, Request $request)
     {
+        $filters = $this->resolveRegistrationsFilters($request, 'active');
         return view('admin.reports.prihlasky', [
             'udalost' => $udalost,
-            'prihlasky' => $this->basePrihlaskyQuery($udalost)
-                ->where('smazana', false)
-                ->orderBy('start_cislo')
+            'filters' => $filters,
+            'prihlasky' => $this->registrationsListingQuery($udalost, $filters)
                 ->get(),
         ]);
     }
 
-    public function smazane(Udalost $udalost)
+    public function smazane(Udalost $udalost, Request $request)
     {
+        $filters = $this->resolveRegistrationsFilters($request, 'deleted');
         return view('admin.reports.prihlasky', [
             'udalost' => $udalost,
             'showDeleted' => true,
-            'prihlasky' => $this->basePrihlaskyQuery($udalost)
-                ->where('smazana', true)
-                ->orderBy('start_cislo')
+            'filters' => $filters,
+            'prihlasky' => $this->registrationsListingQuery($udalost, $filters)
                 ->get(),
         ]);
     }
@@ -234,6 +235,56 @@ class ReportController extends Controller
                 'polozky',
                 'ustajeniChoices',
             ]);
+    }
+
+    /**
+     * @return array{q: string, stav: string}
+     */
+    private function resolveRegistrationsFilters(Request $request, string $defaultStatus): array
+    {
+        $status = (string) $request->query('stav', $defaultStatus);
+        if (! in_array($status, ['active', 'deleted', 'all'], true)) {
+            $status = $defaultStatus;
+        }
+
+        return [
+            'q' => trim((string) $request->query('q', '')),
+            'stav' => $status,
+        ];
+    }
+
+    /**
+     * @param  array{q: string, stav: string}  $filters
+     */
+    private function registrationsListingQuery(Udalost $udalost, array $filters)
+    {
+        $query = $this->basePrihlaskyQuery($udalost);
+
+        if ($filters['stav'] === 'active') {
+            $query->where('smazana', false);
+        } elseif ($filters['stav'] === 'deleted') {
+            $query->where('smazana', true);
+        }
+
+        if ($filters['q'] !== '') {
+            $needle = '%'.$filters['q'].'%';
+            $query->where(function ($subQuery) use ($needle) {
+                $subQuery
+                    ->where('start_cislo', 'like', $needle)
+                    ->orWhereHas('osoba', fn ($osobaQuery) => $osobaQuery
+                        ->where('jmeno', 'like', $needle)
+                        ->orWhere('prijmeni', 'like', $needle))
+                    ->orWhereHas('kun', fn ($kunQuery) => $kunQuery
+                        ->where('jmeno', 'like', $needle))
+                    ->orWhereHas('user', fn ($userQuery) => $userQuery
+                        ->where('email', 'like', $needle));
+            });
+        }
+
+        return $query
+            ->orderBy('smazana')
+            ->orderBy('start_cislo')
+            ->orderByDesc('id');
     }
 
     private function xlsResponse(string $html, string $filename): Response

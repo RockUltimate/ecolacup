@@ -1,8 +1,13 @@
 <x-app-layout>
+    @php
+        $filters = $filters ?? ['q' => '', 'stav' => (($showDeleted ?? false) ? 'deleted' : 'active')];
+        $isDeletedView = ($showDeleted ?? false);
+        $listingRoute = $isDeletedView ? route('admin.reports.smazane', $udalost) : route('admin.reports.prihlasky', $udalost);
+    @endphp
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Admin • {{ $showDeleted ?? false ? 'Smazané přihlášky' : 'Přihlášky' }} • {{ $udalost->nazev }}
+                Admin • {{ $isDeletedView ? 'Smazané přihlášky' : 'Přihlášky' }} • {{ $udalost->nazev }}
             </h2>
             <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
         </div>
@@ -11,8 +16,28 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
             @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'prihlasky'])
             <div class="panel p-3 text-sm flex flex-wrap gap-3">
-                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => !($showDeleted ?? false), 'text-indigo-600' => ($showDeleted ?? false)])>Aktivní</a>
-                <a href="{{ route('admin.reports.smazane', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => ($showDeleted ?? false), 'text-indigo-600' => !($showDeleted ?? false)])>Smazané</a>
+                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => ! $isDeletedView, 'text-indigo-600' => $isDeletedView])>Aktivní</a>
+                <a href="{{ route('admin.reports.smazane', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => $isDeletedView, 'text-indigo-600' => ! $isDeletedView])>Smazané</a>
+            </div>
+            <div class="panel p-4">
+                <form method="GET" action="{{ $listingRoute }}" class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_180px_auto] gap-3 items-end">
+                    <div>
+                        <x-input-label for="q" :value="'Hledat (startovní číslo, osoba, kůň, e-mail)'" />
+                        <x-text-input id="q" name="q" type="text" class="mt-1 block w-full" :value="$filters['q']" />
+                    </div>
+                    <div>
+                        <x-input-label for="stav" :value="'Stav'" />
+                        <select id="stav" name="stav" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="active" @selected($filters['stav'] === 'active')>Aktivní</option>
+                            <option value="deleted" @selected($filters['stav'] === 'deleted')>Smazané</option>
+                            <option value="all" @selected($filters['stav'] === 'all')>Všechny</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <x-primary-button>Filtrovat</x-primary-button>
+                        <a href="{{ $listingRoute }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Reset</a>
+                    </div>
+                </form>
             </div>
             <div class="bg-white shadow sm:rounded-lg p-4 text-sm flex flex-wrap gap-3">
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.seznam', $udalost) }}">Export seznam</a>
@@ -24,13 +49,20 @@
             <div class="bg-white shadow sm:rounded-lg overflow-hidden">
                 <div class="divide-y divide-gray-200">
                     @forelse($prihlasky as $p)
-                        <div class="p-4 sm:p-5">
+                        <div @class([
+                            'p-4 sm:p-5',
+                            'bg-red-50/70' => $p->smazana,
+                        ])>
                             <p class="font-medium text-gray-900">
                                 #{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}
+                                @if($p->smazana)
+                                    <span class="ms-2 inline-flex rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">SMAZANÁ</span>
+                                @endif
                             </p>
                             <p class="text-sm text-gray-600">
                                 Kůň: {{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif •
-                                Cena: {{ number_format((float)$p->cena_celkem, 2, ',', ' ') }} Kč
+                                Cena: {{ number_format((float)$p->cena_celkem, 2, ',', ' ') }} Kč •
+                                E-mail: {{ $p->user?->email }}
                             </p>
                         </div>
                     @empty
