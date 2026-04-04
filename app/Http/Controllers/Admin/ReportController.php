@@ -107,14 +107,34 @@ class ReportController extends Controller
         ]);
     }
 
-    public function ubytovani(Udalost $udalost)
+    public function ubytovani(Udalost $udalost, Request $request)
     {
-        $options = $udalost->ustajeniMoznosti()->get();
+        $selectedType = (string) $request->query('typ', 'all');
+        if (! in_array($selectedType, ['all', 'ustajeni', 'ubytovani', 'strava', 'ostatni'], true)) {
+            $selectedType = 'all';
+        }
+
+        $search = trim((string) $request->query('q', ''));
+        $needle = $search !== '' ? '%'.$search.'%' : null;
+
+        $options = $udalost->ustajeniMoznosti()
+            ->when($selectedType !== 'all', fn ($query) => $query->where('typ', $selectedType))
+            ->get();
         $byType = $options->groupBy('typ')->map(function ($items) use ($udalost) {
-            return $items->map(function ($option) use ($udalost) {
+            return $items->map(function ($option) use ($udalost, $needle) {
                 $registrations = $this->basePrihlaskyQuery($udalost)
                     ->where('smazana', false)
                     ->whereHas('ustajeniChoices', fn ($query) => $query->where('ustajeni_id', $option->id))
+                    ->when($needle !== null, function ($query) use ($needle) {
+                        $query->where(function ($subQuery) use ($needle) {
+                            $subQuery
+                                ->whereHas('osoba', fn ($osobaQuery) => $osobaQuery
+                                    ->where('jmeno', 'like', $needle)
+                                    ->orWhere('prijmeni', 'like', $needle))
+                                ->orWhereHas('kun', fn ($kunQuery) => $kunQuery
+                                    ->where('jmeno', 'like', $needle));
+                        });
+                    })
                     ->orderBy('start_cislo')
                     ->get();
 
@@ -128,6 +148,10 @@ class ReportController extends Controller
         return view('admin.reports.ubytovani', [
             'udalost' => $udalost,
             'ustajeniByTyp' => $byType,
+            'ubytovaniFilters' => [
+                'typ' => $selectedType,
+                'q' => $search,
+            ],
         ]);
     }
 
