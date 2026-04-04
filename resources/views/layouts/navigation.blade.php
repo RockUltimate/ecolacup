@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('prihlasky.index')" :active="request()->routeIs('prihlasky.*')">
                         Přihlášky
                     </x-nav-link>
+                    <x-nav-link :href="route('clenstvi-cmt.index')" :active="request()->routeIs('clenstvi-cmt.*')">
+                        Členství CMT
+                    </x-nav-link>
                     <x-nav-link :href="route('kone.index')" :active="request()->routeIs('kone.*')">
                         Koně
                     </x-nav-link>
@@ -99,6 +102,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('prihlasky.index')" :active="request()->routeIs('prihlasky.*')">
                     Přihlášky
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('clenstvi-cmt.index')" :active="request()->routeIs('clenstvi-cmt.*')">
+                    Členství CMT
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('kone.index')" :active="request()->routeIs('kone.*')">
                     Koně

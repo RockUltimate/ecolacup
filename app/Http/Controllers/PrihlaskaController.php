@@ -163,10 +163,25 @@ class PrihlaskaController extends Controller
     public function ajaxClenstviStatus(Osoba $osoba, Request $request): JsonResponse
     {
         $this->abortIfNotMine($osoba->user_id, $request);
+        $clenstvi = $osoba->clenstviCmt()
+            ->where('aktivni', true)
+            ->orderByDesc('rok')
+            ->first();
+
+        if (! $clenstvi) {
+            return response()->json([
+                'status' => 'none',
+                'label' => 'Bez aktivního členství CMT',
+            ]);
+        }
 
         return response()->json([
-            'status' => 'none',
-            'label' => 'Bez členství CMT',
+            'status' => 'active',
+            'label' => 'Aktivní členství CMT',
+            'rok' => $clenstvi->rok,
+            'typ_clenstvi' => $clenstvi->typ_clenstvi,
+            'evidencni_cislo' => $clenstvi->evidencni_cislo,
+            'sken_prihlaska' => $clenstvi->sken_prihlaska,
         ]);
     }
 

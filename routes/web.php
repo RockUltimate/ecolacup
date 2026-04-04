@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KunController;
 use App\Http\Controllers\UdalostController;
 use App\Http\Controllers\PrihlaskaController;
+use App\Http\Controllers\ClenstviCmtController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/kone/{kun}/edit', [KunController::class, 'edit'])->name('kone.edit');
     Route::put('/kone/{kun}', [KunController::class, 'update'])->name('kone.update');
     Route::delete('/kone/{kun}', [KunController::class, 'destroy'])->name('kone.destroy');
+    Route::get('/clenstvi-cmt', [ClenstviCmtController::class, 'index'])->name('clenstvi-cmt.index');
+    Route::get('/clenstvi-cmt/nove', [ClenstviCmtController::class, 'create'])->name('clenstvi-cmt.create');
+    Route::post('/clenstvi-cmt', [ClenstviCmtController::class, 'store'])->name('clenstvi-cmt.store');
+    Route::get('/clenstvi-cmt/{clenstviCmt}/edit', [ClenstviCmtController::class, 'edit'])->name('clenstvi-cmt.edit');
+    Route::put('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'update'])->name('clenstvi-cmt.update');
+    Route::delete('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'destroy'])->name('clenstvi-cmt.destroy');
 
     Route::get('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'create'])->name('prihlasky.create');
     Route::post('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'store'])->name('prihlasky.store');
