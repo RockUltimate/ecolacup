@@ -13,8 +13,11 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
             @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'ubytovani'])
-            <div class="panel p-4">
-                <form method="GET" action="{{ route('admin.reports.ubytovani', $udalost) }}" class="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_auto] gap-3 items-end">
+            <x-admin-report-filter-form
+                :action="route('admin.reports.ubytovani', $udalost)"
+                :reset-href="route('admin.reports.ubytovani', $udalost)"
+                :form-class="'grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_auto] gap-3 items-end'"
+            >
                     <div>
                         <x-input-label for="typ" :value="'Typ'" />
                         <select id="typ" name="typ" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -28,12 +31,7 @@
                         <x-input-label for="q" :value="'Hledat (jezdec/kůň)'" />
                         <x-text-input id="q" name="q" type="text" class="mt-1 block w-full" :value="$ubytovaniFilters['q']" />
                     </div>
-                    <div class="flex items-center gap-2">
-                        <x-primary-button>Filtrovat</x-primary-button>
-                        <a href="{{ route('admin.reports.ubytovani', $udalost) }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Reset</a>
-                    </div>
-                </form>
-            </div>
+            </x-admin-report-filter-form>
             <div class="panel p-3 text-sm">
                 <a href="{{ route('admin.reports.export.ubytovani', $udalost) }}" class="text-indigo-600 underline">Export ustájení/ubytování</a>
             </div>

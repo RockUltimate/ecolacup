@@ -25,8 +25,7 @@
                     Duplicitní startovní čísla: {{ implode(', ', $duplicateStartNumbers) }}
                 </div>
             @endif
-            <div class="panel p-4">
-                <form method="GET" action="{{ $listingRoute }}" class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_180px_auto] gap-3 items-end">
+            <x-admin-report-filter-form :action="$listingRoute" :reset-href="$listingRoute">
                     <div>
                         <x-input-label for="q" :value="'Hledat (startovní číslo, osoba, kůň, e-mail)'" />
                         <x-text-input id="q" name="q" type="text" class="mt-1 block w-full" :value="$filters['q']" />
@@ -39,12 +38,7 @@
                             <option value="all" @selected($filters['stav'] === 'all')>Všechny</option>
                         </select>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <x-primary-button>Filtrovat</x-primary-button>
-                        <a href="{{ $listingRoute }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Reset</a>
-                    </div>
-                </form>
-            </div>
+            </x-admin-report-filter-form>
             <div class="bg-white shadow sm:rounded-lg p-4 text-sm flex flex-wrap gap-3">
                 @if(! $isDeletedView)
                     <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}">
