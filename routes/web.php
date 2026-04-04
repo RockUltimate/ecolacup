@@ -49,7 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'destroy'])->name('clenstvi-cmt.destroy');
 
     Route::get('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'create'])->name('prihlasky.create');
-    Route::post('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'store'])->name('prihlasky.store');
+    Route::post('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'store'])
+        ->middleware('throttle:prihlasky-store')
+        ->name('prihlasky.store');
 
     Route::get('/prihlasky', [PrihlaskaController::class, 'index'])->name('prihlasky.index');
     Route::get('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'show'])->name('prihlasky.show');

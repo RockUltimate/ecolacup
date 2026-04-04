@@ -24,6 +24,11 @@ Database defaults are configured for PostgreSQL:
 - User: `ecolacup`
 - Password: `ecolacup`
 Migrations run automatically at container startup in `docker/entrypoint.sh`.
+## Queue & Scheduler (B8 readiness)
+- Queue tables are included in migrations (`jobs`, `job_batches`, `failed_jobs`).
+- Production worker template is stored in `deploy/supervisor/ecolacup-worker.conf`.
+- Example scheduler cron:
+  - `* * * * * cd /var/www/ecolacup && php artisan schedule:run >> /dev/null 2>&1`
 ## Initial implementation scope
 This first version includes:
 - Laravel + Breeze scaffold
