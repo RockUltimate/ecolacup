@@ -64,6 +64,11 @@ class User extends Authenticatable
         return $this->hasMany(Osoba::class);
     }
 
+    public function kone(): HasMany
+    {
+        return $this->hasMany(Kun::class);
+    }
+
     public function celeJmeno(): string
     {
         if ($this->jmeno && $this->prijmeni) {

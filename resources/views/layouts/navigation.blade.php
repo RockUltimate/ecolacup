@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('osoby.index')" :active="request()->routeIs('osoby.*')">
                         Osoby
                     </x-nav-link>
+                    <x-nav-link :href="route('kone.index')" :active="request()->routeIs('kone.*')">
+                        Koně
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -85,6 +88,9 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('osoby.index')" :active="request()->routeIs('osoby.*')">
                     Osoby
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kone.index')" :active="request()->routeIs('kone.*')">
+                    Koně
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('ucet.edit')">

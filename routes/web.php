@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OsobaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KunController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/osoby/{osoba}/edit', [OsobaController::class, 'edit'])->name('osoby.edit');
     Route::put('/osoby/{osoba}', [OsobaController::class, 'update'])->name('osoby.update');
     Route::delete('/osoby/{osoba}', [OsobaController::class, 'destroy'])->name('osoby.destroy');
+
+    Route::get('/kone', [KunController::class, 'index'])->name('kone.index');
+    Route::get('/kone/novy', [KunController::class, 'create'])->name('kone.create');
+    Route::post('/kone', [KunController::class, 'store'])->name('kone.store');
+    Route::get('/kone/{kun}/edit', [KunController::class, 'edit'])->name('kone.edit');
+    Route::put('/kone/{kun}', [KunController::class, 'update'])->name('kone.update');
+    Route::delete('/kone/{kun}', [KunController::class, 'destroy'])->name('kone.destroy');
 });
 
 require __DIR__.'/auth.php';
