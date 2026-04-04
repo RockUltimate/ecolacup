@@ -18,11 +18,12 @@ class ReportController extends Controller
     public function prihlasky(Udalost $udalost, Request $request)
     {
         $filters = $this->resolveRegistrationsFilters($request, 'active');
+        $prihlasky = $this->registrationsListingQuery($udalost, $filters)->get();
         return view('admin.reports.prihlasky', [
             'udalost' => $udalost,
             'filters' => $filters,
-            'prihlasky' => $this->registrationsListingQuery($udalost, $filters)
-                ->get(),
+            'prihlasky' => $prihlasky,
+            'duplicateStartNumbers' => $this->duplicateStartNumbers($prihlasky),
         ]);
     }
 
@@ -53,12 +54,13 @@ class ReportController extends Controller
     public function smazane(Udalost $udalost, Request $request)
     {
         $filters = $this->resolveRegistrationsFilters($request, 'deleted');
+        $prihlasky = $this->registrationsListingQuery($udalost, $filters)->get();
         return view('admin.reports.prihlasky', [
             'udalost' => $udalost,
             'showDeleted' => true,
             'filters' => $filters,
-            'prihlasky' => $this->registrationsListingQuery($udalost, $filters)
-                ->get(),
+            'prihlasky' => $prihlasky,
+            'duplicateStartNumbers' => $this->duplicateStartNumbers($prihlasky),
         ]);
     }
 
@@ -279,6 +281,26 @@ class ReportController extends Controller
         ];
     }
 
+    public function normalizeStartCisla(Udalost $udalost): RedirectResponse
+    {
+        $registrations = $udalost->prihlasky()
+            ->where('smazana', false)
+            ->orderByRaw('CASE WHEN start_cislo IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('start_cislo')
+            ->orderBy('id')
+            ->get();
+
+        $counter = 1;
+        foreach ($registrations as $registration) {
+            if ((int) $registration->start_cislo !== $counter) {
+                $registration->update(['start_cislo' => $counter]);
+            }
+            $counter++;
+        }
+
+        return back()->with('status', 'start-cisla-normalized');
+    }
+
     /**
      * @param  array{q: string, stav: string}  $filters
      */
@@ -311,6 +333,23 @@ class ReportController extends Controller
             ->orderBy('smazana')
             ->orderBy('start_cislo')
             ->orderByDesc('id');
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, Prihlaska>  $prihlasky
+     * @return array<int, int>
+     */
+    private function duplicateStartNumbers($prihlasky): array
+    {
+        return $prihlasky
+            ->pluck('start_cislo')
+            ->filter(fn ($number) => $number !== null)
+            ->countBy()
+            ->filter(fn ($count) => $count > 1)
+            ->keys()
+            ->map(fn ($number) => (int) $number)
+            ->values()
+            ->all();
     }
 
     private function xlsResponse(string $html, string $filename): Response

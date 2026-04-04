@@ -1,6 +1,7 @@
 <x-app-layout>
     @php
         $filters = $filters ?? ['q' => '', 'stav' => (($showDeleted ?? false) ? 'deleted' : 'active')];
+        $duplicateStartNumbers = $duplicateStartNumbers ?? [];
         $isDeletedView = ($showDeleted ?? false);
         $listingRoute = $isDeletedView ? route('admin.reports.smazane', $udalost) : route('admin.reports.prihlasky', $udalost);
     @endphp
@@ -19,6 +20,11 @@
                 <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => ! $isDeletedView, 'text-indigo-600' => $isDeletedView])>Aktivní</a>
                 <a href="{{ route('admin.reports.smazane', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => $isDeletedView, 'text-indigo-600' => ! $isDeletedView])>Smazané</a>
             </div>
+            @if(count($duplicateStartNumbers) > 0)
+                <div class="panel p-3 text-sm text-amber-800 bg-amber-50 border-amber-200">
+                    Duplicitní startovní čísla: {{ implode(', ', $duplicateStartNumbers) }}
+                </div>
+            @endif
             <div class="panel p-4">
                 <form method="GET" action="{{ $listingRoute }}" class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_180px_auto] gap-3 items-end">
                     <div>
@@ -40,6 +46,13 @@
                 </form>
             </div>
             <div class="bg-white shadow sm:rounded-lg p-4 text-sm flex flex-wrap gap-3">
+                @if(! $isDeletedView)
+                    <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="text-indigo-600 underline">Srovnat startovní čísla</button>
+                    </form>
+                @endif
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.seznam', $udalost) }}">Export seznam</a>
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.discipliny', $udalost) }}">Export disciplíny</a>
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.emaily', $udalost) }}">Export e-maily</a>
@@ -52,6 +65,7 @@
                         <div @class([
                             'p-4 sm:p-5',
                             'bg-red-50/70' => $p->smazana,
+                            'ring-1 ring-amber-300 bg-amber-50/70' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
                         ])>
                             <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div>
