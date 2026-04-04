@@ -75,6 +75,52 @@ class ClenstviCmtController extends Controller
         return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-deleted');
     }
 
+    public function renew(ClenstviCmt $clenstviCmt): RedirectResponse
+    {
+        $this->abortIfNotMine($clenstviCmt);
+
+        $newYear = (int) $clenstviCmt->rok + 1;
+        $exists = ClenstviCmt::query()
+            ->where('osoba_id', $clenstviCmt->osoba_id)
+            ->where('rok', $newYear)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-renew-exists');
+        }
+
+        $clenstviCmt->update(['aktivni' => false]);
+        ClenstviCmt::query()->create([
+            'osoba_id' => $clenstviCmt->osoba_id,
+            'organizace_id' => $clenstviCmt->organizace_id,
+            'evidencni_cislo' => $clenstviCmt->evidencni_cislo,
+            'titul' => $clenstviCmt->titul,
+            'bydliste' => $clenstviCmt->bydliste,
+            'telefon' => $clenstviCmt->telefon,
+            'email' => $clenstviCmt->email,
+            'nazev_organizace' => $clenstviCmt->nazev_organizace,
+            'ico' => $clenstviCmt->ico,
+            'typ_clenstvi' => $clenstviCmt->typ_clenstvi,
+            'rok' => $newYear,
+            'cena' => $clenstviCmt->cena,
+            'aktivni' => true,
+            'zastupce_titul' => $clenstviCmt->zastupce_titul,
+            'zastupce_jmeno' => $clenstviCmt->zastupce_jmeno,
+            'zastupce_prijmeni' => $clenstviCmt->zastupce_prijmeni,
+            'zastupce_rok_narozeni' => $clenstviCmt->zastupce_rok_narozeni,
+            'zastupce_vztah' => $clenstviCmt->zastupce_vztah,
+            'zastupce_bydliste' => $clenstviCmt->zastupce_bydliste,
+            'zastupce_telefon' => $clenstviCmt->zastupce_telefon,
+            'zastupce_email' => $clenstviCmt->zastupce_email,
+            'sken_prihlaska' => $clenstviCmt->sken_prihlaska,
+            'souhlas_gdpr' => $clenstviCmt->souhlas_gdpr,
+            'souhlas_email' => $clenstviCmt->souhlas_email,
+            'souhlas_zverejneni' => $clenstviCmt->souhlas_zverejneni,
+        ]);
+
+        return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-renewed');
+    }
+
     /**
      * @return array<string, mixed>
      */

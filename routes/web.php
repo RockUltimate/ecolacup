@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/clenstvi-cmt', [ClenstviCmtController::class, 'store'])->name('clenstvi-cmt.store');
     Route::get('/clenstvi-cmt/{clenstviCmt}/edit', [ClenstviCmtController::class, 'edit'])->name('clenstvi-cmt.edit');
     Route::put('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'update'])->name('clenstvi-cmt.update');
+    Route::post('/clenstvi-cmt/{clenstviCmt}/prodlouzit', [ClenstviCmtController::class, 'renew'])->name('clenstvi-cmt.renew');
     Route::delete('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'destroy'])->name('clenstvi-cmt.destroy');
 
     Route::get('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'create'])->name('prihlasky.create');

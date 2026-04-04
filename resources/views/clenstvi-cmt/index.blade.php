@@ -11,45 +11,51 @@
     </x-slot>
     <div class="py-12">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-            @if (session('status'))
-                <div class="mb-4 p-4 rounded-md bg-green-50 text-green-700 text-sm">
-                    @if (session('status') === 'clenstvi-created') Členství bylo vytvořeno. @endif
-                    @if (session('status') === 'clenstvi-updated') Členství bylo upraveno. @endif
-                    @if (session('status') === 'clenstvi-deleted') Členství bylo smazáno. @endif
-                </div>
-            @endif
-
-            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-                <div class="divide-y divide-gray-200">
-                    @forelse($clenstvi as $item)
-                        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <x-flash-message />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @forelse($clenstvi as $item)
+                    @php
+                        $membershipNo = str_pad((string) ($item->evidencni_cislo ?: $item->id), 4, '0', STR_PAD_LEFT);
+                        $nextYear = (int) $item->rok + 1;
+                    @endphp
+                    <article class="panel p-5 space-y-4">
+                        <div class="flex items-start justify-between gap-3">
                             <div>
-                                <p class="font-medium text-gray-900">
-                                    {{ $item->osoba?->prijmeni }} {{ $item->osoba?->jmeno }} • {{ $item->typ_clenstvi }}
-                                </p>
-                                <p class="text-sm text-gray-600">Rok: {{ $item->rok }} • Cena: {{ number_format((float)$item->cena, 2, ',', ' ') }} Kč</p>
-                                <p class="text-sm text-gray-600">
-                                    Status:
-                                    @if($item->aktivni)
-                                        <span class="text-green-700">Aktivní</span>
-                                    @else
-                                        <span class="text-gray-500">Neaktivní</span>
-                                    @endif
-                                </p>
+                                <p class="text-xs text-gray-500">Členství #{{ $membershipNo }}</p>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ $item->osoba?->prijmeni }} {{ $item->osoba?->jmeno }}</h3>
+                                <p class="text-sm text-gray-600">{{ $item->typ_clenstvi }}</p>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <a href="{{ route('clenstvi-cmt.edit', $item) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
-                                <form method="POST" action="{{ route('clenstvi-cmt.destroy', $item) }}" onsubmit="return confirm('Opravdu smazat členství?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">Smazat</button>
-                                </form>
-                            </div>
+                            <span @class([
+                                'inline-flex rounded-full px-2.5 py-1 text-xs font-semibold',
+                                'bg-emerald-100 text-emerald-700' => $item->aktivni,
+                                'bg-amber-100 text-amber-700' => ! $item->aktivni,
+                            ])>
+                                {{ $item->aktivni ? 'AKTIVNÍ' : 'NEAKTIVNÍ' }}
+                            </span>
                         </div>
-                    @empty
-                        <div class="p-5 text-sm text-gray-600">Zatím nemáte žádné CMT členství.</div>
-                    @endforelse
-                </div>
+                        <div class="text-sm text-gray-700 space-y-1">
+                            <p>Rok: <span class="font-medium">{{ $item->rok }}</span></p>
+                            <p>Členský poplatek: <span class="font-medium">{{ number_format((float)$item->cena, 2, ',', ' ') }} Kč</span></p>
+                            @if($item->evidencni_cislo)
+                                <p>Evidenční číslo: <span class="font-medium">{{ $item->evidencni_cislo }}</span></p>
+                            @endif
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <a href="{{ route('clenstvi-cmt.edit', $item) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
+                            <form method="POST" action="{{ route('clenstvi-cmt.renew', $item) }}">
+                                @csrf
+                                <button type="submit" class="text-sm text-emerald-700 hover:text-emerald-900 underline">Prodloužit na rok {{ $nextYear }}</button>
+                            </form>
+                            <form method="POST" action="{{ route('clenstvi-cmt.destroy', $item) }}" onsubmit="return confirm('Opravdu smazat členství?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">Smazat</button>
+                            </form>
+                        </div>
+                    </article>
+                @empty
+                    <div class="panel p-5 text-sm text-gray-600">Zatím nemáte žádné CMT členství.</div>
+                @endforelse
             </div>
         </div>
     </div>
