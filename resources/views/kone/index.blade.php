@@ -12,24 +12,28 @@
 
     <div class="py-12">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-            @if (session('status'))
-                <div class="mb-4 p-4 rounded-md bg-green-50 text-green-700 text-sm">
-                    @if (session('status') === 'kun-created') Kůň byl vytvořen. @endif
-                    @if (session('status') === 'kun-updated') Kůň byl upraven. @endif
-                    @if (session('status') === 'kun-deleted') Kůň byl smazán. @endif
-                </div>
-            @endif
+            <x-flash-message />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @forelse ($kone as $kun)
                     @php($ockovani = $kun->ockovaniOk())
-                    <div class="bg-white shadow sm:rounded-lg p-5">
+                    @php($passportComplete = filled($kun->cislo_prukazu) && filled($kun->cislo_hospodarstvi) && filled($kun->majitel_jmeno_adresa))
+                    <div class="panel p-5">
                         <div class="flex items-start justify-between gap-4">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $kun->jmeno }}</h3>
                                 <p class="text-sm text-gray-600">
                                     {{ $kun->plemeno_kod ?: 'Bez plemene' }} • {{ $kun->rok_narozeni }} • {{ $kun->staj }}
                                 </p>
+                                <div class="mt-2">
+                                    <span @class([
+                                        'inline-flex rounded-full px-2.5 py-1 text-xs font-semibold',
+                                        'bg-emerald-100 text-emerald-700' => $passportComplete,
+                                        'bg-amber-100 text-amber-700' => ! $passportComplete,
+                                    ])>
+                                        {{ $passportComplete ? 'Průkaz kompletní' : 'Průkaz nekompletní' }}
+                                    </span>
+                                </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <a href="{{ route('kone.edit', $kun) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
@@ -51,12 +55,15 @@
                                     'bg-red-100 text-red-700' => $state === 'missing',
                                 ])>
                                     {{ $label }}: {{ $state === 'ok' ? 'OK' : ($state === 'expired' ? 'Po termínu' : 'Chybí') }}
+                                    @if($kun->{$field})
+                                        ({{ $kun->{$field}->format('d.m.Y') }})
+                                    @endif
                                 </span>
                             @endforeach
                         </div>
                     </div>
                 @empty
-                    <div class="bg-white shadow sm:rounded-lg p-6 text-sm text-gray-600">
+                    <div class="panel p-6 text-sm text-gray-600">
                         Zatím nemáte žádné koně. Přidejte první záznam.
                     </div>
                 @endforelse

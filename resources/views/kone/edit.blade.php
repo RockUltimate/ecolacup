@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
+            <div class="panel p-6">
                 @include('kone._form', ['kun' => $kun, 'plemena' => $plemena])
             </div>
         </div>
