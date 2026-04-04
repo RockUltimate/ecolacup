@@ -12,6 +12,11 @@ class Kun extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * @var string
+     */
+    protected $table = 'kone';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

@@ -12,6 +12,11 @@ class Osoba extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * @var string
+     */
+    protected $table = 'osoby';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

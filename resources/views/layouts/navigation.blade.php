@@ -40,6 +40,11 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        @if(Auth::user()->is_admin)
+                            <x-dropdown-link :href="route('admin.udalosti.index')">
+                                Admin události
+                            </x-dropdown-link>
+                        @endif
                         <x-dropdown-link :href="route('ucet.edit')">
                             Můj účet
                         </x-dropdown-link>
@@ -92,6 +97,11 @@
                 <x-responsive-nav-link :href="route('kone.index')" :active="request()->routeIs('kone.*')">
                     Koně
                 </x-responsive-nav-link>
+                @if(Auth::user()->is_admin)
+                    <x-responsive-nav-link :href="route('admin.udalosti.index')" :active="request()->routeIs('admin.udalosti.*')">
+                        Admin události
+                    </x-responsive-nav-link>
+                @endif
 
                 <x-responsive-nav-link :href="route('ucet.edit')">
                     Můj účet
