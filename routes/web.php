@@ -85,6 +85,7 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::delete('/udalosti/{udalost}/ustajeni/{ustajeni}', [AdminUdalostController::class, 'destroyUstajeni'])->name('udalosti.ustajeni.destroy');
 
     Route::get('/udalosti/{udalost}/prihlasky', [ReportController::class, 'prihlasky'])->name('reports.prihlasky');
+    Route::put('/udalosti/{udalost}/prihlasky/{prihlaska}/start-cislo', [ReportController::class, 'updateStartCislo'])->name('reports.start-cislo.update');
     Route::get('/udalosti/{udalost}/prihlasky/smazane', [ReportController::class, 'smazane'])->name('reports.smazane');
     Route::get('/udalosti/{udalost}/startky', [ReportController::class, 'startky'])->name('reports.startky');
     Route::get('/udalosti/{udalost}/ubytovani', [ReportController::class, 'ubytovani'])->name('reports.ubytovani');

@@ -9,6 +9,7 @@
         'clenstvi-deleted' => 'Členství bylo smazáno.',
         'clenstvi-renewed' => 'Členství bylo prodlouženo na další rok.',
         'clenstvi-renew-exists' => 'Členství pro další rok už existuje.',
+        'start-cislo-updated' => 'Startovní číslo bylo uloženo.',
         'prihlaska-created' => 'Přihláška byla vytvořena.',
         'prihlaska-updated' => 'Přihláška byla upravena.',
         'prihlaska-deleted' => 'Přihláška byla smazána.',

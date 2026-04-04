@@ -53,17 +53,32 @@
                             'p-4 sm:p-5',
                             'bg-red-50/70' => $p->smazana,
                         ])>
-                            <p class="font-medium text-gray-900">
-                                #{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}
-                                @if($p->smazana)
-                                    <span class="ms-2 inline-flex rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">SMAZANÁ</span>
-                                @endif
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                Kůň: {{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif •
-                                Cena: {{ number_format((float)$p->cena_celkem, 2, ',', ' ') }} Kč •
-                                E-mail: {{ $p->user?->email }}
-                            </p>
+                            <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                                <div>
+                                    <p class="font-medium text-gray-900">
+                                        #{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}
+                                        @if($p->smazana)
+                                            <span class="ms-2 inline-flex rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">SMAZANÁ</span>
+                                        @endif
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Kůň: {{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif •
+                                        Cena: {{ number_format((float)$p->cena_celkem, 2, ',', ' ') }} Kč •
+                                        E-mail: {{ $p->user?->email }}
+                                    </p>
+                                </div>
+                                <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex items-end gap-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="q" value="{{ $filters['q'] }}">
+                                    <input type="hidden" name="stav" value="{{ $filters['stav'] }}">
+                                    <div>
+                                        <label for="start_cislo_{{ $p->id }}" class="block text-xs text-gray-600">Start. číslo</label>
+                                        <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="mt-1 w-24 border-gray-300 rounded-md shadow-sm text-sm" value="{{ $p->start_cislo }}">
+                                    </div>
+                                    <button type="submit" class="inline-flex items-center px-3 py-2 text-xs font-semibold uppercase rounded-md bg-indigo-600 text-white hover:bg-indigo-500">Uložit</button>
+                                </form>
+                            </div>
                         </div>
                     @empty
                         <div class="p-5 text-sm text-gray-600">Žádné záznamy.</div>
