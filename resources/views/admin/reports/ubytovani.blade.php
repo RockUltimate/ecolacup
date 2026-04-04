@@ -2,6 +2,7 @@
     @php
         $ubytovaniFilters = $ubytovaniFilters ?? ['typ' => 'all', 'q' => ''];
         $typeLabels = ['ustajeni' => 'Ustájení', 'ubytovani' => 'Ubytování', 'strava' => 'Strava', 'ostatni' => 'Ostatní'];
+        $hasItems = collect($ustajeniByTyp)->flatten(1)->isNotEmpty();
     @endphp
     <x-slot name="header">
         <div class="flex items-center justify-between">
@@ -36,7 +37,7 @@
             <div class="panel p-3 text-sm">
                 <a href="{{ route('admin.reports.export.ubytovani', $udalost) }}" class="text-indigo-600 underline">Export ustájení/ubytování</a>
             </div>
-            @forelse($typeLabels as $type => $label)
+            @foreach($typeLabels as $type => $label)
                 @if($ubytovaniFilters['typ'] !== 'all' && $ubytovaniFilters['typ'] !== $type)
                     @continue
                 @endif
@@ -59,9 +60,13 @@
                         @endforelse
                     </div>
                 </div>
-            @empty
+            @endforeach
+            @if(! $hasItems)
                 <div class="bg-white shadow sm:rounded-lg p-4 text-sm text-gray-600">Pro zvolený filtr nebyly nalezeny žádné položky.</div>
-            @endforelse
+            @endif
+            <div>
+                {{ $optionsPagination->links() }}
+            </div>
         </div>
     </div>
 </x-app-layout>

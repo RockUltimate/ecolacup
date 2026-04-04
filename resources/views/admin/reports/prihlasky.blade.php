@@ -99,6 +99,9 @@
                     @endforelse
                 </div>
             </div>
+            <div>
+                {{ $prihlasky->links() }}
+            </div>
         </div>
     </div>
 </x-app-layout>

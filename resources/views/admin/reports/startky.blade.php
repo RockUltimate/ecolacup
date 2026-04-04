@@ -53,6 +53,9 @@
             @empty
                 <div class="bg-white shadow sm:rounded-lg p-4 text-sm text-gray-600">Pro zvolený filtr nebyly nalezeny žádné startky.</div>
             @endforelse
+            <div>
+                {{ $moznostiSeStartkami->links() }}
+            </div>
         </div>
     </div>
 </x-app-layout>
