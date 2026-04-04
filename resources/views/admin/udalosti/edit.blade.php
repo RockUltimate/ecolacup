@@ -2,16 +2,13 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Upravit událost</h2>
-            <div class="text-sm flex items-center gap-3">
-                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" class="text-indigo-600 underline">Přihlášky</a>
-                <a href="{{ route('admin.reports.startky', $udalost) }}" class="text-indigo-600 underline">Startky</a>
-                <a href="{{ route('admin.reports.ubytovani', $udalost) }}" class="text-indigo-600 underline">Ubytování</a>
-            </div>
+            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'settings'])
             @if (session('status'))
                 <div class="p-4 rounded-md bg-green-50 text-green-700 text-sm">
                     @if (session('status') === 'udalost-updated') Událost byla upravena. @endif

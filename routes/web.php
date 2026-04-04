@@ -73,6 +73,7 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::get('/udalosti', [AdminUdalostController::class, 'index'])->name('udalosti.index');
     Route::get('/udalosti/nova', [AdminUdalostController::class, 'create'])->name('udalosti.create');
     Route::post('/udalosti', [AdminUdalostController::class, 'store'])->name('udalosti.store');
+    Route::get('/udalosti/{udalost}', [AdminUdalostController::class, 'show'])->name('udalosti.show');
     Route::get('/udalosti/{udalost}/edit', [AdminUdalostController::class, 'edit'])->name('udalosti.edit');
     Route::put('/udalosti/{udalost}', [AdminUdalostController::class, 'update'])->name('udalosti.update');
     Route::delete('/udalosti/{udalost}', [AdminUdalostController::class, 'destroy'])->name('udalosti.destroy');

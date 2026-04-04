@@ -2,15 +2,16 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Startky • {{ $udalost->nazev }}</h2>
-            <div class="text-sm flex items-center gap-2">
-                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" class="text-indigo-600 underline">Přihlášky</a>
-                <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="text-indigo-600 underline">Export startky</a>
-                <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="text-indigo-600 underline">Export počty</a>
-            </div>
+            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
         </div>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'startky'])
+            <div class="panel p-3 text-sm flex flex-wrap gap-3">
+                <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="text-indigo-600 underline">Export startky</a>
+                <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="text-indigo-600 underline">Export počty</a>
+            </div>
             @forelse($moznostiSeStartkami as $block)
                 <div class="bg-white shadow sm:rounded-lg overflow-hidden">
                     <div class="p-4 border-b border-gray-200 font-semibold text-gray-900">{{ $block['moznost']->nazev }}</div>

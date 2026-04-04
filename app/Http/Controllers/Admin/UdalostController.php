@@ -24,6 +24,28 @@ class UdalostController extends Controller
         return view('admin.udalosti.create');
     }
 
+    public function show(Udalost $udalost): View
+    {
+        $udalost->loadCount([
+            'prihlasky as active_prihlasky_count' => fn ($query) => $query->where('smazana', false),
+            'prihlasky as deleted_prihlasky_count' => fn ($query) => $query->where('smazana', true),
+            'moznosti',
+            'ustajeniMoznosti',
+        ]);
+
+        $recentRegistrations = $udalost->prihlasky()
+            ->where('smazana', false)
+            ->with(['osoba', 'kun'])
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        return view('admin.udalosti.show', [
+            'udalost' => $udalost,
+            'recentRegistrations' => $recentRegistrations,
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([

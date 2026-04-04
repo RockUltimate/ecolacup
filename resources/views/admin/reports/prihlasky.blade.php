@@ -4,16 +4,16 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Admin • {{ $showDeleted ?? false ? 'Smazané přihlášky' : 'Přihlášky' }} • {{ $udalost->nazev }}
             </h2>
-            <div class="flex items-center gap-2 text-sm">
-                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" class="text-indigo-600 underline">Aktivní</a>
-                <a href="{{ route('admin.reports.smazane', $udalost) }}" class="text-indigo-600 underline">Smazané</a>
-                <a href="{{ route('admin.reports.startky', $udalost) }}" class="text-indigo-600 underline">Startky</a>
-                <a href="{{ route('admin.reports.ubytovani', $udalost) }}" class="text-indigo-600 underline">Ubytování</a>
-            </div>
+            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
         </div>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'prihlasky'])
+            <div class="panel p-3 text-sm flex flex-wrap gap-3">
+                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => !($showDeleted ?? false), 'text-indigo-600' => ($showDeleted ?? false)])>Aktivní</a>
+                <a href="{{ route('admin.reports.smazane', $udalost) }}" @class(['underline', 'font-semibold text-[#3d6b4f]' => ($showDeleted ?? false), 'text-indigo-600' => !($showDeleted ?? false)])>Smazané</a>
+            </div>
             <div class="bg-white shadow sm:rounded-lg p-4 text-sm flex flex-wrap gap-3">
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.seznam', $udalost) }}">Export seznam</a>
                 <a class="text-indigo-600 underline" href="{{ route('admin.reports.export.discipliny', $udalost) }}">Export disciplíny</a>

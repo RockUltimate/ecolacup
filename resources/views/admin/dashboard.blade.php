@@ -36,7 +36,7 @@
                     </div>
                     <div class="space-y-3">
                         @forelse($upcomingEvents as $event)
-                            <div class="rounded-lg border border-gray-200 p-3">
+                            <a href="{{ route('admin.udalosti.show', $event) }}" class="block rounded-lg border border-gray-200 p-3 hover:border-emerald-300 transition">
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
                                         <p class="font-medium text-gray-900">{{ $event->nazev }}</p>
@@ -45,7 +45,7 @@
                                     </div>
                                     <span class="brand-pill">{{ $event->active_registrations_count }} přihlášek</span>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <p class="text-sm text-gray-600">Žádné nadcházející události.</p>
                         @endforelse
