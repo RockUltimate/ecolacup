@@ -25,7 +25,7 @@ class StoreAdminUdalostRequest extends FormRequest
             'kapacita' => ['nullable', 'integer', 'min:1'],
             'aktivni' => ['nullable', 'boolean'],
             'popis' => ['nullable', 'string'],
-            'propozice_pdf' => ['nullable', 'string', 'max:255'],
+            'propozice_pdf_upload' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
         ];
     }
 }

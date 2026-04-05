@@ -11,6 +11,7 @@ use App\Models\Udalost;
 use App\Models\UdalostMoznost;
 use App\Models\UdalostUstajeni;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class UdalostController extends Controller
@@ -52,8 +53,13 @@ class UdalostController extends Controller
     public function store(StoreAdminUdalostRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
         $validated['aktivni'] = $request->boolean('aktivni', true);
+        unset($validated['propozice_pdf_upload']);
+
+        if ($request->hasFile('propozice_pdf_upload')) {
+            $validated['propozice_pdf'] = $request->file('propozice_pdf_upload')->store('propozice', 'public');
+        }
+
         Udalost::query()->create($validated);
 
         return redirect()->route('admin.udalosti.index')->with('status', 'udalost-created');
@@ -71,8 +77,17 @@ class UdalostController extends Controller
     public function update(UpdateAdminUdalostRequest $request, Udalost $udalost): RedirectResponse
     {
         $validated = $request->validated();
-
         $validated['aktivni'] = $request->boolean('aktivni', false);
+        unset($validated['propozice_pdf_upload']);
+
+        if ($request->hasFile('propozice_pdf_upload')) {
+            $storedPath = $request->file('propozice_pdf_upload')->store('propozice', 'public');
+            if ($udalost->propozice_pdf && $udalost->propozice_pdf !== $storedPath) {
+                Storage::disk('public')->delete($udalost->propozice_pdf);
+            }
+            $validated['propozice_pdf'] = $storedPath;
+        }
+
         $udalost->update($validated);
 
         return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'udalost-updated');

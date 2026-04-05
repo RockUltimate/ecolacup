@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\UpdateAdminClenstviRequest;
 use App\Models\ClenstviCmt;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ClenstviAdminController extends Controller
@@ -61,19 +62,27 @@ class ClenstviAdminController extends Controller
     public function update(UpdateAdminClenstviRequest $request, ClenstviCmt $clenstviCmt): RedirectResponse
     {
         $validated = $request->validated();
-
-        $clenstviCmt->update([
+        $payload = [
             'evidencni_cislo' => $validated['evidencni_cislo'] ?? null,
             'rok' => $validated['rok'],
             'cena' => $validated['cena'],
             'email' => $validated['email'] ?? null,
             'telefon' => $validated['telefon'] ?? null,
-            'sken_prihlaska' => $validated['sken_prihlaska'] ?? null,
             'aktivni' => $request->boolean('aktivni'),
             'souhlas_gdpr' => $request->boolean('souhlas_gdpr'),
             'souhlas_email' => $request->boolean('souhlas_email'),
             'souhlas_zverejneni' => $request->boolean('souhlas_zverejneni'),
-        ]);
+        ];
+
+        if ($request->hasFile('sken_prihlaska_upload')) {
+            $storedPath = $request->file('sken_prihlaska_upload')->store('clenstvi', 'public');
+            if ($clenstviCmt->sken_prihlaska && $clenstviCmt->sken_prihlaska !== $storedPath) {
+                Storage::disk('public')->delete($clenstviCmt->sken_prihlaska);
+            }
+            $payload['sken_prihlaska'] = $storedPath;
+        }
+
+        $clenstviCmt->update($payload);
 
         return redirect()->route('admin.clenstvi.edit', $clenstviCmt)->with('status', 'admin-clenstvi-updated');
     }

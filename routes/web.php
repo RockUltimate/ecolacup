@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/ajax/osoba/{osoba}/polozky', [PrihlaskaController::class, 'ajaxOsobaPolozky']);
     Route::get('/ajax/osoba/{osoba}/clenstvi-img', [PrihlaskaController::class, 'ajaxClenstviStatus']);
+    Route::get('/ajax/osoba/{osoba}/clenstvi-data', [ClenstviCmtController::class, 'ajaxOsobaClenstviData']);
     Route::get('/ajax/kun/{kun}/ockovani', [PrihlaskaController::class, 'ajaxKunOckovani']);
     Route::get('/ajax/udalost/{udalost}/admin-poplatek', [PrihlaskaController::class, 'ajaxAdminPoplatek']);
 });

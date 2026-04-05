@@ -10,7 +10,7 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-4">
             <x-flash-message />
-            <form method="POST" action="{{ route('admin.clenstvi.update', $membership) }}" class="panel p-5 space-y-4">
+            <form method="POST" action="{{ route('admin.clenstvi.update', $membership) }}" class="panel p-5 space-y-4" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -43,9 +43,23 @@
                     </div>
                 </div>
                 <div>
-                    <x-input-label for="sken_prihlaska" :value="'Cesta ke skenu přihlášky'" />
-                    <x-text-input id="sken_prihlaska" name="sken_prihlaska" type="text" class="mt-1 block w-full" :value="old('sken_prihlaska', $membership->sken_prihlaska)" />
-                    <x-input-error :messages="$errors->get('sken_prihlaska')" class="mt-2" />
+                    <x-input-label for="sken_prihlaska_upload" :value="'Nahrát sken přihlášky (jpg/png/webp/pdf)'" />
+                    <input
+                        id="sken_prihlaska_upload"
+                        name="sken_prihlaska_upload"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp,.pdf"
+                        class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
+                    >
+                    <x-input-error :messages="$errors->get('sken_prihlaska_upload')" class="mt-2" />
+                    @if($membership->sken_prihlaska)
+                        <p class="mt-2 text-sm text-gray-600">
+                            Aktuální soubor:
+                            <a href="{{ asset('storage/'.$membership->sken_prihlaska) }}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 underline">
+                                zobrazit sken
+                            </a>
+                        </p>
+                    @endif
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <label for="aktivni" class="inline-flex items-center">

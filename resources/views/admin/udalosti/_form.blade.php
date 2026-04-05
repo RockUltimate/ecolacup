@@ -2,7 +2,7 @@
     $isEdit = isset($udalost);
 @endphp
 
-<form method="POST" action="{{ $isEdit ? route('admin.udalosti.update', $udalost) : route('admin.udalosti.store') }}" class="space-y-6">
+<form method="POST" action="{{ $isEdit ? route('admin.udalosti.update', $udalost) : route('admin.udalosti.store') }}" class="space-y-6" enctype="multipart/form-data">
     @csrf
     @if($isEdit)
         @method('PUT')
@@ -45,15 +45,30 @@
             <x-input-error :messages="$errors->get('kapacita')" class="mt-2" />
         </div>
         <div>
-            <x-input-label for="propozice_pdf" :value="'Cesta k propozicím (volitelně)'" />
-            <x-text-input id="propozice_pdf" name="propozice_pdf" type="text" class="mt-1 block w-full" :value="old('propozice_pdf', $udalost->propozice_pdf ?? '')" />
-            <x-input-error :messages="$errors->get('propozice_pdf')" class="mt-2" />
+            <x-input-label for="propozice_pdf_upload" :value="'Nahrát propozice (PDF, volitelně)'" />
+            <input
+                id="propozice_pdf_upload"
+                name="propozice_pdf_upload"
+                type="file"
+                accept=".pdf"
+                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
+            >
+            <x-input-error :messages="$errors->get('propozice_pdf_upload')" class="mt-2" />
+            @if($isEdit && $udalost->propozice_pdf)
+                <p class="mt-2 text-sm text-gray-600">
+                    Aktuální soubor:
+                    <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 underline">
+                        otevřít propozice
+                    </a>
+                </p>
+            @endif
         </div>
     </div>
 
     <div>
-        <x-input-label for="popis" :value="'Popis'" />
-        <textarea id="popis" name="popis" rows="4" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('popis', $udalost->popis ?? '') }}</textarea>
+        <x-input-label for="popis_editor" :value="'Popis'" />
+        <input id="popis" name="popis" type="hidden" value="{{ old('popis', $udalost->popis ?? '') }}">
+        <div id="popis_editor" class="mt-1 rounded-md border border-gray-300 bg-white min-h-[220px]"></div>
         <x-input-error :messages="$errors->get('popis')" class="mt-2" />
     </div>
 
@@ -69,3 +84,41 @@
         <a href="{{ route('admin.udalosti.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na seznam</a>
     </div>
 </form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hiddenInput = document.getElementById('popis');
+        const editorElement = document.getElementById('popis_editor');
+        if (!hiddenInput || !editorElement || editorElement.dataset.quillInitialized === '1' || typeof Quill === 'undefined') {
+            return;
+        }
+
+        const quill = new Quill(editorElement, {
+            theme: 'snow',
+            placeholder: 'Zadejte popis události…',
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link'],
+                    ['clean'],
+                ],
+            },
+        });
+
+        quill.root.innerHTML = hiddenInput.value || '';
+        quill.on('text-change', function () {
+            hiddenInput.value = quill.root.innerHTML;
+        });
+        if (hiddenInput.form) {
+            hiddenInput.form.addEventListener('submit', function () {
+                hiddenInput.value = quill.root.innerHTML;
+            });
+        }
+
+        editorElement.dataset.quillInitialized = '1';
+    });
+</script>

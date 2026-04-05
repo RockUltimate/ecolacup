@@ -6,7 +6,10 @@ use App\Http\Requests\StoreClenstviCmtRequest;
 use App\Http\Requests\UpdateClenstviCmtRequest;
 use App\Models\ClenstviCmt;
 use App\Models\Osoba;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ClenstviCmtController extends Controller
@@ -37,7 +40,17 @@ class ClenstviCmtController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        ClenstviCmt::query()->create($this->payload($request, $osoba));
+        $payload = $this->payload($request, $osoba);
+        $payload['cena'] = $this->resolveMembershipPrice(
+            (string) $payload['typ_clenstvi'],
+            (int) $payload['rok'],
+            (float) $payload['cena']
+        );
+        if ($this->isNewMember($osoba)) {
+            $payload['cena'] += $this->newMemberAdminFee();
+        }
+
+        ClenstviCmt::query()->create($payload);
 
         return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-created');
     }
@@ -61,7 +74,13 @@ class ClenstviCmtController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        $clenstviCmt->update($this->payload($request, $osoba));
+        $payload = $this->payload($request, $osoba, $clenstviCmt);
+        $payload['cena'] = $this->resolveMembershipPrice(
+            (string) $payload['typ_clenstvi'],
+            (int) $payload['rok'],
+            (float) $payload['cena']
+        );
+        $clenstviCmt->update($payload);
 
         return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-updated');
     }
@@ -89,6 +108,12 @@ class ClenstviCmtController extends Controller
             return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-renew-exists');
         }
 
+        $renewedPrice = $this->resolveMembershipPrice(
+            (string) $clenstviCmt->typ_clenstvi,
+            $newYear,
+            (float) $clenstviCmt->cena
+        );
+
         $clenstviCmt->update(['aktivni' => false]);
         ClenstviCmt::query()->create([
             'osoba_id' => $clenstviCmt->osoba_id,
@@ -102,7 +127,7 @@ class ClenstviCmtController extends Controller
             'ico' => $clenstviCmt->ico,
             'typ_clenstvi' => $clenstviCmt->typ_clenstvi,
             'rok' => $newYear,
-            'cena' => $clenstviCmt->cena,
+            'cena' => $renewedPrice,
             'aktivni' => true,
             'zastupce_titul' => $clenstviCmt->zastupce_titul,
             'zastupce_jmeno' => $clenstviCmt->zastupce_jmeno,
@@ -121,10 +146,47 @@ class ClenstviCmtController extends Controller
         return redirect()->route('clenstvi-cmt.index')->with('status', 'clenstvi-renewed');
     }
 
+    public function ajaxOsobaClenstviData(Osoba $osoba, Request $request): JsonResponse
+    {
+        if ((int) $osoba->user_id !== (int) $request->user()->id) {
+            abort(403);
+        }
+
+        $latestMembership = $osoba->clenstviCmt()->orderByDesc('rok')->latest('id')->first();
+        $isNewMember = ! $osoba->clenstviCmt()->exists();
+
+        return response()->json([
+            'osoba' => [
+                'id' => $osoba->id,
+                'jmeno' => $osoba->jmeno,
+                'prijmeni' => $osoba->prijmeni,
+                'datum_narozeni' => optional($osoba->datum_narozeni)->format('d.m.Y'),
+                'staj' => $osoba->staj,
+            ],
+            'kontakt' => [
+                'telefon' => $latestMembership?->telefon ?: $request->user()->telefon,
+                'email' => $latestMembership?->email ?: $request->user()->email,
+                'bydliste' => $latestMembership?->bydliste,
+            ],
+            'posledni_clenstvi' => $latestMembership ? [
+                'typ_clenstvi' => $latestMembership->typ_clenstvi,
+                'rok' => $latestMembership->rok,
+                'cena' => (float) $latestMembership->cena,
+                'evidencni_cislo' => $latestMembership->evidencni_cislo,
+            ] : null,
+            'is_new_member' => $isNewMember,
+            'new_member_admin_fee' => $this->newMemberAdminFee(),
+        ]);
+    }
+
     /**
      * @return array<string, mixed>
      */
-    private function payload(StoreClenstviCmtRequest|UpdateClenstviCmtRequest $request, Osoba $osoba): array
+    private function payload(
+        StoreClenstviCmtRequest|UpdateClenstviCmtRequest $request,
+        Osoba $osoba,
+        ?ClenstviCmt $existing = null
+    ): array
     {
         $validated = $request->validated();
         $validated['osoba_id'] = $osoba->id;
@@ -133,6 +195,17 @@ class ClenstviCmtController extends Controller
         $validated['souhlas_gdpr'] = (bool) ($validated['souhlas_gdpr'] ?? false);
         $validated['souhlas_email'] = (bool) ($validated['souhlas_email'] ?? false);
         $validated['souhlas_zverejneni'] = (bool) ($validated['souhlas_zverejneni'] ?? false);
+        unset($validated['sken_prihlaska_upload']);
+
+        if ($request->hasFile('sken_prihlaska_upload')) {
+            $storedPath = $request->file('sken_prihlaska_upload')->store('clenstvi', 'public');
+            if ($existing?->sken_prihlaska && $existing->sken_prihlaska !== $storedPath) {
+                Storage::disk('public')->delete($existing->sken_prihlaska);
+            }
+            $validated['sken_prihlaska'] = $storedPath;
+        } elseif ($existing) {
+            $validated['sken_prihlaska'] = $existing->sken_prihlaska;
+        }
 
         return $validated;
     }
@@ -142,5 +215,31 @@ class ClenstviCmtController extends Controller
         if ((int) $clenstvi->osoba()->value('user_id') !== (int) auth()->id()) {
             abort(403);
         }
+    }
+
+    private function resolveMembershipPrice(string $membershipType, int $year, float $fallback): float
+    {
+        $yearlyPrices = (array) config('clenstvi_cmt.yearly_prices.'.$year, []);
+        if (array_key_exists($membershipType, $yearlyPrices)) {
+            return (float) $yearlyPrices[$membershipType];
+        }
+
+        $membershipTypes = (array) config('clenstvi_cmt.membership_types', []);
+        $defaultPrice = $membershipTypes[$membershipType]['default_price'] ?? null;
+        if ($defaultPrice !== null) {
+            return (float) $defaultPrice;
+        }
+
+        return $fallback;
+    }
+
+    private function isNewMember(Osoba $osoba): bool
+    {
+        return ! $osoba->clenstviCmt()->exists();
+    }
+
+    private function newMemberAdminFee(): float
+    {
+        return (float) config('clenstvi_cmt.new_member_admin_fee', 100);
     }
 }

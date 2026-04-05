@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClenstviCmtRequest extends FormRequest
 {
@@ -16,9 +17,10 @@ class StoreClenstviCmtRequest extends FormRequest
      */
     public function rules(): array
     {
+        $membershipTypes = array_keys((array) config('clenstvi_cmt.membership_types', []));
         return [
             'osoba_id' => ['required', 'integer', 'exists:osoby,id'],
-            'typ_clenstvi' => ['required', 'string', 'max:255'],
+            'typ_clenstvi' => ['required', Rule::in($membershipTypes)],
             'rok' => ['required', 'integer', 'min:2000', 'max:2100'],
             'cena' => ['required', 'numeric', 'min:0'],
             'organizace_id' => ['nullable', 'integer'],
@@ -38,7 +40,7 @@ class StoreClenstviCmtRequest extends FormRequest
             'zastupce_bydliste' => ['nullable', 'string', 'max:255'],
             'zastupce_telefon' => ['nullable', 'string', 'max:50'],
             'zastupce_email' => ['nullable', 'email', 'max:255'],
-            'sken_prihlaska' => ['nullable', 'string', 'max:255'],
+            'sken_prihlaska_upload' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:8192'],
             'souhlas_gdpr' => ['nullable', 'boolean'],
             'souhlas_email' => ['nullable', 'boolean'],
             'souhlas_zverejneni' => ['nullable', 'boolean'],

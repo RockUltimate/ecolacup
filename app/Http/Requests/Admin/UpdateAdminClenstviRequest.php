@@ -22,7 +22,7 @@ class UpdateAdminClenstviRequest extends FormRequest
             'cena' => ['required', 'numeric', 'min:0'],
             'email' => ['nullable', 'email', 'max:255'],
             'telefon' => ['nullable', 'string', 'max:50'],
-            'sken_prihlaska' => ['nullable', 'string', 'max:255'],
+            'sken_prihlaska_upload' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:8192'],
             'aktivni' => ['nullable', 'boolean'],
             'souhlas_gdpr' => ['nullable', 'boolean'],
             'souhlas_email' => ['nullable', 'boolean'],
