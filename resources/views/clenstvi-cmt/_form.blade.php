@@ -135,7 +135,7 @@
                 <select
                     id="osoba_id"
                     name="osoba_id"
-                    class="mt-1 block w-full border-outline-variant dark:border-[#43493e] rounded-md shadow-sm"
+                    class="field-shell"
                     x-model="selectedOsobaId"
                     @change="loadOsobaData"
                     required

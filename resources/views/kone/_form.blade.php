@@ -18,7 +18,7 @@
 
             <div>
                 <x-input-label for="plemeno_kod" :value="'Plemeno (kód)'" />
-                <select id="plemeno_kod" name="plemeno_kod" class="mt-1 block w-full border-outline-variant dark:border-[#43493e] focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                <select id="plemeno_kod" name="plemeno_kod" class="field-shell">
                     <option value="">Vyberte plemeno</option>
                     @foreach($plemena as $pleme)
                         <option value="{{ $pleme->kod }}" @selected(old('plemeno_kod', $kun->plemeno_kod ?? '') === $pleme->kod)>
@@ -46,7 +46,7 @@
                 </div>
                 <div>
                     <x-input-label for="pohlavi" :value="'Pohlaví'" />
-                    <select id="pohlavi" name="pohlavi" class="mt-1 block w-full border-outline-variant dark:border-[#43493e] focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                    <select id="pohlavi" name="pohlavi" class="field-shell" required>
                         <option value="">Vyberte</option>
                         <option value="h" @selected(old('pohlavi', $kun->pohlavi ?? '') === 'h')>Hřebec</option>
                         <option value="k" @selected(old('pohlavi', $kun->pohlavi ?? '') === 'k')>Klisna</option>
@@ -102,7 +102,7 @@
 
             <div>
                 <x-input-label for="majitel_jmeno_adresa" :value="'Majitel (jméno + adresa)'" />
-                <textarea id="majitel_jmeno_adresa" name="majitel_jmeno_adresa" rows="4" class="mt-1 block w-full border-outline-variant dark:border-[#43493e] focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('majitel_jmeno_adresa', $kun->majitel_jmeno_adresa ?? '') }}</textarea>
+                <textarea id="majitel_jmeno_adresa" name="majitel_jmeno_adresa" rows="4" class="field-shell">{{ old('majitel_jmeno_adresa', $kun->majitel_jmeno_adresa ?? '') }}</textarea>
                 <x-input-error :messages="$errors->get('majitel_jmeno_adresa')" class="mt-2" />
             </div>
         </section>

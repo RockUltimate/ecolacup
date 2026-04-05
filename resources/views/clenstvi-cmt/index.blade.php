@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-on-surface dark:text-[#e5e2dd] leading-tight">
                 Členství CMT
             </h2>
-            <a href="{{ route('clenstvi-cmt.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+            <a href="{{ route('clenstvi-cmt.create') }}" class="button-primary">
                 Nové členství
             </a>
         </div>
