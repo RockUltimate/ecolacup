@@ -37,6 +37,7 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
+
         return view('admin.dashboard', [
             'stats' => $stats,
             'upcomingEvents' => $upcomingEvents,

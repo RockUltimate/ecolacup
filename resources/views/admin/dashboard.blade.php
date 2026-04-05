@@ -27,6 +27,10 @@
                     <p class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($stats['registrations']) }}</p>
                 </article>
             </section>
+            <section class="panel p-4 text-sm flex flex-wrap gap-4">
+                <a href="{{ route('admin.users.index') }}" class="text-indigo-600 hover:text-indigo-800 underline">Správa uživatelů</a>
+                <a href="{{ route('admin.clenstvi.index') }}" class="text-indigo-600 hover:text-indigo-800 underline">Správa členství CMT</a>
+            </section>
 
             <section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <article class="panel p-5">

@@ -9,6 +9,9 @@ use App\Http\Controllers\ClenstviCmtController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\ClenstviAdminController;
+use App\Http\Controllers\Admin\StartCislaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UdalostController::class, 'index']);
@@ -99,6 +102,16 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::get('/udalosti/{udalost}/startky/export', [ReportController::class, 'exportStartky'])->name('reports.export.startky');
     Route::get('/udalosti/{udalost}/startky/export/discipliny', [ReportController::class, 'exportDisciplinyPocty'])->name('reports.export.discipliny-pocty');
     Route::get('/udalosti/{udalost}/ubytovani/export', [ReportController::class, 'exportUstajeni'])->name('reports.export.ubytovani');
+
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+
+    Route::get('/clenstvi', [ClenstviAdminController::class, 'index'])->name('clenstvi.index');
+    Route::get('/clenstvi/{clenstviCmt}/edit', [ClenstviAdminController::class, 'edit'])->name('clenstvi.edit');
+    Route::put('/clenstvi/{clenstviCmt}', [ClenstviAdminController::class, 'update'])->name('clenstvi.update');
+
+    Route::get('/start-cisla/{udalost}', [StartCislaController::class, 'show'])->name('start-cisla.show');
 });
 
 require __DIR__.'/auth.php';

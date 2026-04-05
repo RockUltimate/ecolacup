@@ -51,6 +51,7 @@
                     <p class="text-sm text-gray-700">Termín: {{ $udalost->datum_zacatek?->format('d.m.Y') }} @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))– {{ $udalost->datum_konec->format('d.m.Y') }}@endif</p>
                     <p class="text-sm text-gray-700">Uzávěrka přihlášek: {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') }}</p>
                     <p class="text-sm text-gray-700">Kapacita: {{ $udalost->kapacita ? number_format($udalost->kapacita) : 'Neomezená' }}</p>
+                    <a href="{{ route('admin.start-cisla.show', $udalost) }}" class="inline-flex text-sm text-indigo-600 hover:text-indigo-800 underline">Správa startovních čísel</a>
                 </aside>
             </section>
         </div>

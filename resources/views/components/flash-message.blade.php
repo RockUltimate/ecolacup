@@ -20,6 +20,8 @@
         'udalost-created' => 'Událost byla vytvořena.',
         'udalost-updated' => 'Událost byla upravena.',
         'udalost-deleted' => 'Událost byla smazána.',
+        'admin-user-updated' => 'Uživatel byl upraven.',
+        'admin-clenstvi-updated' => 'Členství bylo upraveno v administraci.',
     ];
 @endphp
 

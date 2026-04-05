@@ -53,6 +53,12 @@
                             <x-dropdown-link :href="route('admin.udalosti.index')">
                                 Admin události
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.users.index')">
+                                Admin uživatelé
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.clenstvi.index')">
+                                Admin členství
+                            </x-dropdown-link>
                         @endif
                         <x-dropdown-link :href="route('ucet.edit')">
                             Můj účet
@@ -118,6 +124,12 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.udalosti.index')" :active="request()->routeIs('admin.udalosti.*')">
                         Admin události
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        Admin uživatelé
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.clenstvi.index')" :active="request()->routeIs('admin.clenstvi.*')">
+                        Admin členství
                     </x-responsive-nav-link>
                 @endif
 
