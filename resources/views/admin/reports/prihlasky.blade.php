@@ -10,8 +10,8 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div class="space-y-3">
                 <p class="section-eyebrow">Report přihlášek</p>
-                <h1 class="text-3xl text-on-surface dark:text-[#e5e2dd]">{{ $isDeletedView ? 'Smazané přihlášky' : 'Aktivní přihlášky' }}</h1>
-                <p class="max-w-3xl text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->nazev }} • přehled registrací, startovních čísel a exportů pro pořadatele.</p>
+                <h1 class="text-3xl text-[#20392c]">{{ $isDeletedView ? 'Smazané přihlášky' : 'Aktivní přihlášky' }}</h1>
+                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • přehled registrací, startovních čísel a exportů pro pořadatele.</p>
             </div>
             <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
         </div>
@@ -25,19 +25,19 @@
                 <div class="flex flex-wrap items-center gap-3">
                     <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class([
                         'rounded-full border px-4 py-2 text-sm font-semibold transition',
-                        'border-primary bg-primary text-on-primary dark:border-inverse-primary dark:bg-primary-container dark:text-on-primary-container' => ! $isDeletedView,
-                        'border-outline-variant/40 bg-surface-container-lowest/70 text-on-surface-variant dark:border-[#43493e]/40 dark:bg-[#2a2a27]/70 dark:text-[#c3c8bb]' => $isDeletedView,
+                        'border-[#20392c] bg-[#20392c] text-white' => ! $isDeletedView,
+                        'border-[#ddd0bc] bg-white/70 text-gray-600' => $isDeletedView,
                     ])>Aktivní</a>
                     <a href="{{ route('admin.reports.smazane', $udalost) }}" @class([
                         'rounded-full border px-4 py-2 text-sm font-semibold transition',
-                        'border-primary bg-primary text-on-primary dark:border-inverse-primary dark:bg-primary-container dark:text-on-primary-container' => $isDeletedView,
-                        'border-outline-variant/40 bg-surface-container-lowest/70 text-on-surface-variant dark:border-[#43493e]/40 dark:bg-[#2a2a27]/70 dark:text-[#c3c8bb]' => ! $isDeletedView,
+                        'border-[#20392c] bg-[#20392c] text-white' => $isDeletedView,
+                        'border-[#ddd0bc] bg-white/70 text-gray-600' => ! $isDeletedView,
                     ])>Smazané</a>
                 </div>
             </section>
 
             @if(count($duplicateStartNumbers) > 0)
-                <div class="status-note mt-4">
+                <div class="status-note border-amber-200 bg-amber-50 text-amber-900">
                     Duplicitní startovní čísla: {{ implode(', ', $duplicateStartNumbers) }}
                 </div>
             @endif
@@ -46,11 +46,11 @@
                 <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
                     <form method="GET" action="{{ $listingRoute }}" class="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px_auto]">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Hledat podle čísla, osoby, koně nebo e-mailu</label>
-                            <input id="q" name="q" type="text" value="{{ $filters['q'] }}" class="field-shell" />
+                            <x-input-label for="q" :value="'Hledat podle čísla, osoby, koně nebo e-mailu'" />
+                            <x-text-input id="q" name="q" type="text" :value="$filters['q']" />
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Stav</label>
+                            <x-input-label for="stav" :value="'Stav'" />
                             <select id="stav" name="stav" class="field-shell">
                                 <option value="active" @selected($filters['stav'] === 'active')>Aktivní</option>
                                 <option value="deleted" @selected($filters['stav'] === 'deleted')>Smazané</option>
@@ -85,7 +85,7 @@
                 </div>
             </section>
 
-            <section class="panel p-5 text-sm text-on-surface dark:text-[#e5e2dd]">
+            <section class="panel p-5 text-sm text-gray-700">
                 @if($prihlasky->total() > 0)
                     Zobrazeno {{ $prihlasky->firstItem() }}–{{ $prihlasky->lastItem() }} z {{ $prihlasky->total() }} přihlášek.
                 @else
@@ -97,18 +97,18 @@
                 @forelse($prihlasky as $p)
                     <article @class([
                         'panel p-6',
-                        'bg-error-container/60 dark:bg-error-container/40' => $p->smazana,
-                        'ring-1 ring-tertiary-fixed/40 bg-tertiary-fixed/60 dark:bg-tertiary-container/40' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
+                        'bg-red-50/60' => $p->smazana,
+                        'ring-1 ring-amber-300 bg-amber-50/60' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
                     ])>
                         <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                             <div class="space-y-3">
                                 <div class="flex flex-wrap items-center gap-3">
-                                    <p class="text-xl font-semibold text-on-surface dark:text-[#e5e2dd]">#{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</p>
+                                    <p class="text-xl font-semibold text-[#20392c]">#{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</p>
                                     @if($p->smazana)
-                                        <span class="brand-pill bg-error-container text-on-error-container">Smazaná</span>
+                                        <span class="brand-pill bg-red-100 text-red-700">Smazaná</span>
                                     @endif
                                 </div>
-                                <div class="grid gap-2 text-sm text-on-surface-variant dark:text-[#c3c8bb] md:grid-cols-2">
+                                <div class="grid gap-2 text-sm text-gray-600 md:grid-cols-2">
                                     <p>Kůň: {{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif</p>
                                     <p>Cena: {{ number_format((float) $p->cena_celkem, 2, ',', ' ') }} Kč</p>
                                     <p>E-mail: {{ $p->user?->email }}</p>
@@ -122,7 +122,7 @@
                                 <input type="hidden" name="q" value="{{ $filters['q'] }}">
                                 <input type="hidden" name="stav" value="{{ $filters['stav'] }}">
                                 <div>
-                                    <label for="start_cislo_{{ $p->id }}" class="block text-xs font-bold uppercase tracking-widest text-secondary dark:text-secondary-fixed-dim">Startovní číslo</label>
+                                    <label for="start_cislo_{{ $p->id }}" class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Startovní číslo</label>
                                     <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="field-shell w-28" value="{{ $p->start_cislo }}">
                                 </div>
                                 <button type="submit" class="button-primary">Uložit</button>
@@ -130,7 +130,7 @@
                         </div>
                     </article>
                 @empty
-                    <div class="panel p-8 text-sm text-on-surface-variant dark:text-[#c3c8bb]">Žádné záznamy.</div>
+                    <div class="panel p-8 text-sm text-gray-600">Žádné záznamy.</div>
                 @endforelse
             </section>
 

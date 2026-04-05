@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-on-surface-variant dark:text-[#c3c8bb]">
+    <div class="mb-4 text-sm text-gray-600">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
 
@@ -8,20 +8,20 @@
 
         <!-- Password -->
         <div>
-            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]" for="password">{{ __('Password') }}</label>
+            <x-input-label for="password" :value="__('Password')" />
 
-            <input id="password" class="field-shell"
+            <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
 
-            <p class="mt-1 text-xs text-error" x-data="{ messages: {{ json_encode($errors->get('password')) }} }" x-show="messages.length > 0" x-text="messages[0]"></p>
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div class="flex justify-end mt-4">
-            <button type="submit" class="button-primary w-full">
+            <x-primary-button>
                 {{ __('Confirm') }}
-            </button>
+            </x-primary-button>
         </div>
     </form>
 </x-guest-layout>

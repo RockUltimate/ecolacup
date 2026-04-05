@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="space-y-3">
             <p class="section-eyebrow">Úprava přihlášky</p>
-            <h1 class="text-3xl text-on-surface dark:text-[#e5e2dd]">Přihláška #{{ $prihlaska->id }}</h1>
-            <p class="max-w-3xl text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">Upravujete doplňkové položky, poznámku a souhrn. Účastník i hlavní kůň zůstávají po vytvoření uzamčené.</p>
+            <h1 class="text-3xl text-[#20392c]">Přihláška #{{ $prihlaska->id }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Upravujete doplňkové položky, poznámku a souhrn. Účastník i hlavní kůň zůstávají po vytvoření uzamčené.</p>
         </div>
     </x-slot>
 

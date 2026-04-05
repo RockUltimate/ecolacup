@@ -35,19 +35,19 @@
     @if($isEdit)
         <div class="space-y-2">
             <label for="gdpr_souhlas" class="inline-flex items-center">
-                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas', $osoba->gdpr_souhlas))>
-                <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">GDPR souhlas aktivní</span>
+                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas', $osoba->gdpr_souhlas))>
+                <span class="ms-2 text-sm text-gray-700">GDPR souhlas aktivní</span>
             </label>
             <label for="gdpr_odvolano" class="inline-flex items-center">
-                <input id="gdpr_odvolano" type="checkbox" name="gdpr_odvolano" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-error shadow-sm focus:ring-red-500" @checked(old('gdpr_odvolano', $osoba->gdpr_odvolano))>
-                <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Odvolat GDPR souhlas</span>
+                <input id="gdpr_odvolano" type="checkbox" name="gdpr_odvolano" value="1" class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500" @checked(old('gdpr_odvolano', $osoba->gdpr_odvolano))>
+                <span class="ms-2 text-sm text-gray-700">Odvolat GDPR souhlas</span>
             </label>
         </div>
     @else
         <div>
             <label for="gdpr_souhlas" class="inline-flex items-center">
-                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas')) required>
-                <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Souhlasím se zpracováním osobních údajů (GDPR)</span>
+                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas')) required>
+                <span class="ms-2 text-sm text-gray-700">Souhlasím se zpracováním osobních údajů (GDPR)</span>
             </label>
             <x-input-error :messages="$errors->get('gdpr_souhlas')" class="mt-2" />
         </div>
@@ -55,6 +55,6 @@
 
     <div class="flex items-center gap-3">
         <x-primary-button>{{ $isEdit ? 'Uložit změny' : 'Vytvořit osobu' }}</x-primary-button>
-        <a href="{{ route('osoby.index') }}" class="text-sm text-on-surface-variant dark:text-[#c3c8bb] hover:text-on-surface dark:hover:text-[#e5e2dd] underline">Zpět na přehled</a>
+        <a href="{{ route('osoby.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
     </div>
 </form>

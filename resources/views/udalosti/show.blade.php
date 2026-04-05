@@ -1,193 +1,192 @@
-{{-- resources/views/udalosti/show.blade.php --}}
 <x-site-layout>
+    @php
+        $deadlinePassed = $udalost->uzavierka_prihlasek && $udalost->uzavierka_prihlasek->lt(now()->startOfDay());
+        $capacityReached = $udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita;
+        $isClosed = $deadlinePassed || $capacityReached;
+        $daysLeft = $udalost->uzavierka_prihlasek ? now()->startOfDay()->diffInDays($udalost->uzavierka_prihlasek, false) : null;
+        $capacityPercent = $udalost->kapacita ? min(100, (int) round(($udalost->pocet_prihlasek / $udalost->kapacita) * 100)) : null;
+        $stablingByType = $udalost->ustajeniMoznosti->groupBy('typ');
+    @endphp
 
-@php
-    $closed = ($udalost->uzavierka_prihlasek && $udalost->uzavierka_prihlasek->lt(now()->startOfDay()))
-           || ($udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita);
-@endphp
-
-{{-- ── Hero ─────────────────────────────────────────────────────── --}}
-<section class="relative min-h-[600px] overflow-hidden">
-    <div class="mx-auto flex max-w-screen-xl items-center gap-8 px-6 py-20 lg:px-8">
-
-        {{-- Left: event info --}}
-        <div class="relative z-10 w-full lg:w-3/5">
-            <span class="brand-pill mb-6 inline-block">CMT Závod</span>
-            <h1 class="font-headline text-6xl leading-none text-primary dark:text-inverse-primary lg:text-8xl">
-                {{ $udalost->nazev }}
-            </h1>
-            <p class="mt-6 max-w-lg text-xl text-on-surface-variant dark:text-[#c3c8bb]">
-                {{ $udalost->misto }}
-                @if($udalost->datum_zacatek)
-                    • {{ $udalost->datum_zacatek->format('d.m.Y') }}
-                    @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))
-                        – {{ $udalost->datum_konec->format('d.m.Y') }}
-                    @endif
-                @endif
-            </p>
-            <div class="mt-8 flex flex-wrap gap-4">
-                @if(!$closed)
-                    @auth
-                        <a href="{{ route('prihlasky.create', $udalost) }}" class="button-primary px-10 py-4">
-                            Přihlásit se
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="button-primary px-10 py-4">
-                            Přihlásit se
-                        </a>
-                    @endauth
-                @else
-                    <span class="button-secondary cursor-not-allowed px-10 py-4 opacity-60">Registrace uzavřena</span>
-                @endif
-                <a href="{{ route('udalosti.index') }}" class="button-secondary px-10 py-4">
-                    Všechny akce
-                </a>
-            </div>
-        </div>
-
-        {{-- Right: gradient image placeholder --}}
-        <div class="absolute right-0 top-0 hidden h-full w-2/5 lg:block">
-            <div class="h-full w-full overflow-hidden" style="border-radius: 2rem 0.5rem 0.5rem 5rem;">
-                <div class="h-full w-full"
-                     style="background: linear-gradient(135deg, #173809 0%, #2d4f1e 50%, #446733 100%); opacity: 0.85;"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- ── Stats bento grid ─────────────────────────────────────────── --}}
-<section class="px-6 py-16 lg:px-8">
-    <div class="mx-auto grid max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-4">
-
-        {{-- Kapacita --}}
-        <div class="rounded-xl bg-surface-container-low p-8 dark:bg-[#252522]">
-            <h3 class="font-headline text-2xl text-primary dark:text-inverse-primary">Kapacita</h3>
-            @if($udalost->kapacita)
-                <div class="mt-4 flex items-baseline gap-2">
-                    <span class="font-headline text-5xl text-primary dark:text-inverse-primary">{{ $udalost->pocet_prihlasek }}</span>
-                    <span class="text-sm uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">/ {{ $udalost->kapacita }}</span>
-                </div>
-                <p class="mt-2 text-sm text-on-surface-variant dark:text-[#c3c8bb]">obsazených míst</p>
-            @else
-                <p class="mt-4 font-headline text-3xl text-primary dark:text-inverse-primary">{{ $udalost->pocet_prihlasek }}</p>
-                <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">přihlášek (bez limitu)</p>
-            @endif
-        </div>
-
-        {{-- Uzávěrka --}}
-        <div class="rounded-xl bg-surface-container-highest p-8 dark:bg-[#3b3b38]">
-            <h3 class="font-headline text-xl text-primary dark:text-inverse-primary">Uzávěrka</h3>
-            <p class="mt-4 font-headline text-3xl text-on-surface dark:text-[#e5e2dd]">
-                {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') ?? '—' }}
-            </p>
-            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">přihlášek</p>
-        </div>
-
-        {{-- Status --}}
-        <div class="flex flex-col items-center justify-center rounded-xl p-8 text-center
-                    {{ $closed ? 'bg-inverse-surface text-inverse-on-surface dark:bg-[#31302d]' : 'bg-primary text-on-primary' }}">
-            <p class="text-xs uppercase tracking-widest opacity-80">Stav</p>
-            <p class="mt-2 font-headline text-2xl italic">{{ $closed ? 'Uzavřeno' : 'Otevřeno' }}</p>
-        </div>
-
-        {{-- Schedule --}}
-        <div class="rounded-xl bg-surface-container-low p-8 dark:bg-[#252522]">
-            <h3 class="mb-4 text-xs font-bold uppercase tracking-widest text-primary dark:text-inverse-primary">Termíny</h3>
-            <ul class="space-y-3 text-sm">
-                @if($udalost->datum_zacatek)
-                    <li class="flex justify-between border-b border-outline-variant/20 pb-2 dark:border-[#43493e]/30">
-                        <span class="font-semibold text-on-surface dark:text-[#e5e2dd]">Zahájení</span>
-                        <span class="text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->datum_zacatek->format('d.m.Y') }}</span>
-                    </li>
-                @endif
-                @if($udalost->datum_konec)
-                    <li class="flex justify-between border-b border-outline-variant/20 pb-2 dark:border-[#43493e]/30">
-                        <span class="font-semibold text-on-surface dark:text-[#e5e2dd]">Ukončení</span>
-                        <span class="text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->datum_konec->format('d.m.Y') }}</span>
-                    </li>
-                @endif
-                @if($udalost->uzavierka_prihlasek)
-                    <li class="flex justify-between">
-                        <span class="font-semibold text-on-surface dark:text-[#e5e2dd]">Uzávěrka</span>
-                        <span class="text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->uzavierka_prihlasek->format('d.m.Y') }}</span>
-                    </li>
-                @endif
-            </ul>
-        </div>
-    </div>
-</section>
-
-{{-- ── Disciplines ──────────────────────────────────────────────── --}}
-@if($udalost->moznosti->isNotEmpty())
-<section class="bg-surface-container-low py-20 dark:bg-[#252522]">
-    <div class="mx-auto grid max-w-screen-xl gap-16 px-6 lg:grid-cols-2 lg:px-8">
-        <div>
-            <h2 class="font-headline text-4xl text-primary dark:text-inverse-primary">Disciplíny</h2>
-            <p class="mt-4 text-on-surface-variant dark:text-[#c3c8bb]">
-                Přehled kategorií a startovních poplatků pro tuto akci.
-            </p>
-        </div>
-        <div class="space-y-0">
-            @foreach($udalost->moznosti as $moznost)
-                <div class="flex items-center justify-between py-4
-                            {{ !$loop->last ? 'border-b border-outline-variant/20 dark:border-[#43493e]/30' : '' }}">
-                    <div>
-                        <p class="font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $moznost->nazev }}</p>
-                        @if($moznost->popis)
-                            <p class="text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ $moznost->popis }}</p>
+    <section class="px-4 pb-10 pt-10 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+            <div class="editorial-grid items-start">
+                <div class="panel reveal-up overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
+                    <p class="section-eyebrow">Detail události</p>
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">{{ $udalost->misto }}</p>
+                        @if($isClosed)
+                            <span class="brand-pill bg-red-100 text-red-700">Registrace uzavřena</span>
+                        @elseif($daysLeft !== null && $daysLeft <= 7)
+                            <span class="brand-pill bg-amber-100 text-amber-700">Uzávěrka brzy</span>
+                        @else
+                            <span class="brand-pill">Registrace otevřena</span>
                         @endif
                     </div>
-                    <span class="ml-4 font-headline text-xl text-primary dark:text-inverse-primary">
-                        {{ number_format($moznost->cena, 0, ',', ' ') }} Kč
-                    </span>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 
-{{-- ── Stabling ─────────────────────────────────────────────────── --}}
-@if($udalost->ustajeniMoznosti->isNotEmpty())
-<section class="py-20">
-    <div class="mx-auto max-w-screen-xl px-6 lg:px-8">
-        <h2 class="mb-10 font-headline text-4xl text-on-surface dark:text-[#e5e2dd]">Ustájení</h2>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach($udalost->ustajeniMoznosti as $ustajeni)
-                <div class="rounded-xl bg-surface-container-highest p-6 dark:bg-[#3b3b38]">
-                    <h3 class="font-headline text-xl text-on-surface dark:text-[#e5e2dd]">{{ $ustajeni->nazev }}</h3>
-                    @if($ustajeni->popis)
-                        <p class="mt-2 text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ $ustajeni->popis }}</p>
+                    <div class="mt-5 max-w-3xl">
+                        <h1 class="text-4xl leading-tight text-[#20392c] sm:text-5xl">{{ $udalost->nazev }}</h1>
+                        <p class="mt-5 text-base leading-7 text-gray-600">{{ $udalost->popis ?: 'Přehled termínu, disciplín, ustájení a registrace pro tento závod.' }}</p>
+                    </div>
+
+                    <div class="mt-8 grid gap-4 border-t border-[#eadfcc] pt-6 sm:grid-cols-2 xl:grid-cols-4">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">Termín</p>
+                            <p class="mt-2 text-lg font-semibold text-[#20392c]">{{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
+                            @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))
+                                <p class="text-sm text-gray-600">až do {{ $udalost->datum_konec->format('d.m.Y') }}</p>
+                            @endif
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">Uzávěrka</p>
+                            <p class="mt-2 text-lg font-semibold text-[#20392c]">{{ $udalost->uzavierka_prihlasek?->format('d.m.Y') ?? 'Bez uzávěrky' }}</p>
+                            <p class="text-sm text-gray-600">
+                                @if($daysLeft === null)
+                                    Přihlášky bez termínového omezení.
+                                @elseif($daysLeft < 0)
+                                    Termín už proběhl.
+                                @elseif($daysLeft === 0)
+                                    Končí dnes.
+                                @else
+                                    Zbývá {{ $daysLeft }} dní.
+                                @endif
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">Registrace</p>
+                            <p class="mt-2 text-lg font-semibold text-[#20392c]">{{ $udalost->pocet_prihlasek }}</p>
+                            <p class="text-sm text-gray-600">celkem evidovaných přihlášek</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">Starty</p>
+                            <p class="mt-2 text-lg font-semibold text-[#20392c]">{{ $udalost->pocet_startu }}</p>
+                            <p class="text-sm text-gray-600">obsazených disciplín</p>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="panel reveal-up-delay space-y-6 px-6 py-8 sm:px-8">
+                    <div>
+                        <p class="section-eyebrow">Registrace</p>
+                        <h2 class="mt-3 text-2xl text-[#20392c]">
+                            @if($isClosed)
+                                Tato akce už nepřijímá další přihlášky.
+                            @else
+                                Přihlášení mohou pokračovat rovnou do formuláře.
+                            @endif
+                        </h2>
+                        <p class="mt-3 text-sm leading-6 text-gray-600">Po přihlášení navážete na existující osoby a koně ve svém účtu, takže další registrace jsou výrazně rychlejší.</p>
+                    </div>
+
+                    @if($capacityPercent !== null)
+                        <div class="rounded-[1.25rem] border border-[#eadfcc] bg-[#f9f4eb] p-5">
+                            <div class="flex items-center justify-between gap-4 text-sm text-gray-600">
+                                <span>Využití kapacity</span>
+                                <span>{{ $udalost->pocet_prihlasek }} / {{ $udalost->kapacita }}</span>
+                            </div>
+                            <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-[#e6d8c6]">
+                                <div class="h-full rounded-full bg-[#3d6b4f]" style="width: {{ $capacityPercent }}%"></div>
+                            </div>
+                        </div>
                     @endif
-                    <p class="mt-4 font-headline text-2xl text-primary dark:text-inverse-primary">
-                        {{ number_format($ustajeni->cena, 0, ',', ' ') }} Kč
-                    </p>
+
+                    <div class="flex flex-wrap gap-3">
+                        @auth
+                            @if($isClosed)
+                                <span class="button-secondary cursor-default opacity-70">Přihlášky uzavřeny</span>
+                            @else
+                                <a href="{{ route('prihlasky.create', $udalost) }}" class="button-primary">Přihlásit se na akci</a>
+                            @endif
+                            <a href="{{ route('prihlasky.index') }}" class="button-secondary">Moje přihlášky</a>
+                        @else
+                            <a href="{{ route('login') }}" class="button-primary">Přihlásit se</a>
+                            <a href="{{ route('register') }}" class="button-secondary">Vytvořit účet</a>
+                        @endauth
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+            <div class="panel p-6 sm:p-8">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="section-eyebrow">Disciplíny</p>
+                        <h2 class="mt-2 text-3xl text-[#20392c]">Startovní program</h2>
+                    </div>
+                    <p class="text-sm text-gray-500">{{ $udalost->moznosti->count() }} položek</p>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 
-{{-- ── Registration CTA ─────────────────────────────────────────── --}}
-@if(!$closed)
-<section class="bg-surface-container-low py-20 dark:bg-[#252522]">
-    <div class="mx-auto max-w-screen-xl px-6 text-center lg:px-8">
-        <h2 class="font-headline text-4xl text-on-surface dark:text-[#e5e2dd]">Přihlásit se na tuto akci</h2>
-        <p class="mt-4 text-on-surface-variant dark:text-[#c3c8bb]">Uzávěrka přihlášek: {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') ?? 'neurčena' }}</p>
-        <div class="mt-8">
-            @auth
-                <a href="{{ route('prihlasky.create', $udalost) }}" class="button-primary px-12 py-5 text-base">
-                    Přihlásit se
-                </a>
-            @else
-                <a href="{{ route('register') }}" class="button-primary px-12 py-5 text-base">
-                    Vytvořit účet a přihlásit se
-                </a>
-            @endauth
-        </div>
-    </div>
-</section>
-@endif
+                <div class="mt-8 space-y-3">
+                    @forelse($udalost->moznosti->sortBy('poradi') as $moznost)
+                        <div class="grid gap-3 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_110px_110px] sm:items-center">
+                            <div>
+                                <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    @if($moznost->je_administrativni_poplatek)
+                                        Administrativní položka přidávaná podle pravidel členství.
+                                    @elseif($moznost->min_vek !== null)
+                                        Minimální věk účastníka: {{ $moznost->min_vek }} let.
+                                    @else
+                                        Bez věkového omezení.
+                                    @endif
+                                </p>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Min. věk</p>
+                                <p class="mt-1 font-semibold text-[#20392c]">{{ $moznost->min_vek ?? '—' }}</p>
+                            </div>
+                            <div class="text-sm text-gray-600 sm:text-right">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Cena</p>
+                                <p class="mt-1 font-semibold text-[#20392c]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 text-sm text-gray-600">Zatím nejsou přidané žádné disciplíny.</div>
+                    @endforelse
+                </div>
+            </div>
 
+            <div class="panel p-6 sm:p-8">
+                <p class="section-eyebrow">Zázemí</p>
+                <h2 class="mt-2 text-3xl text-[#20392c]">Ustájení a doplňkové služby</h2>
+
+                <div class="mt-8 space-y-6">
+                    @forelse(['ustajeni' => 'Ustájení', 'ubytovani' => 'Ubytování', 'strava' => 'Strava', 'ostatni' => 'Ostatní'] as $type => $label)
+                        @if(($stablingByType[$type] ?? collect())->isNotEmpty())
+                            <div>
+                                <h3 class="text-lg font-semibold text-[#20392c]">{{ $label }}</h3>
+                                <div class="mt-3 space-y-3">
+                                    @foreach($stablingByType[$type] as $moznost)
+                                        <div class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4">
+                                            <div class="flex items-start justify-between gap-4">
+                                                <div>
+                                                    <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
+                                                    <p class="mt-1 text-sm text-gray-600">
+                                                        @if($moznost->kapacita)
+                                                            Kapacita {{ $moznost->kapacita }} míst.
+                                                        @else
+                                                            Bez pevně stanovené kapacity.
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    @empty
+                    @endforelse
+
+                    @if($udalost->ustajeniMoznosti->isEmpty())
+                        <div class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 text-sm text-gray-600">Zatím nejsou přidané žádné možnosti ustájení ani doplňkových služeb.</div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
 </x-site-layout>
