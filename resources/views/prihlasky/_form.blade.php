@@ -129,13 +129,13 @@
 
             <section class="rounded-2xl bg-surface-container-low px-6 py-5 dark:bg-[#252522] sm:px-8">
                 <div class="flex flex-wrap gap-3">
-                    <button type="button" @click="step = 1" :class="step === 1 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                    <button type="button" @click="step = 1" :class="step === 1 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-surface-container-lowest/80 dark:bg-[#2a2a27]/80 text-on-surface-variant dark:text-[#c3c8bb] border-outline-variant/40 dark:border-[#43493e]/40'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
                         1. Osoba a kůň
                     </button>
-                    <button type="button" @click="step = 2" :class="step === 2 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                    <button type="button" @click="step = 2" :class="step === 2 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-surface-container-lowest/80 dark:bg-[#2a2a27]/80 text-on-surface-variant dark:text-[#c3c8bb] border-outline-variant/40 dark:border-[#43493e]/40'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
                         2. Položky a služby
                     </button>
-                    <button type="button" @click="step = 3" :class="step === 3 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                    <button type="button" @click="step = 3" :class="step === 3 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-surface-container-lowest/80 dark:bg-[#2a2a27]/80 text-on-surface-variant dark:text-[#c3c8bb] border-outline-variant/40 dark:border-[#43493e]/40'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
                         3. Souhrn
                     </button>
                 </div>
@@ -144,8 +144,8 @@
             <section x-cloak x-show="step === 1" class="rounded-2xl bg-surface-container-low space-y-6 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 1</p>
-                    <h2 class="mt-3 text-2xl text-[#20392c]">Vyberte účastníka a koně</h2>
-                    <p class="mt-2 text-sm leading-6 text-gray-600">Při úpravě zůstává osoba i hlavní kůň uzamčený, aby zůstala zachovaná historie registrace.</p>
+                    <h2 class="mt-3 text-2xl text-on-surface dark:text-[#e5e2dd]">Vyberte účastníka a koně</h2>
+                    <p class="mt-2 text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">Při úpravě zůstává osoba i hlavní kůň uzamčený, aby zůstala zachovaná historie registrace.</p>
                 </div>
 
                 @if($osoby->isEmpty() || $kone->isEmpty())
@@ -203,12 +203,12 @@
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Členství CMT</p>
-                        <p class="mt-3 text-lg font-semibold text-[#20392c]" x-text="clenstvi.label"></p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-secondary dark:text-secondary-fixed-dim">Členství CMT</p>
+                        <p class="mt-3 text-lg font-semibold text-on-surface dark:text-[#e5e2dd]" x-text="clenstvi.label"></p>
                     </div>
                     <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Očkování a vyšetření</p>
-                        <ul class="mt-3 space-y-2 text-sm text-gray-700">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-secondary dark:text-secondary-fixed-dim">Očkování a vyšetření</p>
+                        <ul class="mt-3 space-y-2 text-sm text-on-surface dark:text-[#e5e2dd]">
                             <li>EHV: <span x-text="ockovani.ehv_datum ?? 'neuvedeno'"></span></li>
                             <li>AIE: <span x-text="ockovani.aie_datum ?? 'neuvedeno'"></span></li>
                             <li>Chřipka: <span x-text="ockovani.chripka_datum ?? 'neuvedeno'"></span></li>
@@ -220,25 +220,25 @@
             <section x-cloak x-show="step === 2" class="rounded-2xl bg-surface-container-low space-y-8 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 2</p>
-                    <h2 class="mt-3 text-2xl text-[#20392c]">Zvolte disciplíny a doplňkové služby</h2>
-                    <p class="mt-2 text-sm leading-6 text-gray-600">Průběžný součet dole počítá i s administrativním poplatkem podle pravidel členství CMT.</p>
+                    <h2 class="mt-3 text-2xl text-on-surface dark:text-[#e5e2dd]">Zvolte disciplíny a doplňkové služby</h2>
+                    <p class="mt-2 text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">Průběžný součet dole počítá i s administrativním poplatkem podle pravidel členství CMT.</p>
                 </div>
 
                 <div class="space-y-4">
                     <div class="flex items-center justify-between gap-4">
-                        <h3 class="text-lg font-semibold text-[#20392c]">Disciplíny</h3>
+                        <h3 class="text-lg font-semibold text-on-surface dark:text-[#e5e2dd]">Disciplíny</h3>
                         <p class="text-sm text-gray-500">{{ $udalost->moznosti->count() }} možností</p>
                     </div>
 
                     <div class="space-y-3">
                         @foreach($udalost->moznosti as $moznost)
-                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-[#faf6ef]">
+                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-outline-variant/30 dark:border-[#43493e]/30 bg-surface-container-lowest/80 dark:bg-[#2a2a27]/80 px-5 py-4 transition hover:bg-[#faf6ef]">
                                 <div class="flex items-start gap-3">
                                     <input type="checkbox" x-model="selectedMoznosti" name="moznosti[]" value="{{ $moznost->id }}" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]"
                                         @checked(in_array($moznost->id, array_map('intval', $selectedMoznosti), true))>
                                     <div>
-                                        <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
-                                        <p class="mt-1 text-sm text-gray-600">
+                                        <p class="font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $moznost->nazev }}</p>
+                                        <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">
                                             @if($moznost->je_administrativni_poplatek)
                                                 Administrativní položka dle pravidel akce.
                                             @elseif($moznost->min_vek !== null)
@@ -249,7 +249,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
+                                <p class="text-sm font-semibold text-secondary dark:text-secondary-fixed-dim">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
                             </label>
                         @endforeach
                     </div>
@@ -266,22 +266,22 @@
 
                 <div class="space-y-4">
                     <div class="flex items-center justify-between gap-4">
-                        <h3 class="text-lg font-semibold text-[#20392c]">Ustájení, ubytování a ostatní</h3>
+                        <h3 class="text-lg font-semibold text-on-surface dark:text-[#e5e2dd]">Ustájení, ubytování a ostatní</h3>
                         <p class="text-sm text-gray-500">{{ $udalost->ustajeniMoznosti->count() }} možností</p>
                     </div>
 
                     <div class="space-y-3">
                         @foreach($udalost->ustajeniMoznosti as $item)
-                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-[#faf6ef]">
+                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-outline-variant/30 dark:border-[#43493e]/30 bg-surface-container-lowest/80 dark:bg-[#2a2a27]/80 px-5 py-4 transition hover:bg-[#faf6ef]">
                                 <div class="flex items-start gap-3">
                                     <input type="checkbox" x-model="selectedUstajeni" name="ustajeni[]" value="{{ $item->id }}" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]"
                                         @checked(in_array($item->id, array_map('intval', $selectedUstajeni), true))>
                                     <div>
-                                        <p class="font-semibold text-[#20392c]">{{ $item->nazev }}</p>
-                                        <p class="mt-1 text-sm text-gray-600">{{ ucfirst($item->typ) }} @if($item->kapacita)• kapacita {{ $item->kapacita }}@endif</p>
+                                        <p class="font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $item->nazev }}</p>
+                                        <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ ucfirst($item->typ) }} @if($item->kapacita)• kapacita {{ $item->kapacita }}@endif</p>
                                     </div>
                                 </div>
-                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $item->cena, 2, ',', ' ') }} Kč</p>
+                                <p class="text-sm font-semibold text-secondary dark:text-secondary-fixed-dim">{{ number_format((float) $item->cena, 2, ',', ' ') }} Kč</p>
                             </label>
                         @endforeach
                     </div>
@@ -291,35 +291,35 @@
             <section x-cloak x-show="step === 3" class="rounded-2xl bg-surface-container-low space-y-6 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 3</p>
-                    <h2 class="mt-3 text-2xl text-[#20392c]">Zkontrolujte souhrn a odešlete přihlášku</h2>
+                    <h2 class="mt-3 text-2xl text-on-surface dark:text-[#e5e2dd]">Zkontrolujte souhrn a odešlete přihlášku</h2>
                 </div>
 
                 <div class="grid gap-6 lg:grid-cols-2">
                     <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Vybrané disciplíny</p>
-                        <ul class="mt-4 space-y-2 text-sm text-gray-700">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-secondary dark:text-secondary-fixed-dim">Vybrané disciplíny</p>
+                        <ul class="mt-4 space-y-2 text-sm text-on-surface dark:text-[#e5e2dd]">
                             <template x-if="selectedMoznostiItems().length === 0">
                                 <li>Žádná disciplína není vybraná.</li>
                             </template>
                             <template x-for="item in selectedMoznostiItems()" :key="item.id">
                                 <li class="flex items-start justify-between gap-4">
                                     <span x-text="item.nazev"></span>
-                                    <span class="font-semibold text-[#7b5230]" x-text="`${formatPrice(item.cena)} Kč`"></span>
+                                    <span class="font-semibold text-secondary dark:text-secondary-fixed-dim" x-text="`${formatPrice(item.cena)} Kč`"></span>
                                 </li>
                             </template>
                         </ul>
                     </div>
 
                     <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Doplňkové služby</p>
-                        <ul class="mt-4 space-y-2 text-sm text-gray-700">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-secondary dark:text-secondary-fixed-dim">Doplňkové služby</p>
+                        <ul class="mt-4 space-y-2 text-sm text-on-surface dark:text-[#e5e2dd]">
                             <template x-if="selectedUstajeniItems().length === 0">
                                 <li>Bez doplňkových položek.</li>
                             </template>
                             <template x-for="item in selectedUstajeniItems()" :key="`u-${item.id}`">
                                 <li class="flex items-start justify-between gap-4">
                                     <span x-text="`${item.nazev} (${item.typ})`"></span>
-                                    <span class="font-semibold text-[#7b5230]" x-text="`${formatPrice(item.cena)} Kč`"></span>
+                                    <span class="font-semibold text-secondary dark:text-secondary-fixed-dim" x-text="`${formatPrice(item.cena)} Kč`"></span>
                                 </li>
                             </template>
                         </ul>
@@ -327,8 +327,8 @@
                 </div>
 
                 <div class="surface-muted">
-                    <p class="text-sm text-gray-600">Celkem k úhradě</p>
-                    <p class="mt-2 text-3xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
+                    <p class="text-sm text-on-surface-variant dark:text-[#c3c8bb]">Celkem k úhradě</p>
+                    <p class="mt-2 text-3xl font-semibold text-on-surface dark:text-[#e5e2dd]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
                 </div>
 
                 <div>
@@ -337,7 +337,7 @@
                     <x-input-error :messages="$errors->get('poznamka')" class="mt-2" />
                 </div>
 
-                <label for="gdpr_souhlas" class="flex items-start gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-4 text-sm leading-6 text-gray-700">
+                <label for="gdpr_souhlas" class="flex items-start gap-3 rounded-[1rem] border border-outline-variant/30 dark:border-[#43493e]/30 bg-surface-container-lowest/60 dark:bg-[#2a2a27]/60 px-4 py-4 text-sm leading-6 text-on-surface dark:text-[#e5e2dd]">
                     <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('gdpr_souhlas', true)) required>
                     <span>Potvrzuji souhlas se zpracováním osobních údajů pro vytvoření a správu této přihlášky.</span>
                 </label>
@@ -351,7 +351,7 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-[#7b5230] underline underline-offset-4">
+                    <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-secondary dark:text-secondary-fixed-dim underline underline-offset-4">
                         {{ $isEdit ? 'Zpět na detail přihlášky' : 'Zpět na detail akce' }}
                     </a>
                     <button type="submit" class="button-primary" x-show="step === 3">
@@ -364,25 +364,25 @@
         <aside class="space-y-6">
             <section class="glass-card sticky top-24 p-6">
                 <p class="section-eyebrow">Souhrn</p>
-                <h3 class="mt-3 text-2xl text-[#20392c]">Průběžná cena</h3>
-                <p class="mt-4 text-4xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
-                <p class="mt-3 text-sm leading-6 text-gray-600">Vybraných položek: <span class="font-semibold text-[#20392c]" x-text="selectedMoznosti.length + selectedUstajeni.length"></span></p>
+                <h3 class="mt-3 text-2xl text-on-surface dark:text-[#e5e2dd]">Průběžná cena</h3>
+                <p class="mt-4 text-4xl font-semibold text-on-surface dark:text-[#e5e2dd]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
+                <p class="mt-3 text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">Vybraných položek: <span class="font-semibold text-on-surface dark:text-[#e5e2dd]" x-text="selectedMoznosti.length + selectedUstajeni.length"></span></p>
             </section>
 
             <section class="glass-card p-6">
                 <p class="section-eyebrow">Kontrola</p>
-                <ul class="mt-4 space-y-3 text-sm text-gray-700">
+                <ul class="mt-4 space-y-3 text-sm text-on-surface dark:text-[#e5e2dd]">
                     <li class="flex items-start justify-between gap-4">
                         <span>Osoba</span>
-                        <span :class="osobaId ? 'text-emerald-700' : 'text-amber-700'" x-text="osobaId ? 'vybrána' : 'chybí'"></span>
+                        <span :class="osobaId ? 'text-primary dark:text-inverse-primary' : 'text-tertiary dark:text-tertiary-fixed-dim'" x-text="osobaId ? 'vybrána' : 'chybí'"></span>
                     </li>
                     <li class="flex items-start justify-between gap-4">
                         <span>Kůň</span>
-                        <span :class="kunId ? 'text-emerald-700' : 'text-amber-700'" x-text="kunId ? 'vybrán' : 'chybí'"></span>
+                        <span :class="kunId ? 'text-primary dark:text-inverse-primary' : 'text-tertiary dark:text-tertiary-fixed-dim'" x-text="kunId ? 'vybrán' : 'chybí'"></span>
                     </li>
                     <li class="flex items-start justify-between gap-4">
                         <span>Disciplíny</span>
-                        <span :class="selectedMoznosti.length ? 'text-emerald-700' : 'text-amber-700'" x-text="selectedMoznosti.length ? `${selectedMoznosti.length} vybráno` : 'nic nevybráno'"></span>
+                        <span :class="selectedMoznosti.length ? 'text-primary dark:text-inverse-primary' : 'text-tertiary dark:text-tertiary-fixed-dim'" x-text="selectedMoznosti.length ? `${selectedMoznosti.length} vybráno` : 'nic nevybráno'"></span>
                     </li>
                 </ul>
             </section>

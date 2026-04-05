@@ -146,6 +146,14 @@
         color: #ffdbd0;
     }
 
+    .surface-muted {
+        @apply rounded-xl bg-surface-container-low p-4;
+        color: theme('colors.on-surface');
+    }
+    .dark .surface-muted {
+        background-color: #252522;
+    }
+
     /* ── Layout helpers ──────────────────────────────────────── */
     .editorial-grid {
         @apply grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.7fr)];
