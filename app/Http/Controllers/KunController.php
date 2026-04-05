@@ -7,13 +7,14 @@ use App\Http\Requests\UpdateKunRequest;
 use App\Models\Kun;
 use App\Models\Pleme;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class KunController extends Controller
 {
     public function index(): View
     {
-        $this->authorize('viewAny', Kun::class);
+        Gate::authorize('viewAny', Kun::class);
 
         return view('kone.index', [
             'kone' => auth()->user()
@@ -25,7 +26,7 @@ class KunController extends Controller
 
     public function create(): View
     {
-        $this->authorize('create', Kun::class);
+        Gate::authorize('create', Kun::class);
 
         return view('kone.create', [
             'plemena' => Pleme::query()->orderBy('poradi')->orderBy('nazev')->get(),
@@ -34,7 +35,7 @@ class KunController extends Controller
 
     public function store(StoreKunRequest $request): RedirectResponse
     {
-        $this->authorize('create', Kun::class);
+        Gate::authorize('create', Kun::class);
 
         $validated = $request->validated();
         $request->user()->kone()->create($validated);
@@ -46,7 +47,7 @@ class KunController extends Controller
 
     public function edit(Kun $kun): View
     {
-        $this->authorize('update', $kun);
+        Gate::authorize('update', $kun);
 
         return view('kone.edit', [
             'kun' => $kun,
@@ -56,7 +57,7 @@ class KunController extends Controller
 
     public function update(UpdateKunRequest $request, Kun $kun): RedirectResponse
     {
-        $this->authorize('update', $kun);
+        Gate::authorize('update', $kun);
 
         $kun->update($request->validated());
 
@@ -67,7 +68,7 @@ class KunController extends Controller
 
     public function destroy(Kun $kun): RedirectResponse
     {
-        $this->authorize('delete', $kun);
+        Gate::authorize('delete', $kun);
 
         $kun->delete();
 

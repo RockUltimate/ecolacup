@@ -6,13 +6,14 @@ use App\Http\Requests\StoreOsobaRequest;
 use App\Http\Requests\UpdateOsobaRequest;
 use App\Models\Osoba;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class OsobaController extends Controller
 {
     public function index(): View
     {
-        $this->authorize('viewAny', Osoba::class);
+        Gate::authorize('viewAny', Osoba::class);
 
         return view('osoby.index', [
             'osoby' => auth()->user()
@@ -25,14 +26,14 @@ class OsobaController extends Controller
 
     public function create(): View
     {
-        $this->authorize('create', Osoba::class);
+        Gate::authorize('create', Osoba::class);
 
         return view('osoby.create');
     }
 
     public function store(StoreOsobaRequest $request): RedirectResponse
     {
-        $this->authorize('create', Osoba::class);
+        Gate::authorize('create', Osoba::class);
 
         $request->user()->osoby()->create([
             'jmeno' => $request->string('jmeno')->toString(),
@@ -51,7 +52,7 @@ class OsobaController extends Controller
 
     public function edit(Osoba $osoba): View
     {
-        $this->authorize('update', $osoba);
+        Gate::authorize('update', $osoba);
 
         return view('osoby.edit', [
             'osoba' => $osoba,
@@ -60,7 +61,7 @@ class OsobaController extends Controller
 
     public function update(UpdateOsobaRequest $request, Osoba $osoba): RedirectResponse
     {
-        $this->authorize('update', $osoba);
+        Gate::authorize('update', $osoba);
 
         $gdprOdvolano = (bool) $request->boolean('gdpr_odvolano');
         $gdprSouhlas = $gdprOdvolano ? false : (bool) $request->boolean('gdpr_souhlas', true);
@@ -82,7 +83,7 @@ class OsobaController extends Controller
 
     public function destroy(Osoba $osoba): RedirectResponse
     {
-        $this->authorize('delete', $osoba);
+        Gate::authorize('delete', $osoba);
 
         $osoba->delete();
 
