@@ -2,8 +2,8 @@
     <div class="space-y-6">
         <div>
             <p class="section-eyebrow">Ověření e-mailu</p>
-            <h1 class="mt-3 text-3xl text-[#20392c]">Ještě potvrďte svou e-mailovou adresu</h1>
-            <p class="mt-3 text-sm leading-6 text-gray-600">Klikněte na odkaz v e-mailu, který jsme poslali po registraci. Tím se účet aktivuje pro další kroky v aplikaci.</p>
+            <h1 class="mt-3 text-3xl text-on-surface dark:text-[#e5e2dd]">Ještě potvrďte svou e-mailovou adresu</h1>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant dark:text-[#c3c8bb]">Klikněte na odkaz v e-mailu, který jsme poslali po registraci. Tím se účet aktivuje pro další kroky v aplikaci.</p>
         </div>
 
         @if (session('status') === 'verification-link-sent')
@@ -13,20 +13,20 @@
         @endif
 
         <div class="surface-muted">
-            <p class="text-sm leading-6 text-gray-700">Pokud zprávu nevidíte, zkontrolujte i složku hromadné pošty nebo si nechte poslat nový odkaz.</p>
+            <p class="text-sm leading-6 text-on-surface dark:text-[#e5e2dd]">Pokud zprávu nevidíte, zkontrolujte i složku hromadné pošty nebo si nechte poslat nový odkaz.</p>
         </div>
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
-                <x-primary-button>
+                <button type="submit" class="button-primary w-full">
                     Poslat ověřovací e-mail znovu
-                </x-primary-button>
+                </button>
             </form>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="text-sm text-[#7b5230] underline underline-offset-4">
+                <button type="submit" class="text-sm text-secondary dark:text-secondary-fixed-dim underline underline-offset-4">
                     Odhlásit se
                 </button>
             </form>
