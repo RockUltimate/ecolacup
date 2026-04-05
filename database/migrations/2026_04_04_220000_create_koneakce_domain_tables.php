@@ -43,9 +43,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('rok_narozeni');
             $table->string('staj');
             $table->string('pohlavi', 1);
-            $table->date('ehv_datum')->nullable();
-            $table->date('aie_datum')->nullable();
-            $table->date('chripka_datum')->nullable();
             $table->string('cislo_prukazu')->nullable();
             $table->string('cislo_hospodarstvi')->nullable();
             $table->text('majitel_jmeno_adresa')->nullable();

@@ -13,7 +13,9 @@
                 $deadlinePassed = $prihlaska->udalost?->uzavierka_prihlasek?->lt(now()->startOfDay()) ?? true;
                 $daysLeft = $prihlaska->udalost?->uzavierka_prihlasek?->diffInDays(now()->startOfDay(), false);
                 $deleted = $prihlaska->smazana || $prihlaska->trashed();
+                $capacityReached = $prihlaska->udalost?->kapacita !== null && $prihlaska->udalost?->pocet_prihlasek >= $prihlaska->udalost?->kapacita;
                 $canEdit = ! $deadlinePassed && ! $deleted;
+                $canCreateAnother = $prihlaska->udalost && ! $deadlinePassed && ! $capacityReached;
             @endphp
 
             <section class="editorial-grid items-start">
@@ -62,6 +64,9 @@
                 <aside class="panel p-6 sm:p-8">
                     <p class="section-eyebrow">Akce</p>
                     <div class="mt-4 flex flex-wrap gap-3">
+                        @if($canCreateAnother)
+                            <a href="{{ route('prihlasky.create', $prihlaska->udalost) }}" class="button-secondary">Vytvořit novou přihlášku</a>
+                        @endif
                         @if($canEdit)
                             <a href="{{ route('prihlasky.edit', $prihlaska) }}" class="button-primary">Upravit</a>
                         @endif

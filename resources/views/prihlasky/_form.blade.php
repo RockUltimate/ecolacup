@@ -12,18 +12,13 @@
         kunId: '{{ old('kun_id', $isEdit ? $prihlaska->kun_id : '') }}',
         selectedMoznosti: @js(array_map('intval', $selectedMoznosti)),
         selectedUstajeni: @js(array_map('intval', $selectedUstajeni)),
-        ockovani: { ehv_datum: null, aie_datum: null, chripka_datum: null, ockovani: {} },
         moznostiMeta: @js($udalost->moznosti->map(fn ($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
         ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn ($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
         totalPrice: 0,
         init() {
             this.recalculateTotal();
-            if (this.kunId) {
-                this.fetchOckovaniStatus();
-            }
             this.$watch('selectedMoznosti', () => this.recalculateTotal());
             this.$watch('selectedUstajeni', () => this.recalculateTotal());
-            this.$watch('kunId', () => this.fetchOckovaniStatus());
         },
         nextStep() {
             if (this.step === 1 && (!this.osobaId || !this.kunId)) return;
@@ -50,15 +45,6 @@
             const selectedMoznostiPrice = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
             const selectedUstajeniPrice = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
             this.totalPrice = selectedMoznostiPrice + selectedUstajeniPrice;
-        },
-        async fetchOckovaniStatus() {
-            if (!this.kunId) {
-                this.ockovani = { ehv_datum: null, aie_datum: null, chripka_datum: null, ockovani: {} };
-                return;
-            }
-            const response = await fetch(`/ajax/kun/${this.kunId}/ockovani`);
-            if (!response.ok) return;
-            this.ockovani = await response.json();
         },
         formatPrice(value) {
             return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
@@ -146,15 +132,6 @@
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('kun_tandem_id')" class="mt-2" />
-                </div>
-
-                <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Očkování a vyšetření</p>
-                        <ul class="mt-3 space-y-2 text-sm text-gray-700">
-                            <li>EHV: <span x-text="ockovani.ehv_datum ?? 'neuvedeno'"></span></li>
-                            <li>AIE: <span x-text="ockovani.aie_datum ?? 'neuvedeno'"></span></li>
-                            <li>Chřipka: <span x-text="ockovani.chripka_datum ?? 'neuvedeno'"></span></li>
-                        </ul>
                 </div>
             </section>
 

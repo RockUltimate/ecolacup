@@ -42,9 +42,6 @@ trait CreatesDomainModels
             'rok_narozeni' => 2015,
             'staj' => 'Staj A',
             'pohlavi' => 'v',
-            'ehv_datum' => now()->addMonth()->toDateString(),
-            'aie_datum' => now()->addMonth()->toDateString(),
-            'chripka_datum' => now()->addMonth()->toDateString(),
         ], $attributes));
     }
 

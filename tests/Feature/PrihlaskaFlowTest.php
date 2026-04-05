@@ -15,7 +15,7 @@ class PrihlaskaFlowTest extends TestCase
     use CreatesDomainModels;
     use RefreshDatabase;
 
-    public function test_user_can_create_registration_and_admin_fee_is_auto_added_for_non_member(): void
+    public function test_user_can_create_registration_and_see_create_another_action(): void
     {
         Queue::fake();
 
@@ -43,16 +43,21 @@ class PrihlaskaFlowTest extends TestCase
         $prihlaska = Prihlaska::query()->firstOrFail();
 
         $response->assertRedirect(route('prihlasky.show', $prihlaska, absolute: false));
-        $this->assertSame(2, $prihlaska->polozky()->count());
-        $this->assertDatabaseHas('prihlasky_polozky', [
+        $this->assertSame(1, $prihlaska->polozky()->count());
+        $this->assertDatabaseMissing('prihlasky_polozky', [
             'prihlaska_id' => $prihlaska->id,
             'nazev' => 'Administrativní poplatek',
         ]);
-        $this->assertEquals(650.0, (float) $prihlaska->fresh()->cena_celkem);
+        $this->assertEquals(550.0, (float) $prihlaska->fresh()->cena_celkem);
+        $this->actingAs($user)
+            ->get(route('prihlasky.show', $prihlaska))
+            ->assertOk()
+            ->assertSee('Vytvořit novou přihlášku')
+            ->assertSee(route('prihlasky.create', $udalost, absolute: false));
         Queue::assertPushed(SendPrihlaskaEmail::class);
     }
 
-    public function test_admin_fee_is_not_duplicated_for_same_person_and_event(): void
+    public function test_selected_admin_fee_is_preserved_for_multiple_registrations_of_same_person(): void
     {
         Queue::fake();
 
@@ -81,12 +86,12 @@ class PrihlaskaFlowTest extends TestCase
 
         $druhaPrihlaska = Prihlaska::query()->latest('id')->firstOrFail();
 
-        $this->assertSame(1, $druhaPrihlaska->polozky()->count());
-        $this->assertDatabaseMissing('prihlasky_polozky', [
+        $this->assertSame(2, $druhaPrihlaska->polozky()->count());
+        $this->assertDatabaseHas('prihlasky_polozky', [
             'prihlaska_id' => $druhaPrihlaska->id,
             'nazev' => 'Administrativní poplatek',
         ]);
-        $this->assertEquals(300.0, (float) $druhaPrihlaska->fresh()->cena_celkem);
+        $this->assertEquals(400.0, (float) $druhaPrihlaska->fresh()->cena_celkem);
     }
 
     public function test_registration_cannot_be_created_after_deadline(): void

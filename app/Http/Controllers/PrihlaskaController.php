@@ -170,18 +170,6 @@ class PrihlaskaController extends Controller
         ]);
     }
 
-    public function ajaxKunOckovani(Kun $kun, Request $request): JsonResponse
-    {
-        $this->abortIfNotMine($kun->user_id, $request);
-
-        return response()->json([
-            'ockovani' => $kun->ockovaniOk(),
-            'ehv_datum' => optional($kun->ehv_datum)->format('d.m.Y'),
-            'aie_datum' => optional($kun->aie_datum)->format('d.m.Y'),
-            'chripka_datum' => optional($kun->chripka_datum)->format('d.m.Y'),
-        ]);
-    }
-
     /**
      * @param  array<string, mixed>  $validated
      * @return array<string, mixed>

@@ -46,7 +46,7 @@
     @else
         <div>
             <label for="gdpr_souhlas" class="inline-flex items-center">
-                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas')) required>
+                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas'))>
                 <span class="ms-2 text-sm text-gray-700">Souhlasím se zpracováním osobních údajů (GDPR)</span>
             </label>
             <x-input-error :messages="$errors->get('gdpr_souhlas')" class="mt-2" />

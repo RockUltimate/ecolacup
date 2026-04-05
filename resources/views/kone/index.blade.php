@@ -16,7 +16,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @forelse ($kone as $kun)
-                    @php($ockovani = $kun->ockovaniOk())
                     @php($passportComplete = filled($kun->cislo_prukazu) && filled($kun->cislo_hospodarstvi) && filled($kun->majitel_jmeno_adresa))
                     <div class="panel p-5">
                         <div class="flex items-start justify-between gap-4">
@@ -43,23 +42,6 @@
                                     <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">Smazat</button>
                                 </form>
                             </div>
-                        </div>
-
-                        <div class="mt-4 flex flex-wrap gap-2 text-xs">
-                            @foreach (['ehv_datum' => 'EHV', 'aie_datum' => 'AIE', 'chripka_datum' => 'Chřipka'] as $field => $label)
-                                @php($state = $ockovani[$field] ?? 'missing')
-                                <span @class([
-                                    'px-2 py-1 rounded-full',
-                                    'bg-green-100 text-green-700' => $state === 'ok',
-                                    'bg-amber-100 text-amber-700' => $state === 'expired',
-                                    'bg-red-100 text-red-700' => $state === 'missing',
-                                ])>
-                                    {{ $label }}: {{ $state === 'ok' ? 'OK' : ($state === 'expired' ? 'Po termínu' : 'Chybí') }}
-                                    @if($kun->{$field})
-                                        ({{ $kun->{$field}->format('d.m.Y') }})
-                                    @endif
-                                </span>
-                            @endforeach
                         </div>
                     </div>
                 @empty

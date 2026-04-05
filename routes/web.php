@@ -58,7 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/prihlasky/{prihlaska}/pdf', [PrihlaskaController::class, 'pdf'])->name('prihlasky.pdf');
 
     Route::get('/ajax/osoba/{osoba}/polozky', [PrihlaskaController::class, 'ajaxOsobaPolozky']);
-    Route::get('/ajax/kun/{kun}/ockovani', [PrihlaskaController::class, 'ajaxKunOckovani']);
 });
 
 Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {

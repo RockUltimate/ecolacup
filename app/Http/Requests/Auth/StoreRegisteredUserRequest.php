@@ -29,7 +29,7 @@ class StoreRegisteredUserRequest extends FormRequest
             'pohlavi' => ['nullable', 'in:M,F'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'telefon' => ['nullable', 'string', 'max:30'],
-            'gdpr_souhlas' => ['sometimes', 'accepted'],
+            'gdpr_souhlas' => ['required', 'accepted'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }

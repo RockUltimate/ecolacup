@@ -31,9 +31,6 @@ class Kun extends Model
         'rok_narozeni',
         'staj',
         'pohlavi',
-        'ehv_datum',
-        'aie_datum',
-        'chripka_datum',
         'cislo_prukazu',
         'cislo_hospodarstvi',
         'majitel_jmeno_adresa',
@@ -48,9 +45,6 @@ class Kun extends Model
     {
         return [
             'rok_narozeni' => 'integer',
-            'ehv_datum' => 'date',
-            'aie_datum' => 'date',
-            'chripka_datum' => 'date',
         ];
     }
 
@@ -62,24 +56,5 @@ class Kun extends Model
     public function prihlasky(): HasMany
     {
         return $this->hasMany(Prihlaska::class, 'kun_id');
-    }
-
-    public function ockovaniOk(): array
-    {
-        $today = now()->startOfDay();
-        $status = [];
-
-        foreach (['ehv_datum', 'aie_datum', 'chripka_datum'] as $field) {
-            $date = $this->{$field};
-
-            if (! $date) {
-                $status[$field] = 'missing';
-                continue;
-            }
-
-            $status[$field] = $date->lt($today) ? 'expired' : 'ok';
-        }
-
-        return $status;
     }
 }

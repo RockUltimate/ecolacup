@@ -70,7 +70,7 @@
             </div>
 
             <label for="gdpr_souhlas" class="flex items-start gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-4 text-sm leading-6 text-gray-700">
-                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('gdpr_souhlas')) required>
+                <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('gdpr_souhlas'))>
                 <span>Souhlasím se zpracováním osobních údajů pro účely evidence účastníků a přihlášek podle pravidel platformy.</span>
             </label>
             <x-input-error :messages="$errors->get('gdpr_souhlas')" class="mt-2" />

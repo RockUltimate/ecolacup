@@ -48,28 +48,6 @@
         </section>
 
         <section class="panel p-5 space-y-4">
-            <h3 class="text-base font-semibold text-gray-900">Zdravotní údaje</h3>
-            <p class="text-xs text-gray-600">Uveďte platné termíny vyšetření/očkování. Chybějící data se označí jako nekompletní.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <x-input-label for="ehv_datum" :value="'EHV datum'" />
-                    <x-text-input id="ehv_datum" name="ehv_datum" type="text" class="mt-1 block w-full" :value="old('ehv_datum', isset($kun) && $kun->ehv_datum ? $kun->ehv_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
-                    <x-input-error :messages="$errors->get('ehv_datum')" class="mt-2" />
-                </div>
-                <div>
-                    <x-input-label for="aie_datum" :value="'AIE datum'" />
-                    <x-text-input id="aie_datum" name="aie_datum" type="text" class="mt-1 block w-full" :value="old('aie_datum', isset($kun) && $kun->aie_datum ? $kun->aie_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
-                    <x-input-error :messages="$errors->get('aie_datum')" class="mt-2" />
-                </div>
-                <div>
-                    <x-input-label for="chripka_datum" :value="'Chřipka datum'" />
-                    <x-text-input id="chripka_datum" name="chripka_datum" type="text" class="mt-1 block w-full" :value="old('chripka_datum', isset($kun) && $kun->chripka_datum ? $kun->chripka_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
-                    <x-input-error :messages="$errors->get('chripka_datum')" class="mt-2" />
-                </div>
-            </div>
-        </section>
-
-        <section class="panel p-5 space-y-4">
             <h3 class="text-base font-semibold text-gray-900">Průkaz a vlastník</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -85,7 +63,7 @@
             </div>
 
             <div>
-                <x-input-label for="majitel_jmeno_adresa" :value="'Majitel (jméno + adresa)'" />
+                <x-input-label for="majitel_jmeno_adresa" :value="'Majitel koně (jméno + adresa)'" />
                 <textarea id="majitel_jmeno_adresa" name="majitel_jmeno_adresa" rows="4" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('majitel_jmeno_adresa', $kun->majitel_jmeno_adresa ?? '') }}</textarea>
                 <x-input-error :messages="$errors->get('majitel_jmeno_adresa')" class="mt-2" />
             </div>

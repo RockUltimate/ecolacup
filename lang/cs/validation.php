@@ -149,6 +149,10 @@ return [
     'uuid'                 => 'Pole :attribute musí být platné UUID.',
 
     'custom' => [
+        'gdpr_souhlas' => [
+            'accepted' => 'Pro pokračování je potřeba souhlasit se zpracováním osobních údajů.',
+            'required' => 'Pro pokračování je potřeba souhlasit se zpracováním osobních údajů.',
+        ],
         'cislo_prukazu' => [
             'regex' => 'Pole číslo průkazu může obsahovat pouze písmena, číslice, mezery, pomlčky a lomítka.',
         ],

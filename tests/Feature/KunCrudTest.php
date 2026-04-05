@@ -13,11 +13,6 @@ class KunCrudTest extends TestCase
     use CreatesDomainModels;
     use RefreshDatabase;
 
-    protected function czechDateString(string $modifier): string
-    {
-        return now()->modify($modifier)->format('d.m.Y');
-    }
-
     public function test_user_can_create_update_and_delete_horse(): void
     {
         $user = User::factory()->create();
@@ -28,9 +23,6 @@ class KunCrudTest extends TestCase
             'rok_narozeni' => 2017,
             'staj' => 'Ranč Sever',
             'pohlavi' => 'v',
-            'ehv_datum' => $this->czechDateString('+1 month'),
-            'aie_datum' => $this->czechDateString('+1 month'),
-            'chripka_datum' => $this->czechDateString('+1 month'),
             'cislo_prukazu' => 'ABC-123',
             'cislo_hospodarstvi' => 'HZ-77',
             'majitel_jmeno_adresa' => 'Test Owner, Praha',
@@ -54,9 +46,6 @@ class KunCrudTest extends TestCase
             'rok_narozeni' => 2017,
             'staj' => 'Ranč Jih',
             'pohlavi' => 'k',
-            'ehv_datum' => $this->czechDateString('+2 months'),
-            'aie_datum' => $this->czechDateString('+2 months'),
-            'chripka_datum' => $this->czechDateString('+2 months'),
             'cislo_prukazu' => 'XYZ-999',
             'cislo_hospodarstvi' => 'HZ-99',
             'majitel_jmeno_adresa' => 'Updated Owner, Brno',
