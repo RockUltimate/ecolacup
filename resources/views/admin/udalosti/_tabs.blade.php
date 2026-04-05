@@ -13,15 +13,15 @@
     ];
 @endphp
 
-<div class="panel p-2">
+<div class="panel p-3">
     <nav class="flex flex-wrap gap-2">
         @foreach($tabs as $key => $tab)
             <a
                 href="{{ $tab['href'] }}"
                 @class([
-                    'px-3 py-2 rounded-md text-sm font-medium transition',
-                    'bg-[#3d6b4f] text-white' => $active === $key,
-                    'text-[#3d6b4f] hover:bg-emerald-50' => $active !== $key,
+                    'rounded-full border px-4 py-2 text-sm font-semibold transition',
+                    'border-[#20392c] bg-[#20392c] text-white' => $active === $key,
+                    'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50' => $active !== $key,
                 ])
             >
                 {{ $tab['label'] }}

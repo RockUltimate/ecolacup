@@ -9,12 +9,26 @@
         --brand-cream: #f5f0e8;
         --brand-sand: #d4b896;
         --brand-dark: #1c1c1c;
+        --brand-ink: #20392c;
+        --brand-stroke: #e7dcc9;
     }
 
     body {
         background: radial-gradient(circle at 10% 10%, #fff8ee 0%, var(--brand-cream) 55%, #ede2d2 100%);
         color: var(--brand-dark);
         font-family: "Manrope", "Segoe UI", sans-serif;
+    }
+
+    body.site-shell {
+        background:
+            radial-gradient(circle at top left, rgba(255, 247, 231, 0.95), rgba(255, 247, 231, 0) 34%),
+            radial-gradient(circle at 82% 12%, rgba(225, 239, 228, 0.85), rgba(225, 239, 228, 0) 28%),
+            linear-gradient(180deg, #fffaf2 0%, #f4ede1 52%, #ede3d4 100%);
+        min-height: 100vh;
+    }
+
+    [x-cloak] {
+        display: none !important;
     }
 
     h1,
@@ -27,8 +41,34 @@
 }
 
 @layer components {
+    .site-chroma {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0, rgba(255, 255, 255, 0) 22%, rgba(255, 255, 255, 0) 78%, rgba(255, 255, 255, 0.18) 100%),
+            radial-gradient(circle at 20% 20%, rgba(123, 82, 48, 0.08), transparent 26%),
+            radial-gradient(circle at 78% 18%, rgba(61, 107, 79, 0.08), transparent 22%);
+        opacity: 0.9;
+    }
+
+    .site-nav {
+        @apply sticky top-0 z-30 border-b border-white/60 backdrop-blur-xl;
+        background: rgba(255, 251, 245, 0.84);
+    }
+
+    .site-mark {
+        @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
+        background: linear-gradient(135deg, #274633 0%, #3d6b4f 100%);
+        color: #fff8ef;
+        box-shadow: 0 10px 30px rgba(39, 70, 51, 0.2);
+    }
+
     .panel {
-        @apply bg-white/90 backdrop-blur-sm shadow-sm rounded-xl border border-[#e7dcc9];
+        @apply rounded-[1.5rem] border backdrop-blur-sm;
+        border-color: var(--brand-stroke);
+        background-color: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 24px 70px rgba(71, 52, 34, 0.08);
     }
 
     .brand-pill {
@@ -40,5 +80,85 @@
     .brand-link {
         @apply underline underline-offset-4 hover:opacity-80 transition;
         color: var(--brand-brown);
+    }
+
+    .button-primary {
+        @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition duration-200;
+        background: linear-gradient(135deg, #274633 0%, #3d6b4f 100%);
+        color: #fffaf1;
+        box-shadow: 0 14px 30px rgba(39, 70, 51, 0.18);
+    }
+
+    .button-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 34px rgba(39, 70, 51, 0.22);
+    }
+
+    .button-secondary {
+        @apply inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition duration-200;
+        border-color: rgba(123, 82, 48, 0.22);
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--brand-brown);
+    }
+
+    .button-secondary:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .section-eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.3em];
+        color: var(--brand-brown);
+    }
+
+    .field-shell {
+        @apply mt-1 block w-full rounded-2xl border px-4 py-3 text-sm text-gray-900 transition duration-200;
+        border-color: #dccdb8;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .field-shell:hover {
+        border-color: #cdb291;
+    }
+
+    .field-shell:focus {
+        outline: none;
+        border-color: #3d6b4f;
+        box-shadow: 0 0 0 4px rgba(61, 107, 79, 0.12);
+    }
+
+    .surface-muted {
+        @apply rounded-[1.25rem] border p-4;
+        border-color: #eadfcc;
+        background: rgba(249, 244, 235, 0.88);
+    }
+
+    .status-note {
+        @apply rounded-[1rem] border px-4 py-3 text-sm leading-6;
+    }
+
+    .editorial-grid {
+        @apply grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.7fr)];
+    }
+
+    .reveal-up {
+        animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .reveal-up-delay {
+        animation: reveal-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+}
+
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

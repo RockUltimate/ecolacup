@@ -3,6 +3,7 @@
     $selectedMoznosti = old('moznosti', $isEdit ? $prihlaska->polozky->pluck('moznost_id')->all() : []);
     $selectedUstajeni = old('ustajeni', $isEdit ? $prihlaska->ustajeniChoices->pluck('ustajeni_id')->all() : []);
 @endphp
+
 <div
     x-data="{
         step: 1,
@@ -14,8 +15,8 @@
         clenstvi: { status: 'none', label: 'Bez aktivního členství CMT' },
         ockovani: { ehv_datum: null, aie_datum: null, chripka_datum: null, ockovani: {} },
         adminFeeStatus: { alreadyCharged: false, hasMembership: true, autoFeeRequired: false, loading: false },
-        moznostiMeta: @js($udalost->moznosti->map(fn($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
-        ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
+        moznostiMeta: @js($udalost->moznosti->map(fn ($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
+        ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn ($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
         totalPrice: 0,
         init() {
             this.recalculateTotal();
@@ -23,7 +24,9 @@
                 this.fetchClenstviStatus();
                 this.fetchAdminFeeStatus();
             }
-            if (this.kunId) this.fetchOckovaniStatus();
+            if (this.kunId) {
+                this.fetchOckovaniStatus();
+            }
             this.$watch('selectedMoznosti', () => this.recalculateTotal());
             this.$watch('selectedUstajeni', () => this.recalculateTotal());
             this.$watch('osobaId', () => {
@@ -51,15 +54,11 @@
         },
         hasSelectedAdminFee() {
             const adminFee = this.adminFeeOption();
-            if (!adminFee) {
-                return false;
-            }
-
-            return this.selectedMoznosti.map(Number).includes(Number(adminFee.id));
+            return adminFee ? this.selectedMoznosti.map(Number).includes(Number(adminFee.id)) : false;
         },
         recalculateTotal() {
             const selectedMoznostiPrice = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
-            const ustajeni = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
+            const selectedUstajeniPrice = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
             const adminFee = this.adminFeeOption();
             const adminFeePrice = adminFee ? Number(adminFee.cena) : 0;
             const hasSelectedAdminFee = this.hasSelectedAdminFee();
@@ -71,7 +70,7 @@
                 correctedMoznostiPrice += adminFeePrice;
             }
 
-            this.totalPrice = correctedMoznostiPrice + ustajeni;
+            this.totalPrice = correctedMoznostiPrice + selectedUstajeniPrice;
         },
         formatPrice(value) {
             return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
@@ -121,183 +120,272 @@
     x-init="init()"
     class="space-y-6"
 >
-    <form method="POST" action="{{ $isEdit ? route('prihlasky.update', $prihlaska) : route('prihlasky.store', $udalost) }}" class="space-y-6 pb-24">
-        @csrf
-        @if($isEdit)
-            @method('PUT')
-        @endif
-        <div class="flex flex-wrap items-center gap-2 text-xs">
-            <span class="brand-pill" :class="step >= 1 ? '' : 'opacity-50'">1. Osoba a kůň</span>
-            <span class="brand-pill" :class="step >= 2 ? '' : 'opacity-50'">2. Výběr položek</span>
-            <span class="brand-pill" :class="step >= 3 ? '' : 'opacity-50'">3. Souhrn a odeslání</span>
-        </div>
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <form method="POST" action="{{ $isEdit ? route('prihlasky.update', $prihlaska) : route('prihlasky.store', $udalost) }}" class="space-y-6">
+            @csrf
+            @if($isEdit)
+                @method('PUT')
+            @endif
 
-        <section x-show="step === 1" class="panel p-5 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section class="panel px-6 py-5 sm:px-8">
+                <div class="flex flex-wrap gap-3">
+                    <button type="button" @click="step = 1" :class="step === 1 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                        1. Osoba a kůň
+                    </button>
+                    <button type="button" @click="step = 2" :class="step === 2 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                        2. Položky a služby
+                    </button>
+                    <button type="button" @click="step = 3" :class="step === 3 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
+                        3. Souhrn
+                    </button>
+                </div>
+            </section>
+
+            <section x-cloak x-show="step === 1" class="panel space-y-6 p-6 sm:p-8">
                 <div>
-                    <x-input-label for="osoba_id" :value="'Osoba'" />
-                    <select id="osoba_id" x-model="osobaId" name="osoba_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" {{ $isEdit ? 'disabled' : '' }} required>
-                        <option value="">Vyberte osobu</option>
-                        @foreach($osoby as $osoba)
-                            <option value="{{ $osoba->id }}" @selected((int) old('osoba_id', $isEdit ? $prihlaska->osoba_id : 0) === $osoba->id)>
-                                {{ $osoba->prijmeni }} {{ $osoba->jmeno }} ({{ $osoba->datum_narozeni?->format('d.m.Y') }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @if($isEdit)
-                        <input type="hidden" name="osoba_id" value="{{ $prihlaska->osoba_id }}">
-                    @endif
-                    <x-input-error :messages="$errors->get('osoba_id')" class="mt-2" />
+                    <p class="section-eyebrow">Krok 1</p>
+                    <h2 class="mt-3 text-2xl text-[#20392c]">Vyberte účastníka a koně</h2>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">Při úpravě zůstává osoba i hlavní kůň uzamčený, aby zůstala zachovaná historie registrace.</p>
+                </div>
+
+                @if($osoby->isEmpty() || $kone->isEmpty())
+                    <div class="status-note border-amber-200 bg-amber-50 text-amber-900">
+                        Pro vytvoření přihlášky je potřeba mít založenou alespoň jednu osobu a jednoho koně.
+                    </div>
+                @endif
+
+                <div class="grid gap-5 md:grid-cols-2">
+                    <div>
+                        <x-input-label for="osoba_id" :value="'Osoba'" />
+                        <select id="osoba_id" x-model="osobaId" name="osoba_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
+                            <option value="">Vyberte osobu</option>
+                            @foreach($osoby as $osoba)
+                                <option value="{{ $osoba->id }}" @selected((int) old('osoba_id', $isEdit ? $prihlaska->osoba_id : 0) === $osoba->id)>
+                                    {{ $osoba->prijmeni }} {{ $osoba->jmeno }} ({{ $osoba->datum_narozeni?->format('d.m.Y') }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @if($isEdit)
+                            <input type="hidden" name="osoba_id" value="{{ $prihlaska->osoba_id }}">
+                        @endif
+                        <x-input-error :messages="$errors->get('osoba_id')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="kun_id" :value="'Kůň'" />
+                        <select id="kun_id" x-model="kunId" name="kun_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
+                            <option value="">Vyberte koně</option>
+                            @foreach($kone as $kun)
+                                <option value="{{ $kun->id }}" @selected((int) old('kun_id', $isEdit ? $prihlaska->kun_id : 0) === $kun->id)>
+                                    {{ $kun->jmeno }} ({{ $kun->plemeno_kod ?: 'bez plemene' }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @if($isEdit)
+                            <input type="hidden" name="kun_id" value="{{ $prihlaska->kun_id }}">
+                        @endif
+                        <x-input-error :messages="$errors->get('kun_id')" class="mt-2" />
+                    </div>
                 </div>
 
                 <div>
-                    <x-input-label for="kun_id" :value="'Kůň'" />
-                    <select id="kun_id" x-model="kunId" name="kun_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" {{ $isEdit ? 'disabled' : '' }} required>
-                        <option value="">Vyberte koně</option>
+                    <x-input-label for="kun_tandem_id" :value="'Tandem kůň (volitelně)'" />
+                    <select id="kun_tandem_id" name="kun_tandem_id" class="field-shell">
+                        <option value="">Bez tandemu</option>
                         @foreach($kone as $kun)
-                            <option value="{{ $kun->id }}" @selected((int) old('kun_id', $isEdit ? $prihlaska->kun_id : 0) === $kun->id)>
-                                {{ $kun->jmeno }} ({{ $kun->plemeno_kod ?: 'bez plemene' }})
+                            <option value="{{ $kun->id }}" @selected((int) old('kun_tandem_id', $isEdit ? ($prihlaska->kun_tandem_id ?? 0) : 0) === $kun->id)>
+                                {{ $kun->jmeno }}
                             </option>
                         @endforeach
                     </select>
-                    @if($isEdit)
-                        <input type="hidden" name="kun_id" value="{{ $prihlaska->kun_id }}">
-                    @endif
-                    <x-input-error :messages="$errors->get('kun_id')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('kun_tandem_id')" class="mt-2" />
                 </div>
-            </div>
 
-            <div>
-                <x-input-label for="kun_tandem_id" :value="'Tandem kůň (volitelně)'" />
-                <select id="kun_tandem_id" name="kun_tandem_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    <option value="">Bez tandemu</option>
-                    @foreach($kone as $kun)
-                        <option value="{{ $kun->id }}" @selected((int) old('kun_tandem_id', $isEdit ? ($prihlaska->kun_tandem_id ?? 0) : 0) === $kun->id)>
-                            {{ $kun->jmeno }}
-                        </option>
-                    @endforeach
-                </select>
-                <x-input-error :messages="$errors->get('kun_tandem_id')" class="mt-2" />
-            </div>
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="surface-muted">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Členství CMT</p>
+                        <p class="mt-3 text-lg font-semibold text-[#20392c]" x-text="clenstvi.label"></p>
+                    </div>
+                    <div class="surface-muted">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Očkování a vyšetření</p>
+                        <ul class="mt-3 space-y-2 text-sm text-gray-700">
+                            <li>EHV: <span x-text="ockovani.ehv_datum ?? 'neuvedeno'"></span></li>
+                            <li>AIE: <span x-text="ockovani.aie_datum ?? 'neuvedeno'"></span></li>
+                            <li>Chřipka: <span x-text="ockovani.chripka_datum ?? 'neuvedeno'"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div class="rounded-lg border border-gray-200 p-3">
-                    <p class="font-semibold text-gray-900">Status CMT</p>
-                    <p class="mt-1 text-gray-700" x-text="clenstvi.label"></p>
-                </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                    <p class="font-semibold text-gray-900">Očkování / vyšetření</p>
-                    <ul class="mt-1 text-gray-700 space-y-1">
-                        <li>EHV: <span x-text="ockovani.ehv_datum ?? 'neuvedeno'"></span></li>
-                        <li>AIE: <span x-text="ockovani.aie_datum ?? 'neuvedeno'"></span></li>
-                        <li>Chřipka: <span x-text="ockovani.chripka_datum ?? 'neuvedeno'"></span></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section x-show="step === 2" class="panel p-5 space-y-5">
-            <div>
-                <h3 class="font-semibold text-gray-900 mb-2">Disciplíny</h3>
-                <div class="space-y-2">
-                    @foreach($udalost->moznosti as $moznost)
-                        <label class="inline-flex items-center w-full p-3 border border-gray-200 rounded-md hover:bg-[#faf6ef] transition">
-                            <input type="checkbox" x-model="selectedMoznosti" name="moznosti[]" value="{{ $moznost->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                @checked(in_array($moznost->id, array_map('intval', $selectedMoznosti), true))>
-                            <span class="ms-2 text-sm text-gray-700">{{ $moznost->nazev }} — {{ number_format((float)$moznost->cena, 2, ',', ' ') }} Kč</span>
-                        </label>
-                    @endforeach
-                </div>
-                <x-input-error :messages="$errors->get('moznosti')" class="mt-2" />
-                <p x-show=\"adminFeeStatus.loading\" class=\"mt-2 text-xs text-gray-500\">Kontroluji administrativní poplatek…</p>
-                <div x-show=\"!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired\" class=\"mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800\">
-                    U osoby bez členství CMT bude při první přihlášce automaticky přidán administrativní poplatek.
-                </div>
-                <div x-show=\"!adminFeeStatus.loading && adminFeeStatus.alreadyCharged\" class=\"mt-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800\">
-                    Administrativní poplatek už byl pro tuto osobu na této akci účtován a nebude přidán znovu.
-                </div>
-            </div>
-
-            <div>
-                <h3 class="font-semibold text-gray-900 mb-2">Ustájení / ubytování</h3>
-                <div class="space-y-2">
-                    @foreach($udalost->ustajeniMoznosti as $item)
-                        <label class="inline-flex items-center w-full p-3 border border-gray-200 rounded-md hover:bg-[#faf6ef] transition">
-                            <input type="checkbox" x-model="selectedUstajeni" name="ustajeni[]" value="{{ $item->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                @checked(in_array($item->id, array_map('intval', $selectedUstajeni), true))>
-                            <span class="ms-2 text-sm text-gray-700">{{ $item->nazev }} ({{ $item->typ }}) — {{ number_format((float)$item->cena, 2, ',', ' ') }} Kč</span>
-                        </label>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
-        <section x-show="step === 3" class="panel p-5 space-y-5">
-            <h3 class="font-semibold text-gray-900">Souhrn přihlášky</h3>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section x-cloak x-show="step === 2" class="panel space-y-8 p-6 sm:p-8">
                 <div>
-                    <p class="text-sm font-semibold text-gray-900">Vybrané disciplíny</p>
-                    <ul class="mt-2 space-y-1 text-sm text-gray-700">
-                        <template x-for="item in selectedMoznostiItems()" :key="item.id">
-                            <li x-text="`${item.nazev} — ${formatPrice(item.cena)} Kč`"></li>
-                        </template>
-                    </ul>
+                    <p class="section-eyebrow">Krok 2</p>
+                    <h2 class="mt-3 text-2xl text-[#20392c]">Zvolte disciplíny a doplňkové služby</h2>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">Průběžný součet dole počítá i s administrativním poplatkem podle pravidel členství CMT.</p>
                 </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between gap-4">
+                        <h3 class="text-lg font-semibold text-[#20392c]">Disciplíny</h3>
+                        <p class="text-sm text-gray-500">{{ $udalost->moznosti->count() }} možností</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        @foreach($udalost->moznosti as $moznost)
+                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-[#faf6ef]">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" x-model="selectedMoznosti" name="moznosti[]" value="{{ $moznost->id }}" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]"
+                                        @checked(in_array($moznost->id, array_map('intval', $selectedMoznosti), true))>
+                                    <div>
+                                        <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
+                                        <p class="mt-1 text-sm text-gray-600">
+                                            @if($moznost->je_administrativni_poplatek)
+                                                Administrativní položka dle pravidel akce.
+                                            @elseif($moznost->min_vek !== null)
+                                                Minimální věk účastníka: {{ $moznost->min_vek }} let.
+                                            @else
+                                                Bez minimálního věku.
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
+                            </label>
+                        @endforeach
+                    </div>
+                    <x-input-error :messages="$errors->get('moznosti')" class="mt-2" />
+
+                    <p x-show="adminFeeStatus.loading" class="text-sm text-gray-500">Kontroluji administrativní poplatek…</p>
+                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired" class="status-note border-amber-200 bg-amber-50 text-amber-900">
+                        U osoby bez členství CMT bude při první přihlášce na tuto akci automaticky započten administrativní poplatek.
+                    </div>
+                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.alreadyCharged" class="status-note border-emerald-200 bg-emerald-50 text-emerald-800">
+                        Administrativní poplatek už byl pro tuto osobu v rámci akce účtován a nebude přidán znovu.
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between gap-4">
+                        <h3 class="text-lg font-semibold text-[#20392c]">Ustájení, ubytování a ostatní</h3>
+                        <p class="text-sm text-gray-500">{{ $udalost->ustajeniMoznosti->count() }} možností</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        @foreach($udalost->ustajeniMoznosti as $item)
+                            <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-[#faf6ef]">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" x-model="selectedUstajeni" name="ustajeni[]" value="{{ $item->id }}" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]"
+                                        @checked(in_array($item->id, array_map('intval', $selectedUstajeni), true))>
+                                    <div>
+                                        <p class="font-semibold text-[#20392c]">{{ $item->nazev }}</p>
+                                        <p class="mt-1 text-sm text-gray-600">{{ ucfirst($item->typ) }} @if($item->kapacita)• kapacita {{ $item->kapacita }}@endif</p>
+                                    </div>
+                                </div>
+                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $item->cena, 2, ',', ' ') }} Kč</p>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+
+            <section x-cloak x-show="step === 3" class="panel space-y-6 p-6 sm:p-8">
                 <div>
-                    <p class="text-sm font-semibold text-gray-900">Ustájení / ubytování</p>
-                    <ul class="mt-2 space-y-1 text-sm text-gray-700">
-                        <template x-for="item in selectedUstajeniItems()" :key="`u-${item.id}`">
-                            <li x-text="`${item.nazev} (${item.typ}) — ${formatPrice(item.cena)} Kč`"></li>
-                        </template>
-                    </ul>
+                    <p class="section-eyebrow">Krok 3</p>
+                    <h2 class="mt-3 text-2xl text-[#20392c]">Zkontrolujte souhrn a odešlete přihlášku</h2>
                 </div>
-            </div>
-            <div class="rounded-lg border border-[#e5dbc8] bg-[#faf6ef] p-3">
-                <p class="text-sm text-gray-700">Celkem k úhradě</p>
-                <p class="text-xl font-semibold text-[#3d6b4f]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
-            </div>
 
-            <div>
-                <x-input-label for="poznamka" :value="'Poznámka'" />
-                <textarea id="poznamka" name="poznamka" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('poznamka', $isEdit ? $prihlaska->poznamka : '') }}</textarea>
-                <x-input-error :messages="$errors->get('poznamka')" class="mt-2" />
-            </div>
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div class="surface-muted">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Vybrané disciplíny</p>
+                        <ul class="mt-4 space-y-2 text-sm text-gray-700">
+                            <template x-if="selectedMoznostiItems().length === 0">
+                                <li>Žádná disciplína není vybraná.</li>
+                            </template>
+                            <template x-for="item in selectedMoznostiItems()" :key="item.id">
+                                <li class="flex items-start justify-between gap-4">
+                                    <span x-text="item.nazev"></span>
+                                    <span class="font-semibold text-[#7b5230]" x-text="`${formatPrice(item.cena)} Kč`"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
 
-            <div>
-                <label for="gdpr_souhlas" class="inline-flex items-center">
-                    <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('gdpr_souhlas', true)) required>
-                    <span class="ms-2 text-sm text-gray-700">Souhlasím se zpracováním osobních údajů (GDPR)</span>
+                    <div class="surface-muted">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Doplňkové služby</p>
+                        <ul class="mt-4 space-y-2 text-sm text-gray-700">
+                            <template x-if="selectedUstajeniItems().length === 0">
+                                <li>Bez doplňkových položek.</li>
+                            </template>
+                            <template x-for="item in selectedUstajeniItems()" :key="`u-${item.id}`">
+                                <li class="flex items-start justify-between gap-4">
+                                    <span x-text="`${item.nazev} (${item.typ})`"></span>
+                                    <span class="font-semibold text-[#7b5230]" x-text="`${formatPrice(item.cena)} Kč`"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="surface-muted">
+                    <p class="text-sm text-gray-600">Celkem k úhradě</p>
+                    <p class="mt-2 text-3xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
+                </div>
+
+                <div>
+                    <x-input-label for="poznamka" :value="'Poznámka pro pořadatele'" />
+                    <textarea id="poznamka" name="poznamka" rows="4" class="field-shell">{{ old('poznamka', $isEdit ? $prihlaska->poznamka : '') }}</textarea>
+                    <x-input-error :messages="$errors->get('poznamka')" class="mt-2" />
+                </div>
+
+                <label for="gdpr_souhlas" class="flex items-start gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-4 text-sm leading-6 text-gray-700">
+                    <input id="gdpr_souhlas" type="checkbox" name="gdpr_souhlas" value="1" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('gdpr_souhlas', true)) required>
+                    <span>Potvrzuji souhlas se zpracováním osobních údajů pro vytvoření a správu této přihlášky.</span>
                 </label>
                 <x-input-error :messages="$errors->get('gdpr_souhlas')" class="mt-2" />
-            </div>
-        </section>
+            </section>
 
-        <div class="flex items-center justify-between gap-3">
-            <button type="button" @click="prevStep()" class="inline-flex items-center px-4 py-2 rounded-md border border-gray-300 text-xs font-semibold uppercase tracking-widest text-gray-700 hover:bg-gray-50" x-show="step > 1">
-                Zpět
-            </button>
-            <div class="flex items-center gap-3 ms-auto">
-                <button type="button" @click="nextStep()" class="inline-flex items-center px-4 py-2 rounded-md bg-[#3d6b4f] text-xs font-semibold uppercase tracking-widest text-white hover:opacity-90" x-show="step < 3">
-                    Pokračovat
-                </button>
-                <x-primary-button x-show="step === 3">{{ $isEdit ? 'Uložit přihlášku' : 'Odeslat přihlášku' }}</x-primary-button>
-                <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na detail</a>
-            </div>
-        </div>
-    </form>
+            <section class="panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-3">
+                    <button type="button" @click="prevStep()" class="button-secondary" x-show="step > 1">Zpět</button>
+                    <button type="button" @click="nextStep()" class="button-primary" x-show="step < 3">Pokračovat</button>
+                </div>
 
-    <div class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-3xl panel px-4 py-3 flex items-center justify-between gap-4">
-        <div class="text-sm text-gray-700">
-            <span class="font-semibold">Vybrané položky:</span>
-            <span x-text="selectedMoznosti.length + selectedUstajeni.length"></span>
-        </div>
-        <div class="text-sm text-gray-700">
-            <span class="font-semibold">Celkem:</span>
-            <span class="text-[#3d6b4f] font-semibold" x-text="`${formatPrice(totalPrice)} Kč`"></span>
-        </div>
-        <button type="button" class="inline-flex items-center px-3 py-2 rounded-md bg-[#3d6b4f] text-xs font-semibold uppercase tracking-widest text-white hover:opacity-90" @click="step = 3">
-            Souhrn
-        </button>
-        <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět</a>
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-[#7b5230] underline underline-offset-4">
+                        {{ $isEdit ? 'Zpět na detail přihlášky' : 'Zpět na detail akce' }}
+                    </a>
+                    <x-primary-button x-show="step === 3">
+                        {{ $isEdit ? 'Uložit změny' : 'Odeslat přihlášku' }}
+                    </x-primary-button>
+                </div>
+            </section>
+        </form>
+
+        <aside class="space-y-6">
+            <section class="panel p-6">
+                <p class="section-eyebrow">Souhrn</p>
+                <h3 class="mt-3 text-2xl text-[#20392c]">Průběžná cena</h3>
+                <p class="mt-4 text-4xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
+                <p class="mt-3 text-sm leading-6 text-gray-600">Vybraných položek: <span class="font-semibold text-[#20392c]" x-text="selectedMoznosti.length + selectedUstajeni.length"></span></p>
+            </section>
+
+            <section class="panel p-6">
+                <p class="section-eyebrow">Kontrola</p>
+                <ul class="mt-4 space-y-3 text-sm text-gray-700">
+                    <li class="flex items-start justify-between gap-4">
+                        <span>Osoba</span>
+                        <span :class="osobaId ? 'text-emerald-700' : 'text-amber-700'" x-text="osobaId ? 'vybrána' : 'chybí'"></span>
+                    </li>
+                    <li class="flex items-start justify-between gap-4">
+                        <span>Kůň</span>
+                        <span :class="kunId ? 'text-emerald-700' : 'text-amber-700'" x-text="kunId ? 'vybrán' : 'chybí'"></span>
+                    </li>
+                    <li class="flex items-start justify-between gap-4">
+                        <span>Disciplíny</span>
+                        <span :class="selectedMoznosti.length ? 'text-emerald-700' : 'text-amber-700'" x-text="selectedMoznosti.length ? `${selectedMoznosti.length} vybráno` : 'nic nevybráno'"></span>
+                    </li>
+                </ul>
+            </section>
+        </aside>
     </div>
 </div>

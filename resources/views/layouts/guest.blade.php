@@ -5,29 +5,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'EcolaCup') }}</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-[#7b5230]" />
-                </a>
-            </div>
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 panel overflow-hidden sm:rounded-xl">
-                <div class="mb-5 rounded-lg bg-gradient-to-r from-[#3d6b4f] to-[#7b5230] px-4 py-2 text-xs font-semibold text-white tracking-wide uppercase">
-                    Koně Akce Přihlášky
-                </div>
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+    <body class="site-shell text-gray-900 antialiased">
+        <div class="site-chroma" aria-hidden="true"></div>
+        <div class="relative flex min-h-screen items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+            <div class="grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:items-center">
+                <section class="hidden lg:block">
+                    <p class="section-eyebrow">EcolaCup</p>
+                    <h1 class="mt-4 max-w-xl text-5xl leading-tight text-[#20392c]">Přihlášky na CMT akce bez chaotických tabulek a ručního přepisování.</h1>
+                    <p class="mt-5 max-w-xl text-base leading-7 text-gray-600">Účet drží pohromadě osoby, koně i registrace. Přihlášení účastníci pak řeší další závody během pár kroků.</p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="{{ route('udalosti.index') }}" class="button-primary">Zobrazit události</a>
+                        <a href="{{ route('gdpr') }}" class="button-secondary">GDPR informace</a>
+                    </div>
+                </section>
+
+                <section class="panel px-6 py-7 sm:px-8">
+                    <div class="mb-6">
+                        <a href="{{ route('udalosti.index') }}" class="flex items-center gap-3">
+                            <span class="site-mark">EC</span>
+                            <span>
+                                <span class="block text-sm font-semibold uppercase tracking-[0.28em] text-[#7b5230]">EcolaCup</span>
+                                <span class="block text-xs text-gray-500">Czech Mountain Trail registrace</span>
+                            </span>
+                        </a>
+                    </div>
+                    {{ $slot }}
+                </section>
             </div>
         </div>
     </body>

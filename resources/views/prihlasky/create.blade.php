@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Nová přihláška • {{ $udalost->nazev }}
-        </h2>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Nová přihláška</p>
+            <h1 class="text-3xl text-[#20392c]">{{ $udalost->nazev }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Vyberte osobu, koně a startovní položky. Průběžný součet zůstává viditelný po celou dobu vyplňování.</p>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
-                @include('prihlasky._form', ['udalost' => $udalost, 'osoby' => $osoby, 'kone' => $kone])
-            </div>
+    <div class="py-10">
+        <div class="mx-auto max-w-6xl">
+            @include('prihlasky._form', ['udalost' => $udalost, 'osoby' => $osoby, 'kone' => $kone])
         </div>
     </div>
 </x-app-layout>

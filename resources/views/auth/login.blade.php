@@ -1,47 +1,50 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <!-- Email Address -->
+    <div class="space-y-6">
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <p class="section-eyebrow">Přihlášení</p>
+            <h1 class="mt-3 text-3xl text-[#20392c]">Vraťte se do svého účtu</h1>
+            <p class="mt-3 text-sm leading-6 text-gray-600">Po přihlášení navážete na uložené osoby, koně i rozpracované přihlášky.</p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <x-auth-session-status :status="session('status')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            @csrf
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <div>
+                <x-input-label for="email" :value="'E-mail'" />
+                <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+            <div>
+                <div class="flex items-center justify-between gap-4">
+                    <x-input-label for="password" :value="'Heslo'" />
+                    @if (Route::has('password.request'))
+                        <a class="text-sm text-[#7b5230] underline underline-offset-4" href="{{ route('password.request') }}">
+                            Zapomenuté heslo?
+                        </a>
+                    @endif
+                </div>
+
+                <x-text-input id="password" type="password" name="password" required autocomplete="current-password" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
+
+            <label for="remember_me" class="flex items-center gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-3 text-sm text-gray-700">
+                <input id="remember_me" type="checkbox" class="rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" name="remember">
+                <span>Zůstat přihlášený i při další návštěvě.</span>
             </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
+            <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                <p class="text-sm text-gray-600">
+                    Nemáte účet?
+                    <a class="text-[#7b5230] underline underline-offset-4" href="{{ route('register') }}">Vytvořit nový účet</a>
+                </p>
+                <x-primary-button>
+                    Přihlásit se
+                </x-primary-button>
+            </div>
+        </form>
+    </div>
 </x-guest-layout>

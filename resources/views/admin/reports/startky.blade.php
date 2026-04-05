@@ -2,67 +2,78 @@
     @php
         $startkyFilters = $startkyFilters ?? ['moznost_id' => 0, 'q' => ''];
     @endphp
+
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Startky • {{ $udalost->nazev }}</h2>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div class="space-y-3">
+                <p class="section-eyebrow">Startky</p>
+                <h1 class="text-3xl text-[#20392c]">Startovní listiny podle disciplín</h1>
+                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • filtrování podle disciplíny a jména jezdce nebo koně.</p>
+            </div>
+            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
         </div>
     </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+
+    <div class="py-10">
+        <div class="mx-auto max-w-7xl space-y-6">
             @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'startky'])
+
             <x-admin-report-filter-form
                 :action="route('admin.reports.startky', $udalost)"
                 :reset-href="route('admin.reports.startky', $udalost)"
                 :form-class="'grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_auto] gap-3 items-end'"
             >
-                    <div>
-                        <x-input-label for="moznost_id" :value="'Disciplína'" />
-                        <select id="moznost_id" name="moznost_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                            <option value="0">Všechny disciplíny</option>
-                            @foreach($moznostiOptions as $moznost)
-                                <option value="{{ $moznost->id }}" @selected((int) $startkyFilters['moznost_id'] === (int) $moznost->id)>{{ $moznost->nazev }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <x-input-label for="q" :value="'Hledat (jezdec/kůň)'" />
-                        <x-text-input id="q" name="q" type="text" class="mt-1 block w-full" :value="$startkyFilters['q']" />
-                    </div>
+                <div>
+                    <x-input-label for="moznost_id" :value="'Disciplína'" />
+                    <select id="moznost_id" name="moznost_id" class="field-shell">
+                        <option value="0">Všechny disciplíny</option>
+                        @foreach($moznostiOptions as $moznost)
+                            <option value="{{ $moznost->id }}" @selected((int) $startkyFilters['moznost_id'] === (int) $moznost->id)>{{ $moznost->nazev }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <x-input-label for="q" :value="'Hledat (jezdec nebo kůň)'" />
+                    <x-text-input id="q" name="q" type="text" :value="$startkyFilters['q']" />
+                </div>
             </x-admin-report-filter-form>
-            <div class="panel p-3 text-sm flex flex-wrap gap-3">
-                <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="text-indigo-600 underline">Export startky</a>
-                <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="text-indigo-600 underline">Export počty</a>
-            </div>
-            <div class="panel p-3 text-sm text-gray-700">
+
+            <section class="panel p-5">
+                <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="button-secondary">Export startky</a>
+                    <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="button-secondary">Export počty</a>
+                </div>
+            </section>
+
+            <section class="panel p-5 text-sm text-gray-700">
                 @if($moznostiSeStartkami->total() > 0)
                     Zobrazeno {{ $moznostiSeStartkami->firstItem() }}–{{ $moznostiSeStartkami->lastItem() }} z {{ $moznostiSeStartkami->total() }} disciplín.
                 @else
                     Zobrazeno 0 z 0 disciplín.
                 @endif
-            </div>
+            </section>
+
             @forelse($moznostiSeStartkami as $block)
-                <details class="bg-white shadow sm:rounded-lg overflow-hidden group" @if($loop->first) open @endif>
-                    <summary class="p-4 border-b border-gray-200 font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between gap-3">
-                        <span>{{ $block['moznost']->nazev }}</span>
-                        <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                            {{ $block['registrations']->count() }} startů
-                        </span>
+                <details class="panel overflow-hidden" @if($loop->first) open @endif>
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5">
+                        <span class="text-xl font-semibold text-[#20392c]">{{ $block['moznost']->nazev }}</span>
+                        <span class="brand-pill">{{ $block['registrations']->count() }} startů</span>
                     </summary>
-                    <div class="divide-y divide-gray-200">
+                    <div class="space-y-3 border-t border-[#eadfcc] px-6 py-5">
                         @forelse($block['registrations'] as $p)
-                            <div class="p-4 text-sm text-gray-700">
-                                #{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }} •
-                                {{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif • {{ $p->osoba?->staj }}
+                            <div class="surface-muted">
+                                <p class="font-semibold text-[#20392c]">#{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</p>
+                                <p class="mt-1 text-sm text-gray-600">{{ $p->kun?->jmeno }} @if($p->kunTandem) + {{ $p->kunTandem->jmeno }} @endif • {{ $p->osoba?->staj }}</p>
                             </div>
                         @empty
-                            <div class="p-4 text-sm text-gray-600">Bez startů.</div>
+                            <div class="text-sm text-gray-600">Bez startů.</div>
                         @endforelse
                     </div>
                 </details>
             @empty
-                <div class="bg-white shadow sm:rounded-lg p-4 text-sm text-gray-600">Pro zvolený filtr nebyly nalezeny žádné startky.</div>
+                <div class="panel p-8 text-sm text-gray-600">Pro zvolený filtr nebyly nalezeny žádné startky.</div>
             @endforelse
+
             <div>
                 {{ $moznostiSeStartkami->links() }}
             </div>
