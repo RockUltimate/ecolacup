@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateAdminStartCisloRequest;
 use App\Models\Prihlaska;
 use App\Models\Udalost;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -10,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
 use ZipArchive;
 
 class ReportController extends Controller
@@ -29,22 +29,13 @@ class ReportController extends Controller
         ]);
     }
 
-    public function updateStartCislo(Udalost $udalost, Prihlaska $prihlaska, Request $request): RedirectResponse
+    public function updateStartCislo(Udalost $udalost, Prihlaska $prihlaska, UpdateAdminStartCisloRequest $request): RedirectResponse
     {
         if ((int) $prihlaska->udalost_id !== (int) $udalost->id) {
             abort(404);
         }
 
-        $validated = $request->validate([
-            'start_cislo' => [
-                'nullable',
-                'integer',
-                'min:1',
-                Rule::unique('prihlasky', 'start_cislo')
-                    ->where(fn ($query) => $query->where('udalost_id', $udalost->id))
-                    ->ignore($prihlaska->id),
-            ],
-        ]);
+        $validated = $request->validated();
 
         $prihlaska->update([
             'start_cislo' => $validated['start_cislo'] ?? null,

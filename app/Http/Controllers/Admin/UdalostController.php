@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreAdminUdalostMoznostRequest;
+use App\Http\Requests\Admin\StoreAdminUdalostRequest;
+use App\Http\Requests\Admin\StoreAdminUdalostUstajeniRequest;
+use App\Http\Requests\Admin\UpdateAdminUdalostRequest;
 use App\Models\Udalost;
 use App\Models\UdalostMoznost;
 use App\Models\UdalostUstajeni;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class UdalostController extends Controller
@@ -46,19 +49,9 @@ class UdalostController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreAdminUdalostRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nazev' => ['required', 'string', 'max:255'],
-            'misto' => ['required', 'string', 'max:255'],
-            'datum_zacatek' => ['required', 'date'],
-            'datum_konec' => ['required', 'date', 'after_or_equal:datum_zacatek'],
-            'uzavierka_prihlasek' => ['required', 'date'],
-            'kapacita' => ['nullable', 'integer', 'min:1'],
-            'aktivni' => ['nullable', 'boolean'],
-            'popis' => ['nullable', 'string'],
-            'propozice_pdf' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $validated['aktivni'] = $request->boolean('aktivni', true);
         Udalost::query()->create($validated);
@@ -75,19 +68,9 @@ class UdalostController extends Controller
         ]);
     }
 
-    public function update(Request $request, Udalost $udalost): RedirectResponse
+    public function update(UpdateAdminUdalostRequest $request, Udalost $udalost): RedirectResponse
     {
-        $validated = $request->validate([
-            'nazev' => ['required', 'string', 'max:255'],
-            'misto' => ['required', 'string', 'max:255'],
-            'datum_zacatek' => ['required', 'date'],
-            'datum_konec' => ['required', 'date', 'after_or_equal:datum_zacatek'],
-            'uzavierka_prihlasek' => ['required', 'date'],
-            'kapacita' => ['nullable', 'integer', 'min:1'],
-            'aktivni' => ['nullable', 'boolean'],
-            'popis' => ['nullable', 'string'],
-            'propozice_pdf' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $validated['aktivni'] = $request->boolean('aktivni', false);
         $udalost->update($validated);
@@ -102,15 +85,9 @@ class UdalostController extends Controller
         return redirect()->route('admin.udalosti.index')->with('status', 'udalost-deleted');
     }
 
-    public function storeMoznost(Request $request, Udalost $udalost): RedirectResponse
+    public function storeMoznost(StoreAdminUdalostMoznostRequest $request, Udalost $udalost): RedirectResponse
     {
-        $validated = $request->validate([
-            'nazev' => ['required', 'string', 'max:255'],
-            'min_vek' => ['nullable', 'integer', 'min:0'],
-            'cena' => ['required', 'numeric', 'min:0'],
-            'poradi' => ['nullable', 'integer', 'min:0'],
-            'je_administrativni_poplatek' => ['nullable', 'boolean'],
-        ]);
+        $validated = $request->validated();
 
         $validated['poradi'] = $validated['poradi'] ?? 0;
         $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
@@ -130,14 +107,9 @@ class UdalostController extends Controller
         return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-deleted');
     }
 
-    public function storeUstajeni(Request $request, Udalost $udalost): RedirectResponse
+    public function storeUstajeni(StoreAdminUdalostUstajeniRequest $request, Udalost $udalost): RedirectResponse
     {
-        $validated = $request->validate([
-            'nazev' => ['required', 'string', 'max:255'],
-            'typ' => ['required', 'in:ustajeni,ubytovani,strava,ostatni'],
-            'cena' => ['required', 'numeric', 'min:0'],
-            'kapacita' => ['nullable', 'integer', 'min:1'],
-        ]);
+        $validated = $request->validated();
 
         $udalost->ustajeniMoznosti()->create($validated);
 
