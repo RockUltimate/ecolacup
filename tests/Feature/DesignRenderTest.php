@@ -22,7 +22,17 @@ class DesignRenderTest extends TestCase
 
     public function test_event_detail_renders(): void
     {
-        $udalost = Udalost::factory()->create(['aktivni' => true]);
+        $udalost = Udalost::query()->create([
+            'nazev' => 'Testovaci udalost',
+            'misto' => 'Praha',
+            'datum_zacatek' => now()->addWeek()->toDateString(),
+            'datum_konec' => now()->addWeek()->addDay()->toDateString(),
+            'uzavierka_prihlasek' => now()->addDays(5)->toDateString(),
+            'kapacita' => 50,
+            'aktivni' => true,
+            'popis' => 'Testovaci popis udalosti.',
+        ]);
+
         $response = $this->get(route('udalosti.show', $udalost));
         $response->assertStatus(200);
         $response->assertSee($udalost->nazev);
