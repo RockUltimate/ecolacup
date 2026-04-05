@@ -42,8 +42,13 @@
                 @endif
             </div>
             @forelse($moznostiSeStartkami as $block)
-                <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-                    <div class="p-4 border-b border-gray-200 font-semibold text-gray-900">{{ $block['moznost']->nazev }}</div>
+                <details class="bg-white shadow sm:rounded-lg overflow-hidden group" @if($loop->first) open @endif>
+                    <summary class="p-4 border-b border-gray-200 font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between gap-3">
+                        <span>{{ $block['moznost']->nazev }}</span>
+                        <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                            {{ $block['registrations']->count() }} startů
+                        </span>
+                    </summary>
                     <div class="divide-y divide-gray-200">
                         @forelse($block['registrations'] as $p)
                             <div class="p-4 text-sm text-gray-700">
@@ -54,7 +59,7 @@
                             <div class="p-4 text-sm text-gray-600">Bez startů.</div>
                         @endforelse
                     </div>
-                </div>
+                </details>
             @empty
                 <div class="bg-white shadow sm:rounded-lg p-4 text-sm text-gray-600">Pro zvolený filtr nebyly nalezeny žádné startky.</div>
             @endforelse
