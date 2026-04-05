@@ -8,7 +8,9 @@
 
 **Tech Stack:** Laravel 11 + Blade, Tailwind CSS v3, Alpine.js, Vite, PHP 8.4, Docker (port 8086)
 
-**Stitch export:** `/c/Users/Rock Ultimate/Documents/Web/ecolakone/stitch/` (5 pages with `code.html`, plus `paddock_reserve/DESIGN.md`)
+**Workspace assumption:** Run commands from the repository root unless a step says otherwise.
+
+**Stitch export:** `stitch/` (5 pages with `code.html`, plus `paddock_reserve/DESIGN.md`)
 
 **Design spec:** `docs/superpowers/specs/2026-04-05-stitch-blade-design.md`
 
@@ -58,7 +60,6 @@
 - [ ] **Step 1: Push current worktree work as `frontend` branch on origin**
 
 ```bash
-cd "C:\Users\Rock Ultimate\Documents\Web\ecolakone\.claude\worktrees\sleepy-zhukovsky"
 git push origin HEAD:frontend
 ```
 
@@ -167,7 +168,6 @@ export default {
 - [ ] **Step 2: Verify Tailwind compiles without errors**
 
 ```bash
-cd "C:\Users\Rock Ultimate\Documents\Web\ecolakone\.claude\worktrees\sleepy-zhukovsky"
 npm run build 2>&1
 ```
 
@@ -2062,6 +2062,6 @@ EOF
 - **Token naming:** All tasks use the exact token names from Task 2 (`primary`, `on-surface`, `secondary-container`, etc.) — consistent throughout.
 - **Dark mode:** Every page section includes `dark:` variants; component classes in `app.css` include `.dark` overrides.
 - **No TBD:** All code is fully written. Task 10 (registration form) intentionally requires a read step first because `_form.blade.php` is large (408 lines) with complex Alpine.js — writing a complete replacement blind would be error-prone.
-- **Controller update:** Task 11 includes a DashboardController change — committed together with the view.
+- **Controller update:** Task 11 allows a minimal DashboardController/view-model adjustment if the redesigned dashboard needs data that is not already passed by the existing controller.
 - **Image assets:** Replaced with CSS linear gradients throughout (`background: linear-gradient(135deg, #173809 ...)`).
 - **Newsletter footer:** Rendered as disabled UI-only (no form action, button has `disabled` attribute).

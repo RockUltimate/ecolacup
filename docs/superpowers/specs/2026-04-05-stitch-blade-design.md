@@ -372,5 +372,5 @@ Execute in this order to keep the app functional at each step:
 
 - Dark mode toggle UI (OS preference only)
 - Image assets — Stitch uses Google AI-generated images; production will use placeholder or user-uploaded images
-- New backend routes or controller logic — all data contracts unchanged
+- New backend routes or domain/data-contract changes — minimal controller or view-model adjustments are acceptable when required to render the redesigned Blade pages
 - Admin start-cisla and GDPR export pages — adopt component library but no layout redesign
