@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendPrihlaskaEmail;
 use App\Models\Kun;
 use App\Models\Osoba;
 use App\Models\Prihlaska;
@@ -65,6 +66,7 @@ class PrihlaskaController extends Controller
             array_map('intval', $validated['moznosti'] ?? []),
             array_map('intval', $validated['ustajeni'] ?? [])
         );
+        SendPrihlaskaEmail::dispatch($prihlaska);
 
         return redirect()->route('prihlasky.show', $prihlaska)->with('status', 'prihlaska-created');
     }
