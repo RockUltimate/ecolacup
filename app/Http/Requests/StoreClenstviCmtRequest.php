@@ -41,7 +41,7 @@ class StoreClenstviCmtRequest extends FormRequest
             'zastupce_telefon' => ['nullable', 'string', 'max:50'],
             'zastupce_email' => ['nullable', 'email', 'max:255'],
             'sken_prihlaska_upload' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:8192'],
-            'souhlas_gdpr' => ['nullable', 'boolean'],
+            'souhlas_gdpr' => ['required', 'accepted'],
             'souhlas_email' => ['nullable', 'boolean'],
             'souhlas_zverejneni' => ['nullable', 'boolean'],
         ];

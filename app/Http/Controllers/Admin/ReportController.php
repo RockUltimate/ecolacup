@@ -306,6 +306,7 @@ class ReportController extends Controller
     private function basePrihlaskyQuery(Udalost $udalost)
     {
         return $udalost->prihlasky()
+            ->withTrashed()
             ->with([
                 'osoba',
                 'kun',

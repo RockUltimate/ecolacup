@@ -27,8 +27,20 @@ Migrations run automatically at container startup in `docker/entrypoint.sh`.
 ## Queue & Scheduler (B8 readiness)
 - Queue tables are included in migrations (`jobs`, `job_batches`, `failed_jobs`).
 - Production worker template is stored in `deploy/supervisor/ecolacup-worker.conf`.
+- Registered scheduled maintenance tasks live in `routes/console.php`:
+  - `auth:clear-resets` every 15 minutes
+  - `queue:prune-batches --hours=48` daily at `02:15`
+  - `queue:prune-failed --hours=168` daily at `02:30`
 - Example scheduler cron:
   - `* * * * * cd /var/www/ecolacup && php artisan schedule:run >> /dev/null 2>&1`
+## Deployment notes
+- The Docker app container runs `docker/entrypoint.sh` on start.
+- Startup tasks include:
+  - creating `storage`/`bootstrap` cache directories
+  - generating `APP_KEY` when missing
+  - running `php artisan storage:link`
+  - running `php artisan migrate --force --graceful`
+- The current production-like container stack is PostgreSQL-based (`DB_CONNECTION=pgsql`), not MySQL-based.
 ## Initial implementation scope
 This first version includes:
 - Laravel + Breeze scaffold
