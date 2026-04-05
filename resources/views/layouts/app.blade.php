@@ -30,20 +30,9 @@
     <main class="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <x-flash-message />
 
-        @php
-            $upcomingEvents = \App\Models\Udalost::query()
-                ->where('aktivni', true)
-                ->whereDate('datum_zacatek', '>=', now()->startOfDay())
-                ->orderBy('datum_zacatek')
-                ->limit(3)
-                ->get();
-            $myOpenRegistrations = auth()->check()
-                ? auth()->user()->prihlasky()->with(['udalost', 'kun'])->where('smazana', false)->latest()->limit(4)->get()
-                : collect();
-        @endphp
-
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div class="grid grid-cols-1 gap-6 {{ !request()->routeIs('admin.*') ? 'lg:grid-cols-[minmax(0,1fr)_300px]' : '' }}">
             <div>{{ $slot }}</div>
+            @if(!request()->routeIs('admin.*'))
             <aside class="space-y-4">
                 <section class="panel p-5">
                     <p class="section-eyebrow">Kalendář</p>
@@ -74,6 +63,7 @@
                     </ul>
                 </section>
             </aside>
+            @endif
         </div>
     </main>
 </body>
