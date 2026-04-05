@@ -1,45 +1,37 @@
+{{-- resources/views/layouts/guest.blade.php --}}
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'EcolaCup') }}</title>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-background text-on-surface antialiased dark:bg-[#1c1c19] dark:text-[#e5e2dd]">
+    <div class="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md">
+            {{-- Logo --}}
+            <div class="mb-8 text-center">
+                <a href="{{ route('udalosti.index') }}"
+                   class="font-headline text-3xl italic text-emerald-950 dark:text-emerald-100">
+                    EcolaCup
+                </a>
+            </div>
 
-        <title>{{ config('app.name', 'EcolaCup') }}</title>
-
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="site-shell text-gray-900 antialiased">
-        <div class="site-chroma" aria-hidden="true"></div>
-        <div class="relative flex min-h-screen items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
-            <div class="grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:items-center">
-                <section class="hidden lg:block">
-                    <p class="section-eyebrow">EcolaCup</p>
-                    <h1 class="mt-4 max-w-xl text-5xl leading-tight text-[#20392c]">Přihlášky na CMT akce bez chaotických tabulek a ručního přepisování.</h1>
-                    <p class="mt-5 max-w-xl text-base leading-7 text-gray-600">Účet drží pohromadě osoby, koně i registrace. Přihlášení účastníci pak řeší další závody během pár kroků.</p>
-                    <div class="mt-8 flex flex-wrap gap-3">
-                        <a href="{{ route('udalosti.index') }}" class="button-primary">Zobrazit události</a>
-                        <a href="{{ route('gdpr') }}" class="button-secondary">GDPR informace</a>
-                    </div>
-                </section>
-
-                <section class="panel px-6 py-7 sm:px-8">
-                    <div class="mb-6">
-                        <a href="{{ route('udalosti.index') }}" class="flex items-center gap-3">
-                            <span class="site-mark">EC</span>
-                            <span>
-                                <span class="block text-sm font-semibold uppercase tracking-[0.28em] text-[#7b5230]">EcolaCup</span>
-                                <span class="block text-xs text-gray-500">Czech Mountain Trail registrace</span>
-                            </span>
-                        </a>
-                    </div>
-                    {{ $slot }}
-                </section>
+            {{-- Glass card --}}
+            <div class="glass-card px-8 py-8">
+                {{ $slot }}
             </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
