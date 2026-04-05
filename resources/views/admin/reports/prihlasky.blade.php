@@ -37,7 +37,7 @@
             </section>
 
             @if(count($duplicateStartNumbers) > 0)
-                <div class="status-note border-amber-200 bg-amber-50 text-amber-900">
+                <div class="status-note mt-4">
                     Duplicitní startovní čísla: {{ implode(', ', $duplicateStartNumbers) }}
                 </div>
             @endif
@@ -97,8 +97,8 @@
                 @forelse($prihlasky as $p)
                     <article @class([
                         'panel p-6',
-                        'bg-red-50/60' => $p->smazana,
-                        'ring-1 ring-amber-300 bg-amber-50/60' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
+                        'bg-error-container/60 dark:bg-error-container/40' => $p->smazana,
+                        'ring-1 ring-tertiary-fixed/40 bg-tertiary-fixed/60 dark:bg-tertiary-container/40' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
                     ])>
                         <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                             <div class="space-y-3">
