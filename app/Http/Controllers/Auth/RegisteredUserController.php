@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -25,22 +23,9 @@ class RegisteredUserController extends Controller
 
     /**
      * Handle an incoming registration request.
-     *
-     * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRegisteredUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
-            'jmeno' => ['nullable', 'string', 'max:255', 'required_without:name'],
-            'prijmeni' => ['nullable', 'string', 'max:255', 'required_without:name'],
-            'datum_narozeni' => ['nullable', 'date'],
-            'pohlavi' => ['nullable', 'in:M,F'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'telefon' => ['nullable', 'string', 'max:30'],
-            'gdpr_souhlas' => ['sometimes', 'accepted'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
         $jmeno = $request->string('jmeno')->toString();
         $prijmeni = $request->string('prijmeni')->toString();

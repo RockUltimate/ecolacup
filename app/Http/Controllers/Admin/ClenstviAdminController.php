@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateAdminClenstviRequest;
 use App\Models\ClenstviCmt;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -57,20 +58,9 @@ class ClenstviAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, ClenstviCmt $clenstviCmt): RedirectResponse
+    public function update(UpdateAdminClenstviRequest $request, ClenstviCmt $clenstviCmt): RedirectResponse
     {
-        $validated = $request->validate([
-            'evidencni_cislo' => ['nullable', 'string', 'max:20'],
-            'rok' => ['required', 'integer', 'min:2000', 'max:2100'],
-            'cena' => ['required', 'numeric', 'min:0'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'telefon' => ['nullable', 'string', 'max:50'],
-            'sken_prihlaska' => ['nullable', 'string', 'max:255'],
-            'aktivni' => ['nullable', 'boolean'],
-            'souhlas_gdpr' => ['nullable', 'boolean'],
-            'souhlas_email' => ['nullable', 'boolean'],
-            'souhlas_zverejneni' => ['nullable', 'boolean'],
-        ]);
+        $validated = $request->validated();
 
         $clenstviCmt->update([
             'evidencni_cislo' => $validated['evidencni_cislo'] ?? null,

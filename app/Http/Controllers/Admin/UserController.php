@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateAdminUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -43,16 +43,9 @@ class UserController extends Controller
         return view('admin.users.edit', ['managedUser' => $user]);
     }
 
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UpdateAdminUserRequest $request, User $user): RedirectResponse
     {
-        $validated = $request->validate([
-            'jmeno' => ['required', 'string', 'max:255'],
-            'prijmeni' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'telefon' => ['nullable', 'string', 'max:50'],
-            'is_admin' => ['nullable', 'boolean'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        ]);
+        $validated = $request->validated();
 
         $user->update([
             'jmeno' => $validated['jmeno'],
