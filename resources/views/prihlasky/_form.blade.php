@@ -12,27 +12,17 @@
         kunId: '{{ old('kun_id', $isEdit ? $prihlaska->kun_id : '') }}',
         selectedMoznosti: @js(array_map('intval', $selectedMoznosti)),
         selectedUstajeni: @js(array_map('intval', $selectedUstajeni)),
-        clenstvi: { status: 'none', label: 'Bez aktivního členství CMT' },
         ockovani: { ehv_datum: null, aie_datum: null, chripka_datum: null, ockovani: {} },
-        adminFeeStatus: { alreadyCharged: false, hasMembership: true, autoFeeRequired: false, loading: false },
         moznostiMeta: @js($udalost->moznosti->map(fn ($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
         ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn ($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
         totalPrice: 0,
         init() {
             this.recalculateTotal();
-            if (this.osobaId) {
-                this.fetchClenstviStatus();
-                this.fetchAdminFeeStatus();
-            }
             if (this.kunId) {
                 this.fetchOckovaniStatus();
             }
             this.$watch('selectedMoznosti', () => this.recalculateTotal());
             this.$watch('selectedUstajeni', () => this.recalculateTotal());
-            this.$watch('osobaId', () => {
-                this.fetchClenstviStatus();
-                this.fetchAdminFeeStatus();
-            });
             this.$watch('kunId', () => this.fetchOckovaniStatus());
         },
         nextStep() {
@@ -59,30 +49,7 @@
         recalculateTotal() {
             const selectedMoznostiPrice = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
             const selectedUstajeniPrice = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
-            const adminFee = this.adminFeeOption();
-            const adminFeePrice = adminFee ? Number(adminFee.cena) : 0;
-            const hasSelectedAdminFee = this.hasSelectedAdminFee();
-
-            let correctedMoznostiPrice = selectedMoznostiPrice;
-            if (this.adminFeeStatus.alreadyCharged && hasSelectedAdminFee) {
-                correctedMoznostiPrice -= adminFeePrice;
-            } else if (this.adminFeeStatus.autoFeeRequired && !hasSelectedAdminFee) {
-                correctedMoznostiPrice += adminFeePrice;
-            }
-
-            this.totalPrice = correctedMoznostiPrice + selectedUstajeniPrice;
-        },
-        formatPrice(value) {
-            return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-        },
-        async fetchClenstviStatus() {
-            if (!this.osobaId) {
-                this.clenstvi = { status: 'none', label: 'Bez aktivního členství CMT' };
-                return;
-            }
-            const response = await fetch(`/ajax/osoba/${this.osobaId}/clenstvi-img?udalost={{ $udalost->id }}`);
-            if (!response.ok) return;
-            this.clenstvi = await response.json();
+            this.totalPrice = selectedMoznostiPrice + selectedUstajeniPrice;
         },
         async fetchOckovaniStatus() {
             if (!this.kunId) {
@@ -93,28 +60,8 @@
             if (!response.ok) return;
             this.ockovani = await response.json();
         },
-        async fetchAdminFeeStatus() {
-            if (!this.osobaId) {
-                this.adminFeeStatus = { alreadyCharged: false, hasMembership: true, autoFeeRequired: false, loading: false };
-                this.recalculateTotal();
-                return;
-            }
-
-            this.adminFeeStatus.loading = true;
-            try {
-                const response = await fetch(`/ajax/udalost/{{ $udalost->id }}/admin-poplatek?osoba=${this.osobaId}`);
-                if (!response.ok) return;
-                const payload = await response.json();
-                this.adminFeeStatus = {
-                    alreadyCharged: Boolean(payload.already_charged),
-                    hasMembership: Boolean(payload.has_membership),
-                    autoFeeRequired: Boolean(payload.auto_fee_required),
-                    loading: false,
-                };
-                this.recalculateTotal();
-            } catch (e) {
-                this.adminFeeStatus.loading = false;
-            }
+        formatPrice(value) {
+            return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
         }
     }"
     x-init="init()"
@@ -177,7 +124,7 @@
                             <option value="">Vyberte koně</option>
                             @foreach($kone as $kun)
                                 <option value="{{ $kun->id }}" @selected((int) old('kun_id', $isEdit ? $prihlaska->kun_id : 0) === $kun->id)>
-                                    {{ $kun->jmeno }} ({{ $kun->plemeno_kod ?: 'bez plemene' }})
+                                    {{ $kun->jmeno }} ({{ $kun->plemeno_nazev ?: $kun->plemeno_vlastni ?: $kun->plemeno_kod ?: 'bez plemene' }})
                                 </option>
                             @endforeach
                         </select>
@@ -201,19 +148,13 @@
                     <x-input-error :messages="$errors->get('kun_tandem_id')" class="mt-2" />
                 </div>
 
-                <div class="grid gap-4 md:grid-cols-2">
-                    <div class="surface-muted">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Členství CMT</p>
-                        <p class="mt-3 text-lg font-semibold text-[#20392c]" x-text="clenstvi.label"></p>
-                    </div>
-                    <div class="surface-muted">
+                <div class="surface-muted">
                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Očkování a vyšetření</p>
                         <ul class="mt-3 space-y-2 text-sm text-gray-700">
                             <li>EHV: <span x-text="ockovani.ehv_datum ?? 'neuvedeno'"></span></li>
                             <li>AIE: <span x-text="ockovani.aie_datum ?? 'neuvedeno'"></span></li>
                             <li>Chřipka: <span x-text="ockovani.chripka_datum ?? 'neuvedeno'"></span></li>
                         </ul>
-                    </div>
                 </div>
             </section>
 
@@ -221,7 +162,7 @@
                 <div>
                     <p class="section-eyebrow">Krok 2</p>
                     <h2 class="mt-3 text-2xl text-[#20392c]">Zvolte disciplíny a doplňkové služby</h2>
-                    <p class="mt-2 text-sm leading-6 text-gray-600">Průběžný součet dole počítá i s administrativním poplatkem podle pravidel členství CMT.</p>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">Průběžný součet se přepočítává podle vybraných disciplín a doplňkových služeb.</p>
                 </div>
 
                 <div class="space-y-4">
@@ -254,14 +195,6 @@
                         @endforeach
                     </div>
                     <x-input-error :messages="$errors->get('moznosti')" class="mt-2" />
-
-                    <p x-show="adminFeeStatus.loading" class="text-sm text-gray-500">Kontroluji administrativní poplatek…</p>
-                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired" class="status-note border-amber-200 bg-amber-50 text-amber-900">
-                        U osoby bez členství CMT bude při první přihlášce na tuto akci automaticky započten administrativní poplatek.
-                    </div>
-                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.alreadyCharged" class="status-note border-emerald-200 bg-emerald-50 text-emerald-800">
-                        Administrativní poplatek už byl pro tuto osobu v rámci akce účtován a nebude přidán znovu.
-                    </div>
                 </div>
 
                 <div class="space-y-4">

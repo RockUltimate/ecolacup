@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             KunSeeder::class,
             UdalostSeeder::class,
             PrihlaskaSeeder::class,
-            ClenstviCmtSeeder::class,
         ]);
     }
 }

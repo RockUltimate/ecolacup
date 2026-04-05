@@ -29,9 +29,6 @@ class PrihlaskaService
                 ->where('udalost_id', $udalost->id)
                 ->whereIn('id', $ustajeniIds)
                 ->get();
-            $selectedMoznosti = $this->applyNewMemberAdminFee($prihlaska, $selectedMoznosti, $udalost);
-
-            $selectedMoznosti = $this->applyAdminFeeDedup($prihlaska, $selectedMoznosti);
 
             $prihlaska->polozky()->delete();
             foreach ($selectedMoznosti as $moznost) {
@@ -68,66 +65,6 @@ class PrihlaskaService
             ->max('start_cislo');
 
         return ($max ?? 0) + 1;
-    }
-
-    /**
-     * @param Collection<int, UdalostMoznost> $selectedMoznosti
-     */
-    private function applyAdminFeeDedup(Prihlaska $prihlaska, Collection $selectedMoznosti): Collection
-    {
-        $adminFeeIds = $selectedMoznosti
-            ->filter(fn (UdalostMoznost $item): bool => (bool) $item->je_administrativni_poplatek)
-            ->pluck('id');
-
-        if ($adminFeeIds->isEmpty()) {
-            return $selectedMoznosti;
-        }
-
-        $alreadyCharged = Prihlaska::query()
-            ->where('udalost_id', $prihlaska->udalost_id)
-            ->where('osoba_id', $prihlaska->osoba_id)
-            ->where('id', '!=', $prihlaska->id)
-            ->where('smazana', false)
-            ->whereHas('polozky', function ($query) use ($adminFeeIds): void {
-                $query->whereIn('moznost_id', $adminFeeIds->all());
-            })
-            ->exists();
-
-        if (! $alreadyCharged) {
-            return $selectedMoznosti;
-        }
-
-        return $selectedMoznosti->reject(
-            fn (UdalostMoznost $item): bool => (bool) $item->je_administrativni_poplatek
-        )->values();
-    }
-
-    /**
-     * @param Collection<int, UdalostMoznost> $selectedMoznosti
-     */
-    private function applyNewMemberAdminFee(Prihlaska $prihlaska, Collection $selectedMoznosti, Udalost $udalost): Collection
-    {
-        $osoba = $prihlaska->osoba()->first();
-        if (! $osoba || $osoba->clenstviCmt()->exists()) {
-            return $selectedMoznosti;
-        }
-
-        $adminFeeAlreadySelected = $selectedMoznosti
-            ->contains(fn (UdalostMoznost $item): bool => (bool) $item->je_administrativni_poplatek);
-        if ($adminFeeAlreadySelected) {
-            return $selectedMoznosti;
-        }
-
-        $adminFeeOption = UdalostMoznost::query()
-            ->where('udalost_id', $udalost->id)
-            ->where('je_administrativni_poplatek', true)
-            ->orderBy('id')
-            ->first();
-        if (! $adminFeeOption) {
-            return $selectedMoznosti;
-        }
-
-        return $selectedMoznosti->push($adminFeeOption);
     }
 
     /**

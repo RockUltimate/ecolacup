@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\NormalizesCzechDates;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateOsobaRequest extends FormRequest
 {
+    use NormalizesCzechDates;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,5 +32,10 @@ class UpdateOsobaRequest extends FormRequest
             'gdpr_souhlas' => ['nullable', 'boolean'],
             'gdpr_odvolano' => ['nullable', 'boolean'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeCzechDateFields(['datum_narozeni']);
     }
 }

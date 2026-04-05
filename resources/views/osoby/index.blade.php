@@ -22,9 +22,6 @@
                                 <p class="font-medium text-gray-900">{{ $osoba->prijmeni }} {{ $osoba->jmeno }}</p>
                                 <p class="text-sm text-gray-600">Datum narození: {{ $osoba->datum_narozeni?->format('d.m.Y') }}</p>
                                 <p class="text-sm text-gray-600">Stáj: {{ $osoba->staj }}</p>
-                                <div class="mt-2">
-                                    <x-badge-cmt :status="$osoba->cmt_status" />
-                                </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <a href="{{ route('osoby.edit', $osoba) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>

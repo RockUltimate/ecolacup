@@ -18,9 +18,9 @@
             <td style="text-align:center;">{{ $p->start_cislo }}</td>
             <td>{{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</td>
             <td>
-                {{ $p->kun?->jmeno }} ({{ $p->kun?->plemeno_kod }}, {{ $p->kun?->rok_narozeni }}, {{ $p->kun?->pohlavi }})
+                {{ $p->kun?->jmeno }} ({{ $p->kun?->plemeno_nazev ?: $p->kun?->plemeno_vlastni ?: $p->kun?->plemeno_kod }}, {{ $p->kun?->rok_narozeni }}, {{ $p->kun?->pohlavi }})
                 @if($p->kunTandem)
-                    , {{ $p->kunTandem->jmeno }} ({{ $p->kunTandem->plemeno_kod }}, {{ $p->kunTandem->rok_narozeni }}, {{ $p->kunTandem->pohlavi }})
+                    , {{ $p->kunTandem->jmeno }} ({{ $p->kunTandem->plemeno_nazev ?: $p->kunTandem->plemeno_vlastni ?: $p->kunTandem->plemeno_kod }}, {{ $p->kunTandem->rok_narozeni }}, {{ $p->kunTandem->pohlavi }})
                 @endif
             </td>
             <td>{{ $p->osoba?->staj }}</td>

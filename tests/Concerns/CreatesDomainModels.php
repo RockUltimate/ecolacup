@@ -2,7 +2,6 @@
 
 namespace Tests\Concerns;
 
-use App\Models\ClenstviCmt;
 use App\Models\Kun;
 use App\Models\Osoba;
 use App\Models\Pleme;
@@ -38,7 +37,7 @@ trait CreatesDomainModels
         return Kun::query()->create(array_merge([
             'user_id' => $user->id,
             'jmeno' => 'Test Horse',
-            'plemeno_kod' => 'CMT',
+            'plemeno_kod' => 'QH',
             'plemeno_nazev' => 'Test plemeno',
             'rok_narozeni' => 2015,
             'staj' => 'Staj A',
@@ -52,8 +51,8 @@ trait CreatesDomainModels
     protected function createPleme(array $attributes = []): Pleme
     {
         return Pleme::query()->create(array_merge([
-            'kod' => 'CMT',
-            'nazev' => 'Cesky mountain horse',
+            'kod' => 'QH',
+            'nazev' => 'Quarter Horse',
             'poradi' => 1,
         ], $attributes));
     }
@@ -95,21 +94,6 @@ trait CreatesDomainModels
         }
 
         return $udalost->fresh(['moznosti', 'ustajeniMoznosti']);
-    }
-
-    protected function createClenstvi(Osoba $osoba, array $attributes = []): ClenstviCmt
-    {
-        return ClenstviCmt::query()->create(array_merge([
-            'osoba_id' => $osoba->id,
-            'organizace_id' => 2,
-            'typ_clenstvi' => 'fyzicka_osoba',
-            'rok' => 2026,
-            'cena' => 500,
-            'aktivni' => true,
-            'souhlas_gdpr' => true,
-            'souhlas_email' => false,
-            'souhlas_zverejneni' => false,
-        ], $attributes));
     }
 
     /**

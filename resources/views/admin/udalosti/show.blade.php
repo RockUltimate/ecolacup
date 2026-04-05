@@ -59,6 +59,33 @@
                             <p class="mt-1">Uzávěrka: {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') }}</p>
                             <p class="mt-1">Kapacita: {{ $udalost->kapacita ? number_format($udalost->kapacita) : 'Neomezená' }}</p>
                         </div>
+                        <div class="surface-muted space-y-2">
+                            <p class="font-semibold text-[#20392c]">Materiály akce</p>
+                            <p>
+                                Propozice:
+                                @if($udalost->propozice_pdf)
+                                    <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">otevřít PDF</a>
+                                @else
+                                    <span class="text-gray-500">zatím bez souboru</span>
+                                @endif
+                            </p>
+                            <p>
+                                Výsledky:
+                                @if($udalost->vysledky_pdf)
+                                    <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">otevřít PDF</a>
+                                @else
+                                    <span class="text-gray-500">zatím bez souboru</span>
+                                @endif
+                            </p>
+                            <p>
+                                Fotoalbum:
+                                @if($udalost->fotoalbum_url)
+                                    <a href="{{ $udalost->fotoalbum_url }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">otevřít album</a>
+                                @else
+                                    <span class="text-gray-500">zatím bez odkazu</span>
+                                @endif
+                            </p>
+                        </div>
 
                         <div class="flex flex-wrap gap-3">
                             <a href="{{ route('admin.start-cisla.show', $udalost) }}" class="button-secondary">Správa startovních čísel</a>

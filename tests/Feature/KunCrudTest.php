@@ -13,22 +13,24 @@ class KunCrudTest extends TestCase
     use CreatesDomainModels;
     use RefreshDatabase;
 
+    protected function czechDateString(string $modifier): string
+    {
+        return now()->modify($modifier)->format('d.m.Y');
+    }
+
     public function test_user_can_create_update_and_delete_horse(): void
     {
         $user = User::factory()->create();
-        $this->createPleme();
 
         $this->actingAs($user)->post(route('kone.store'), [
             'jmeno' => 'Argo',
-            'plemeno_kod' => 'CMT',
-            'plemeno_nazev' => 'Cesky mountain horse',
-            'plemeno_vlastni' => null,
+            'plemeno_nazev' => 'Quarter Horse',
             'rok_narozeni' => 2017,
             'staj' => 'Ranč Sever',
             'pohlavi' => 'v',
-            'ehv_datum' => now()->addMonth()->toDateString(),
-            'aie_datum' => now()->addMonth()->toDateString(),
-            'chripka_datum' => now()->addMonth()->toDateString(),
+            'ehv_datum' => $this->czechDateString('+1 month'),
+            'aie_datum' => $this->czechDateString('+1 month'),
+            'chripka_datum' => $this->czechDateString('+1 month'),
             'cislo_prukazu' => 'ABC-123',
             'cislo_hospodarstvi' => 'HZ-77',
             'majitel_jmeno_adresa' => 'Test Owner, Praha',
@@ -40,7 +42,7 @@ class KunCrudTest extends TestCase
             'id' => $kun->id,
             'user_id' => $user->id,
             'jmeno' => 'Argo',
-            'plemeno_kod' => 'CMT',
+            'plemeno_nazev' => 'Quarter Horse',
             'staj' => 'Ranč Sever',
             'pohlavi' => 'v',
             'cislo_prukazu' => 'ABC-123',
@@ -48,15 +50,13 @@ class KunCrudTest extends TestCase
 
         $this->actingAs($user)->put(route('kone.update', $kun), [
             'jmeno' => 'Argo II',
-            'plemeno_kod' => 'CMT',
-            'plemeno_nazev' => 'Cesky mountain horse',
-            'plemeno_vlastni' => 'Linie A',
+            'plemeno_nazev' => 'Quarter Horse - Linie A',
             'rok_narozeni' => 2017,
             'staj' => 'Ranč Jih',
             'pohlavi' => 'k',
-            'ehv_datum' => now()->addMonths(2)->toDateString(),
-            'aie_datum' => now()->addMonths(2)->toDateString(),
-            'chripka_datum' => now()->addMonths(2)->toDateString(),
+            'ehv_datum' => $this->czechDateString('+2 months'),
+            'aie_datum' => $this->czechDateString('+2 months'),
+            'chripka_datum' => $this->czechDateString('+2 months'),
             'cislo_prukazu' => 'XYZ-999',
             'cislo_hospodarstvi' => 'HZ-99',
             'majitel_jmeno_adresa' => 'Updated Owner, Brno',
@@ -65,7 +65,7 @@ class KunCrudTest extends TestCase
         $this->assertDatabaseHas('kone', [
             'id' => $kun->id,
             'jmeno' => 'Argo II',
-            'plemeno_vlastni' => 'Linie A',
+            'plemeno_nazev' => 'Quarter Horse - Linie A',
             'staj' => 'Ranč Jih',
             'pohlavi' => 'k',
             'cislo_prukazu' => 'XYZ-999',
@@ -101,7 +101,6 @@ class KunCrudTest extends TestCase
 
         $this->actingAs($user)->put(route('kone.update', $kun), [
             'jmeno' => 'Neplatny kůň',
-            'plemeno_kod' => 'CMT',
             'plemeno_nazev' => 'Test plemeno',
             'rok_narozeni' => 2015,
             'staj' => 'Cizi staj',

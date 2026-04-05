@@ -4,11 +4,6 @@
         'osoba-created' => 'Osoba byla vytvořena.',
         'osoba-updated' => 'Osoba byla upravena.',
         'osoba-deleted' => 'Osoba byla smazána.',
-        'clenstvi-created' => 'Členství bylo vytvořeno.',
-        'clenstvi-updated' => 'Členství bylo upraveno.',
-        'clenstvi-deleted' => 'Členství bylo smazáno.',
-        'clenstvi-renewed' => 'Členství bylo prodlouženo na další rok.',
-        'clenstvi-renew-exists' => 'Členství pro další rok už existuje.',
         'start-cislo-updated' => 'Startovní číslo bylo uloženo.',
         'start-cisla-normalized' => 'Startovní čísla byla srovnána.',
         'prihlaska-created' => 'Přihláška byla vytvořena.',
@@ -23,7 +18,6 @@
         'admin-user-updated' => 'Uživatel byl upraven.',
         'admin-user-purged' => 'Uživatel byl trvale odstraněn (GDPR purge).',
         'admin-user-purge-self-denied' => 'Nelze odstranit právě přihlášeného administrátora.',
-        'admin-clenstvi-updated' => 'Členství bylo upraveno v administraci.',
     ];
 @endphp
 

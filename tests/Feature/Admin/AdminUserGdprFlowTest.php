@@ -24,8 +24,6 @@ class AdminUserGdprFlowTest extends TestCase
 
         $activeOsoba = $this->createOsoba($targetUser, ['jmeno' => 'Target']);
         $deletedOsoba = $this->createOsoba($targetUser, ['jmeno' => 'Deleted Person']);
-        $this->createClenstvi($activeOsoba);
-        $this->createClenstvi($deletedOsoba, ['rok' => 2027, 'aktivni' => false]);
         $deletedOsoba->delete();
 
         $activeKun = $this->createKun($targetUser, ['jmeno' => 'Target Horse']);
@@ -50,7 +48,6 @@ class AdminUserGdprFlowTest extends TestCase
         $this->assertDatabaseMissing('kone', ['id' => $deletedKun->id]);
         $this->assertDatabaseMissing('prihlasky', ['id' => $activePrihlaska->id]);
         $this->assertDatabaseMissing('prihlasky', ['id' => $deletedPrihlaska->id]);
-        $this->assertDatabaseCount('clenstvi_cmt', 0);
 
         $this->assertDatabaseHas('users', ['id' => $otherUser->id]);
         $this->assertDatabaseHas('osoby', ['id' => $otherOsoba->id]);

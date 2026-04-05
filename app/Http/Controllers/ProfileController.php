@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DestroyProfileRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Support\CzechDate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,10 @@ class ProfileController extends Controller
         $validated['name'] = $name !== '' ? $name : $request->user()->name;
         $validated['jmeno'] = $jmeno !== '' ? $jmeno : $request->user()->jmeno;
         $validated['prijmeni'] = $prijmeni !== '' ? $prijmeni : $request->user()->prijmeni;
+
+        if (!empty($validated['datum_narozeni'])) {
+            $validated['datum_narozeni'] = CzechDate::toDateString($validated['datum_narozeni']);
+        }
 
         if ($request->has('gdpr_souhlas')) {
             $validated['gdpr_souhlas_at'] = now();

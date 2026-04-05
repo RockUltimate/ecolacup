@@ -34,7 +34,6 @@
             <section class="panel p-5">
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('admin.users.index') }}" class="button-secondary">Správa uživatelů</a>
-                    <a href="{{ route('admin.clenstvi.index') }}" class="button-secondary">Správa členství CMT</a>
                     <a href="{{ route('admin.udalosti.index') }}" class="button-secondary">Události</a>
                 </div>
             </section>

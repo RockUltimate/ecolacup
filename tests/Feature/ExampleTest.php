@@ -33,9 +33,29 @@ class ExampleTest extends TestCase
         $eventIndex = $this->actingAs($user)->get(route('udalosti.index'));
         $eventDetail = $this->actingAs($user)->get(route('udalosti.show', $udalost));
 
-        foreach (['Osoby', 'Koně', 'Přihlášky', 'Členství CMT'] as $label) {
+        foreach (['Osoby', 'Koně', 'Přihlášky'] as $label) {
             $eventIndex->assertSee($label);
             $eventDetail->assertSee($label);
         }
+    }
+
+    public function test_event_descriptions_render_stored_html(): void
+    {
+        $udalost = $this->createUdalost([
+            'nazev' => 'Html pohar',
+            'popis' => '<p>Závod <strong>MT</strong></p><p>Druhý odstavec.</p>',
+        ]);
+
+        $index = $this->get(route('udalosti.index'));
+        $detail = $this->get(route('udalosti.show', $udalost));
+
+        $index->assertOk();
+        $index->assertSee('Závod', false);
+        $index->assertSee('<strong>MT</strong>', false);
+        $index->assertDontSee('&lt;p&gt;Závod', false);
+
+        $detail->assertOk();
+        $detail->assertSee('<p>Závod <strong>MT</strong></p>', false);
+        $detail->assertDontSee('&lt;p&gt;Závod', false);
     }
 }

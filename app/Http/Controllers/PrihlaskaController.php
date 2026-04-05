@@ -170,31 +170,6 @@ class PrihlaskaController extends Controller
         ]);
     }
 
-    public function ajaxClenstviStatus(Osoba $osoba, Request $request): JsonResponse
-    {
-        $this->abortIfNotMine($osoba->user_id, $request);
-        $clenstvi = $osoba->clenstviCmt()
-            ->where('aktivni', true)
-            ->orderByDesc('rok')
-            ->first();
-
-        if (! $clenstvi) {
-            return response()->json([
-                'status' => 'none',
-                'label' => 'Bez aktivního členství CMT',
-            ]);
-        }
-
-        return response()->json([
-            'status' => 'active',
-            'label' => 'Aktivní členství CMT',
-            'rok' => $clenstvi->rok,
-            'typ_clenstvi' => $clenstvi->typ_clenstvi,
-            'evidencni_cislo' => $clenstvi->evidencni_cislo,
-            'sken_prihlaska' => $clenstvi->sken_prihlaska,
-        ]);
-    }
-
     public function ajaxKunOckovani(Kun $kun, Request $request): JsonResponse
     {
         $this->abortIfNotMine($kun->user_id, $request);
@@ -204,26 +179,6 @@ class PrihlaskaController extends Controller
             'ehv_datum' => optional($kun->ehv_datum)->format('d.m.Y'),
             'aie_datum' => optional($kun->aie_datum)->format('d.m.Y'),
             'chripka_datum' => optional($kun->chripka_datum)->format('d.m.Y'),
-        ]);
-    }
-
-    public function ajaxAdminPoplatek(Udalost $udalost, Request $request): JsonResponse
-    {
-        $osobaId = (int) $request->query('osoba');
-        $osoba = Osoba::query()->where('id', $osobaId)->where('user_id', $request->user()->id)->firstOrFail();
-        $hasMembership = $osoba->clenstviCmt()->exists();
-
-        $alreadyCharged = Prihlaska::query()
-            ->where('udalost_id', $udalost->id)
-            ->where('osoba_id', $osoba->id)
-            ->where('smazana', false)
-            ->whereHas('polozky', fn ($q) => $q->whereHas('moznost', fn ($m) => $m->where('je_administrativni_poplatek', true)))
-            ->exists();
-
-        return response()->json([
-            'already_charged' => $alreadyCharged,
-            'has_membership' => $hasMembership,
-            'auto_fee_required' => ! $hasMembership && ! $alreadyCharged,
         ]);
     }
 

@@ -18,7 +18,7 @@ class UdalostSeeder extends Seeder
                 'uzavierka_prihlasek' => '2026-03-31',
                 'kapacita' => null,
                 'aktivni' => true,
-                'popis' => 'Jednodenní OPEN závody CMT s disciplínami ruka/sedlo, tandemem a working race.',
+                'popis' => 'Jednodenní OPEN koňské závody s disciplínami ruka/sedlo, tandemem a working race.',
                 'moznosti' => [
                     ['nazev' => 'MT Ruka EASY 8+', 'cena' => 300, 'min_vek' => 8],
                     ['nazev' => 'MT Ruka MEDIUM 8+', 'cena' => 300, 'min_vek' => 8],
@@ -45,14 +45,14 @@ class UdalostSeeder extends Seeder
                 ],
             ],
             [
-                'nazev' => 'CMT Jaro 2026 – Plzeň',
+                'nazev' => 'Jarní závody 2026 – Plzeň',
                 'misto' => 'Ranč U Koníka, Plzeň',
                 'datum_zacatek' => '2026-05-10',
                 'datum_konec' => '2026-05-11',
                 'uzavierka_prihlasek' => '2026-04-30',
                 'kapacita' => 60,
                 'aktivni' => true,
-                'popis' => 'Dvoudenní jarní závody CMT včetně tandemové disciplíny.',
+                'popis' => 'Dvoudenní jarní koňské závody včetně tandemové disciplíny.',
                 'moznosti' => [
                     ['nazev' => 'MT Ruka EASY 8+', 'cena' => 320, 'min_vek' => 8],
                     ['nazev' => 'MT Sedo EASY 8+', 'cena' => 320, 'min_vek' => 8],
@@ -68,14 +68,14 @@ class UdalostSeeder extends Seeder
                 ],
             ],
             [
-                'nazev' => 'Letní mistrovství CMT',
+                'nazev' => 'Letní mistrovství trailu',
                 'misto' => 'Farma Borovice, Brno',
                 'datum_zacatek' => '2026-07-18',
                 'datum_konec' => '2026-07-20',
                 'uzavierka_prihlasek' => '2026-07-05',
                 'kapacita' => 100,
                 'aktivni' => true,
-                'popis' => 'Třídenní letní mistrovství CMT se startkami napříč disciplínami.',
+                'popis' => 'Třídenní letní mistrovství se startkami napříč disciplínami.',
                 'moznosti' => [
                     ['nazev' => 'MT Ruka SOLID 8+', 'cena' => 380, 'min_vek' => 8],
                     ['nazev' => 'MT Sedo SOLID 8+', 'cena' => 380, 'min_vek' => 8],

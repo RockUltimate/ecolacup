@@ -19,7 +19,7 @@
             <div class="grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:items-center">
                 <section class="hidden lg:block">
                     <p class="section-eyebrow">ECOLAKONĚ</p>
-                    <h1 class="mt-4 max-w-xl text-5xl leading-tight text-[#20392c]">Přihlášky na CMT akce bez chaotických tabulek a ručního přepisování.</h1>
+                    <h1 class="mt-4 max-w-xl text-5xl leading-tight text-[#20392c]">Přihlášky na koňské závody bez chaotických tabulek a ručního přepisování.</h1>
                     <p class="mt-5 max-w-xl text-base leading-7 text-gray-600">Účet drží pohromadě osoby, koně i registrace. Přihlášení účastníci pak řeší další závody během pár kroků.</p>
                     <div class="mt-8 flex flex-wrap gap-3">
                         <a href="{{ route('udalosti.index') }}" class="button-primary">Zobrazit události</a>
@@ -33,7 +33,7 @@
                             <span class="site-mark">EC</span>
                             <span>
                                 <span class="block text-sm font-semibold tracking-[0.08em] text-[#7b5230]">ECOLAKONĚ</span>
-                                <span class="block text-xs text-gray-500">Czech Mountain Trail registrace</span>
+                                <span class="block text-xs text-gray-500">Registrace na koňské závody</span>
                             </span>
                         </a>
                     </div>

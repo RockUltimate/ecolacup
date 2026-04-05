@@ -92,7 +92,7 @@
                     <p class="section-eyebrow">Kůň</p>
                     <h3 class="mt-3 text-2xl text-[#20392c]">{{ $prihlaska->kun?->jmeno }}</h3>
                     <div class="mt-5 grid gap-3 text-sm text-gray-600 sm:grid-cols-2">
-                        <p>Plemeno: {{ $prihlaska->kun?->plemeno_kod ?: 'Neuvedeno' }}</p>
+                        <p>Plemeno: {{ $prihlaska->kun?->plemeno_nazev ?: $prihlaska->kun?->plemeno_vlastni ?: $prihlaska->kun?->plemeno_kod ?: 'Neuvedeno' }}</p>
                         <p>Rok narození: {{ $prihlaska->kun?->rok_narozeni ?? '—' }}</p>
                         @if($prihlaska->kunTandem)
                             <p class="sm:col-span-2">Tandem kůň: {{ $prihlaska->kunTandem->jmeno }}</p>

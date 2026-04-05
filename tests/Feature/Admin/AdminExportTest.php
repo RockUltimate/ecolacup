@@ -47,7 +47,6 @@ class AdminExportTest extends TestCase
             ['nazev' => 'MT Ruka EASY 8+', 'cena' => 300],
         ]);
 
-        $this->createClenstvi($osoba);
         $this->createPrihlaska($udalost, $user, $osoba, $kun, [$udalost->moznosti[0]->id]);
 
         $response = $this->actingAs($admin)->get(route('admin.users.gdpr-export', $user));
@@ -56,7 +55,6 @@ class AdminExportTest extends TestCase
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
         $response->assertSeeText('lucie@example.test');
         $response->assertSeeText('prihlaska');
-        $response->assertSeeText('clenstvi_cmt');
     }
 
     public function test_non_admin_cannot_access_admin_export(): void

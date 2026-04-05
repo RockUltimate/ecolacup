@@ -31,7 +31,7 @@
 
         <div>
             <x-input-label for="datum_narozeni" :value="'Datum narození'" />
-            <x-text-input id="datum_narozeni" name="datum_narozeni" type="date" class="mt-1 block w-full" :value="old('datum_narozeni', optional($user->datum_narozeni)->format('Y-m-d'))" />
+            <x-text-input id="datum_narozeni" name="datum_narozeni" type="text" class="mt-1 block w-full" :value="old('datum_narozeni', optional($user->datum_narozeni)->format('d.m.Y'))" placeholder="DD.MM.RRRR" />
             <x-input-error class="mt-2" :messages="$errors->get('datum_narozeni')" />
         </div>
 

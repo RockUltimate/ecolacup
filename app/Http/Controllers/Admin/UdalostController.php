@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\UpdateAdminUdalostRequest;
 use App\Models\Udalost;
 use App\Models\UdalostMoznost;
 use App\Models\UdalostUstajeni;
+use App\Support\CzechDate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -52,12 +53,15 @@ class UdalostController extends Controller
 
     public function store(StoreAdminUdalostRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = $this->normalizeEventDates($request->validated());
         $validated['aktivni'] = $request->boolean('aktivni', true);
-        unset($validated['propozice_pdf_upload']);
+        unset($validated['propozice_pdf_upload'], $validated['vysledky_pdf_upload']);
 
         if ($request->hasFile('propozice_pdf_upload')) {
             $validated['propozice_pdf'] = $request->file('propozice_pdf_upload')->store('propozice', 'public');
+        }
+        if ($request->hasFile('vysledky_pdf_upload')) {
+            $validated['vysledky_pdf'] = $request->file('vysledky_pdf_upload')->store('vysledky', 'public');
         }
 
         Udalost::query()->create($validated);
@@ -76,9 +80,9 @@ class UdalostController extends Controller
 
     public function update(UpdateAdminUdalostRequest $request, Udalost $udalost): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = $this->normalizeEventDates($request->validated());
         $validated['aktivni'] = $request->boolean('aktivni', false);
-        unset($validated['propozice_pdf_upload']);
+        unset($validated['propozice_pdf_upload'], $validated['vysledky_pdf_upload']);
 
         if ($request->hasFile('propozice_pdf_upload')) {
             $storedPath = $request->file('propozice_pdf_upload')->store('propozice', 'public');
@@ -86,6 +90,13 @@ class UdalostController extends Controller
                 Storage::disk('public')->delete($udalost->propozice_pdf);
             }
             $validated['propozice_pdf'] = $storedPath;
+        }
+        if ($request->hasFile('vysledky_pdf_upload')) {
+            $storedPath = $request->file('vysledky_pdf_upload')->store('vysledky', 'public');
+            if ($udalost->vysledky_pdf && $udalost->vysledky_pdf !== $storedPath) {
+                Storage::disk('public')->delete($udalost->vysledky_pdf);
+            }
+            $validated['vysledky_pdf'] = $storedPath;
         }
 
         $udalost->update($validated);
@@ -140,5 +151,20 @@ class UdalostController extends Controller
         $ustajeni->delete();
 
         return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-deleted');
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    protected function normalizeEventDates(array $validated): array
+    {
+        foreach (['datum_zacatek', 'datum_konec', 'uzavierka_prihlasek'] as $field) {
+            if (! empty($validated[$field])) {
+                $validated[$field] = CzechDate::toDateString($validated[$field]);
+            }
+        }
+
+        return $validated;
     }
 }

@@ -26,7 +26,7 @@
             <div class="grid gap-5 sm:grid-cols-2">
                 <div>
                     <x-input-label for="datum_narozeni" :value="'Datum narození'" />
-                    <x-text-input id="datum_narozeni" type="date" name="datum_narozeni" :value="old('datum_narozeni')" autocomplete="bday" />
+                    <x-text-input id="datum_narozeni" type="text" name="datum_narozeni" :value="old('datum_narozeni')" placeholder="DD.MM.RRRR" autocomplete="bday" />
                     <x-input-error :messages="$errors->get('datum_narozeni')" class="mt-2" />
                 </div>
 

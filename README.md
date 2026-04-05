@@ -45,5 +45,5 @@ Migrations run automatically at container startup in `docker/entrypoint.sh`.
 This first version includes:
 - Laravel + Breeze scaffold
 - Core package dependencies from the plan
-- Initial domain schema migrations (`osoby`, `kone`, `udalosti`, `prihlasky`, `clenstvi_cmt`, etc.)
+- Initial domain schema migrations (`osoby`, `kone`, `udalosti`, `prihlasky`, etc.)
 - Dockerized deployment baseline for quick server spawn

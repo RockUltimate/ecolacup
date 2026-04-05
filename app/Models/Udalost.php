@@ -30,6 +30,8 @@ class Udalost extends Model
         'uzavierka_prihlasek',
         'kapacita',
         'propozice_pdf',
+        'vysledky_pdf',
+        'fotoalbum_url',
         'aktivni',
         'popis',
     ];

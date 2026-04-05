@@ -14,7 +14,6 @@
                 <a href="{{ route('osoby.index') }}" class="brand-link {{ request()->routeIs('osoby.*') ? 'font-semibold' : '' }}">Osoby</a>
                 <a href="{{ route('kone.index') }}" class="brand-link {{ request()->routeIs('kone.*') ? 'font-semibold' : '' }}">Koně</a>
                 <a href="{{ route('prihlasky.index') }}" class="brand-link {{ request()->routeIs('prihlasky.*') ? 'font-semibold' : '' }}">Přihlášky</a>
-                <a href="{{ route('clenstvi-cmt.index') }}" class="brand-link {{ request()->routeIs('clenstvi-cmt.*') ? 'font-semibold' : '' }}">Členství CMT</a>
                 @if(Auth::user()->is_admin)
                     <a href="{{ route('admin.dashboard') }}" class="brand-link {{ request()->routeIs('admin.*') ? 'font-semibold' : '' }}">Admin</a>
                 @endif
@@ -43,7 +42,6 @@
             <a href="{{ route('osoby.index') }}" class="brand-link">Osoby</a>
             <a href="{{ route('kone.index') }}" class="brand-link">Koně</a>
             <a href="{{ route('prihlasky.index') }}" class="brand-link">Přihlášky</a>
-            <a href="{{ route('clenstvi-cmt.index') }}" class="brand-link">Členství CMT</a>
             @if(Auth::user()->is_admin)
                 <a href="{{ route('admin.dashboard') }}" class="brand-link">Admin</a>
             @endif

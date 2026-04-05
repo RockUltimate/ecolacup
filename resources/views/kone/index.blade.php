@@ -23,7 +23,7 @@
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $kun->jmeno }}</h3>
                                 <p class="text-sm text-gray-600">
-                                    {{ $kun->plemeno_kod ?: 'Bez plemene' }} • {{ $kun->rok_narozeni }} • {{ $kun->staj }}
+                                    {{ $kun->plemeno_nazev ?: $kun->plemeno_vlastni ?: $kun->plemeno_kod ?: 'Bez plemene' }} • {{ $kun->rok_narozeni }} • {{ $kun->staj }}
                                 </p>
                                 <div class="mt-2">
                                     <span @class([

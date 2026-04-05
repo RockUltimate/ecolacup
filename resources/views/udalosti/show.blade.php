@@ -26,7 +26,13 @@
 
                     <div class="mt-5 max-w-3xl">
                         <h1 class="text-4xl leading-tight text-[#20392c] sm:text-5xl">{{ $udalost->nazev }}</h1>
-                        <p class="mt-5 text-base leading-7 text-gray-600">{{ $udalost->popis ?: 'Přehled termínu, disciplín, ustájení a registrace pro tento závod.' }}</p>
+                        @if($udalost->popis)
+                            <div class="mt-5 space-y-4 text-base leading-7 text-gray-600 [&_p]:mt-4 [&_p:first-child]:mt-0 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_strong]:font-semibold [&_a]:text-[#7b5230] [&_a]:underline">
+                                {!! $udalost->popis !!}
+                            </div>
+                        @else
+                            <p class="mt-5 text-base leading-7 text-gray-600">Přehled termínu, disciplín, ustájení a registrace pro tento závod.</p>
+                        @endif
                     </div>
 
                     <div class="mt-8 grid gap-4 border-t border-[#eadfcc] pt-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -126,7 +132,7 @@
                                 <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
                                 <p class="mt-1 text-sm text-gray-600">
                                     @if($moznost->je_administrativni_poplatek)
-                                        Administrativní položka přidávaná podle pravidel členství.
+                                        Administrativní položka pořadatele.
                                     @elseif($moznost->min_vek !== null)
                                         Minimální věk účastníka: {{ $moznost->min_vek }} let.
                                     @else
@@ -189,4 +195,36 @@
             </div>
         </div>
     </section>
+
+    @if($udalost->propozice_pdf || $udalost->vysledky_pdf || $udalost->fotoalbum_url)
+        <section class="px-4 pb-10 pt-2 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl">
+                <div class="panel p-6 sm:p-8">
+                    <p class="section-eyebrow">Soubory a odkazy</p>
+                    <h2 class="mt-2 text-3xl text-[#20392c]">Doplňující materiály k události</h2>
+
+                    <div class="mt-8 grid gap-4 md:grid-cols-3">
+                        @if($udalost->propozice_pdf)
+                            <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Propozice</p>
+                                <p class="mt-2 font-semibold text-[#20392c]">Stáhnout PDF</p>
+                            </a>
+                        @endif
+                        @if($udalost->vysledky_pdf)
+                            <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Výsledky</p>
+                                <p class="mt-2 font-semibold text-[#20392c]">Otevřít výsledkové PDF</p>
+                            </a>
+                        @endif
+                        @if($udalost->fotoalbum_url)
+                            <a href="{{ $udalost->fotoalbum_url }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Fotografie</p>
+                                <p class="mt-2 font-semibold text-[#20392c]">Otevřít fotoalbum</p>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 </x-site-layout>

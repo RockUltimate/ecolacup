@@ -24,7 +24,6 @@
                 ['label' => 'Osoby', 'route' => 'osoby.index', 'active' => 'osoby.*'],
                 ['label' => 'Koně', 'route' => 'kone.index', 'active' => 'kone.*'],
                 ['label' => 'Přihlášky', 'route' => 'prihlasky.index', 'active' => 'prihlasky.*'],
-                ['label' => 'Členství CMT', 'route' => 'clenstvi-cmt.index', 'active' => 'clenstvi-cmt.*'],
             ];
         @endphp
         <div class="site-chroma" aria-hidden="true"></div>
@@ -35,7 +34,7 @@
                         <span class="site-mark">EC</span>
                         <span class="flex flex-col">
                             <span class="text-sm font-semibold tracking-[0.08em] text-[#7b5230]">ECOLAKONĚ</span>
-                            <span class="text-xs text-gray-500">Czech Mountain Trail registrace</span>
+                            <span class="text-xs text-gray-500">Registrace na koňské závody</span>
                         </span>
                     </a>
 
@@ -50,8 +49,6 @@
                             @if(auth()->user()->is_admin)
                                 <a href="{{ route('admin.dashboard') }}" class="brand-link {{ request()->routeIs('admin.*') ? 'font-semibold' : '' }}">Admin</a>
                             @endif
-                        @else
-                            <a href="{{ route('login') }}" class="brand-link">Přihlášení</a>
                         @endauth
                     </nav>
 
@@ -63,6 +60,7 @@
                                 <button type="submit" class="button-primary">Odhlásit</button>
                             </form>
                         @else
+                            <a href="{{ route('login') }}" class="button-secondary">Přihlášení</a>
                             <a href="{{ route('register') }}" class="button-primary">Vytvořit účet</a>
                         @endauth
 
@@ -94,8 +92,8 @@
                                 <button type="submit" class="button-primary mt-2 w-full">Odhlásit</button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="brand-link">Přihlášení</a>
-                            <a href="{{ route('register') }}" class="brand-link">Registrace</a>
+                            <a href="{{ route('login') }}" class="button-secondary w-full justify-center">Přihlášení</a>
+                            <a href="{{ route('register') }}" class="button-primary w-full justify-center">Vytvořit účet</a>
                         @endauth
                     </div>
                 </div>

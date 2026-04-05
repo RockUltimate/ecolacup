@@ -5,12 +5,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KunController;
 use App\Http\Controllers\UdalostController;
 use App\Http\Controllers\PrihlaskaController;
-use App\Http\Controllers\ClenstviCmtController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\ClenstviAdminController;
 use App\Http\Controllers\Admin\StartCislaController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,13 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/kone/{kun}/edit', [KunController::class, 'edit'])->name('kone.edit');
     Route::put('/kone/{kun}', [KunController::class, 'update'])->name('kone.update');
     Route::delete('/kone/{kun}', [KunController::class, 'destroy'])->name('kone.destroy');
-    Route::get('/clenstvi-cmt', [ClenstviCmtController::class, 'index'])->name('clenstvi-cmt.index');
-    Route::get('/clenstvi-cmt/nove', [ClenstviCmtController::class, 'create'])->name('clenstvi-cmt.create');
-    Route::post('/clenstvi-cmt', [ClenstviCmtController::class, 'store'])->name('clenstvi-cmt.store');
-    Route::get('/clenstvi-cmt/{clenstviCmt}/edit', [ClenstviCmtController::class, 'edit'])->name('clenstvi-cmt.edit');
-    Route::put('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'update'])->name('clenstvi-cmt.update');
-    Route::post('/clenstvi-cmt/{clenstviCmt}/prodlouzit', [ClenstviCmtController::class, 'renew'])->name('clenstvi-cmt.renew');
-    Route::delete('/clenstvi-cmt/{clenstviCmt}', [ClenstviCmtController::class, 'destroy'])->name('clenstvi-cmt.destroy');
 
     Route::get('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'create'])->name('prihlasky.create');
     Route::post('/udalosti/{udalost}/prihlasit', [PrihlaskaController::class, 'store'])
@@ -67,10 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/prihlasky/{prihlaska}/pdf', [PrihlaskaController::class, 'pdf'])->name('prihlasky.pdf');
 
     Route::get('/ajax/osoba/{osoba}/polozky', [PrihlaskaController::class, 'ajaxOsobaPolozky']);
-    Route::get('/ajax/osoba/{osoba}/clenstvi-img', [PrihlaskaController::class, 'ajaxClenstviStatus']);
-    Route::get('/ajax/osoba/{osoba}/clenstvi-data', [ClenstviCmtController::class, 'ajaxOsobaClenstviData']);
     Route::get('/ajax/kun/{kun}/ockovani', [PrihlaskaController::class, 'ajaxKunOckovani']);
-    Route::get('/ajax/udalost/{udalost}/admin-poplatek', [PrihlaskaController::class, 'ajaxAdminPoplatek']);
 });
 
 Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
@@ -110,10 +98,6 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::get('/users/{user}/gdpr-export', [AdminUserController::class, 'gdprExport'])->name('users.gdpr-export');
     Route::delete('/users/{user}/purge', [AdminUserController::class, 'purge'])->name('users.purge');
-
-    Route::get('/clenstvi', [ClenstviAdminController::class, 'index'])->name('clenstvi.index');
-    Route::get('/clenstvi/{clenstviCmt}/edit', [ClenstviAdminController::class, 'edit'])->name('clenstvi.edit');
-    Route::put('/clenstvi/{clenstviCmt}', [ClenstviAdminController::class, 'update'])->name('clenstvi.update');
 
     Route::get('/start-cisla/{udalost}', [StartCislaController::class, 'show'])->name('start-cisla.show');
 });

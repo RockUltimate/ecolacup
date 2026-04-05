@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Osoba extends Model
@@ -57,30 +56,5 @@ class Osoba extends Model
     public function prihlasky(): HasMany
     {
         return $this->hasMany(Prihlaska::class);
-    }
-
-    public function clenstviCmt(): HasMany
-    {
-        return $this->hasMany(ClenstviCmt::class, 'osoba_id');
-    }
-
-    public function aktivniClenstviCmt(): HasOne
-    {
-        return $this->hasOne(ClenstviCmt::class, 'osoba_id')
-            ->where('aktivni', true)
-            ->latestOfMany('rok');
-    }
-
-    public function getCmtStatusAttribute(): string
-    {
-        if ($this->relationLoaded('aktivniClenstviCmt') && $this->aktivniClenstviCmt) {
-            return 'active';
-        }
-
-        $hasAny = $this->relationLoaded('clenstviCmt')
-            ? $this->clenstviCmt->isNotEmpty()
-            : $this->clenstviCmt()->exists();
-
-        return $hasAny ? 'inactive' : 'none';
     }
 }

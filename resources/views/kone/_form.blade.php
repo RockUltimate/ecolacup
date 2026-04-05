@@ -7,7 +7,7 @@
     @if($isEdit)
         @method('PUT')
     @endif
-    <div x-data="{ customBreed: @js((bool) old('plemeno_vlastni', $kun->plemeno_vlastni ?? null)) }" class="space-y-6">
+    <div class="space-y-6">
         <section class="panel p-5 space-y-4">
             <h3 class="text-base font-semibold text-gray-900">Základní údaje</h3>
             <div>
@@ -17,25 +17,9 @@
             </div>
 
             <div>
-                <x-input-label for="plemeno_kod" :value="'Plemeno (kód)'" />
-                <select id="plemeno_kod" name="plemeno_kod" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                    <option value="">Vyberte plemeno</option>
-                    @foreach($plemena as $pleme)
-                        <option value="{{ $pleme->kod }}" @selected(old('plemeno_kod', $kun->plemeno_kod ?? '') === $pleme->kod)>
-                            {{ $pleme->kod }} — {{ $pleme->nazev }}
-                        </option>
-                    @endforeach
-                </select>
-                <button type="button" class="mt-2 text-sm text-indigo-600 hover:text-indigo-800 underline" @click="customBreed = !customBreed">
-                    Nenašli jste plemeno? Zadat ručně
-                </button>
-                <x-input-error :messages="$errors->get('plemeno_kod')" class="mt-2" />
-            </div>
-
-            <div x-show="customBreed">
-                <x-input-label for="plemeno_vlastni" :value="'Vlastní název plemene (volitelné)'" />
-                <x-text-input id="plemeno_vlastni" name="plemeno_vlastni" type="text" class="mt-1 block w-full" :value="old('plemeno_vlastni', $kun->plemeno_vlastni ?? '')" />
-                <x-input-error :messages="$errors->get('plemeno_vlastni')" class="mt-2" />
+                <x-input-label for="plemeno_nazev" :value="'Plemeno'" />
+                <x-text-input id="plemeno_nazev" name="plemeno_nazev" type="text" class="mt-1 block w-full" :value="old('plemeno_nazev', $kun->plemeno_nazev ?? $kun->plemeno_vlastni ?? $kun->plemeno_kod ?? '')" placeholder="Např. Quarter Horse" />
+                <x-input-error :messages="$errors->get('plemeno_nazev')" class="mt-2" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,17 +53,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <x-input-label for="ehv_datum" :value="'EHV datum'" />
-                    <x-text-input id="ehv_datum" name="ehv_datum" type="date" class="mt-1 block w-full" :value="old('ehv_datum', isset($kun) && $kun->ehv_datum ? $kun->ehv_datum->format('Y-m-d') : '')" />
+                    <x-text-input id="ehv_datum" name="ehv_datum" type="text" class="mt-1 block w-full" :value="old('ehv_datum', isset($kun) && $kun->ehv_datum ? $kun->ehv_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
                     <x-input-error :messages="$errors->get('ehv_datum')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="aie_datum" :value="'AIE datum'" />
-                    <x-text-input id="aie_datum" name="aie_datum" type="date" class="mt-1 block w-full" :value="old('aie_datum', isset($kun) && $kun->aie_datum ? $kun->aie_datum->format('Y-m-d') : '')" />
+                    <x-text-input id="aie_datum" name="aie_datum" type="text" class="mt-1 block w-full" :value="old('aie_datum', isset($kun) && $kun->aie_datum ? $kun->aie_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
                     <x-input-error :messages="$errors->get('aie_datum')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="chripka_datum" :value="'Chřipka datum'" />
-                    <x-text-input id="chripka_datum" name="chripka_datum" type="date" class="mt-1 block w-full" :value="old('chripka_datum', isset($kun) && $kun->chripka_datum ? $kun->chripka_datum->format('Y-m-d') : '')" />
+                    <x-text-input id="chripka_datum" name="chripka_datum" type="text" class="mt-1 block w-full" :value="old('chripka_datum', isset($kun) && $kun->chripka_datum ? $kun->chripka_datum->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" />
                     <x-input-error :messages="$errors->get('chripka_datum')" class="mt-2" />
                 </div>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\User;
+use App\Support\CzechDate;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -41,7 +42,7 @@ class RegisteredUserController extends Controller
             'name' => trim($name !== '' ? $name : ($jmeno.' '.$prijmeni)),
             'jmeno' => $jmeno,
             'prijmeni' => $prijmeni,
-            'datum_narozeni' => $request->date('datum_narozeni'),
+            'datum_narozeni' => CzechDate::toDateString($request->input('datum_narozeni')),
             'pohlavi' => $request->string('pohlavi')->toString() ?: null,
             'email' => $request->email,
             'telefon' => $request->string('telefon')->toString() ?: null,
@@ -54,6 +55,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('udalosti.index', absolute: false));
     }
 }

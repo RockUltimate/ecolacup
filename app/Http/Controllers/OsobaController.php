@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOsobaRequest;
 use App\Http\Requests\UpdateOsobaRequest;
 use App\Models\Osoba;
-use Carbon\Carbon;
+use App\Support\CzechDate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -18,7 +18,6 @@ class OsobaController extends Controller
         return view('osoby.index', [
             'osoby' => auth()->user()
                 ->osoby()
-                ->with(['aktivniClenstviCmt', 'clenstviCmt'])
                 ->latest()
                 ->get(),
         ]);
@@ -38,7 +37,7 @@ class OsobaController extends Controller
         $request->user()->osoby()->create([
             'jmeno' => $request->string('jmeno')->toString(),
             'prijmeni' => $request->string('prijmeni')->toString(),
-            'datum_narozeni' => Carbon::createFromFormat('d.m.Y', $request->input('datum_narozeni'))->toDateString(),
+            'datum_narozeni' => CzechDate::toDateString($request->input('datum_narozeni')),
             'staj' => $request->string('staj')->toString(),
             'gdpr_souhlas' => true,
             'gdpr_souhlas_at' => now(),
@@ -69,7 +68,7 @@ class OsobaController extends Controller
         $osoba->update([
             'jmeno' => $request->string('jmeno')->toString(),
             'prijmeni' => $request->string('prijmeni')->toString(),
-            'datum_narozeni' => Carbon::createFromFormat('d.m.Y', $request->input('datum_narozeni'))->toDateString(),
+            'datum_narozeni' => CzechDate::toDateString($request->input('datum_narozeni')),
             'staj' => $request->string('staj')->toString(),
             'gdpr_souhlas' => $gdprSouhlas,
             'gdpr_odvolano' => $gdprOdvolano,

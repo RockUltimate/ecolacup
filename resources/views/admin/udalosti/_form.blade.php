@@ -23,17 +23,17 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
             <x-input-label for="datum_zacatek" :value="'Datum začátku'" />
-            <x-text-input id="datum_zacatek" name="datum_zacatek" type="date" class="mt-1 block w-full" :value="old('datum_zacatek', isset($udalost) && $udalost->datum_zacatek ? $udalost->datum_zacatek->format('Y-m-d') : '')" required />
+            <x-text-input id="datum_zacatek" name="datum_zacatek" type="text" class="mt-1 block w-full" :value="old('datum_zacatek', isset($udalost) && $udalost->datum_zacatek ? $udalost->datum_zacatek->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" required />
             <x-input-error :messages="$errors->get('datum_zacatek')" class="mt-2" />
         </div>
         <div>
             <x-input-label for="datum_konec" :value="'Datum konce'" />
-            <x-text-input id="datum_konec" name="datum_konec" type="date" class="mt-1 block w-full" :value="old('datum_konec', isset($udalost) && $udalost->datum_konec ? $udalost->datum_konec->format('Y-m-d') : '')" required />
+            <x-text-input id="datum_konec" name="datum_konec" type="text" class="mt-1 block w-full" :value="old('datum_konec', isset($udalost) && $udalost->datum_konec ? $udalost->datum_konec->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" required />
             <x-input-error :messages="$errors->get('datum_konec')" class="mt-2" />
         </div>
         <div>
             <x-input-label for="uzavierka_prihlasek" :value="'Uzávěrka přihlášek'" />
-            <x-text-input id="uzavierka_prihlasek" name="uzavierka_prihlasek" type="date" class="mt-1 block w-full" :value="old('uzavierka_prihlasek', isset($udalost) && $udalost->uzavierka_prihlasek ? $udalost->uzavierka_prihlasek->format('Y-m-d') : '')" required />
+            <x-text-input id="uzavierka_prihlasek" name="uzavierka_prihlasek" type="text" class="mt-1 block w-full" :value="old('uzavierka_prihlasek', isset($udalost) && $udalost->uzavierka_prihlasek ? $udalost->uzavierka_prihlasek->format('d.m.Y') : '')" placeholder="DD.MM.RRRR" required />
             <x-input-error :messages="$errors->get('uzavierka_prihlasek')" class="mt-2" />
         </div>
     </div>
@@ -45,13 +45,26 @@
             <x-input-error :messages="$errors->get('kapacita')" class="mt-2" />
         </div>
         <div>
+            <x-input-label for="fotoalbum_url" :value="'Odkaz na fotoalbum (volitelně)'" />
+            <x-text-input id="fotoalbum_url" name="fotoalbum_url" type="url" class="mt-1 block w-full" :value="old('fotoalbum_url', $udalost->fotoalbum_url ?? '')" placeholder="https://..." />
+            <p class="mt-2 text-sm text-gray-500">Doplňte odkaz později, až budou fotografie dostupné.</p>
+            <x-input-error :messages="$errors->get('fotoalbum_url')" class="mt-2" />
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
             <x-input-label for="propozice_pdf_upload" :value="'Nahrát propozice (PDF, volitelně)'" />
+            <label for="propozice_pdf_upload" class="mt-1 flex cursor-pointer items-center justify-between gap-4 rounded-[1.25rem] border border-[#dccdb8] bg-white px-4 py-3 text-sm text-gray-700">
+                <span id="propozice_pdf_upload_label" class="truncate">Žádný soubor nevybrán</span>
+                <span class="rounded-full bg-[#3d6b4f] px-4 py-2 font-semibold text-white">Vyberte soubor</span>
+            </label>
             <input
                 id="propozice_pdf_upload"
                 name="propozice_pdf_upload"
                 type="file"
                 accept=".pdf"
-                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-full file:border-0 file:bg-[#3d6b4f] file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-[#31563f]"
+                class="sr-only"
             >
             <x-input-error :messages="$errors->get('propozice_pdf_upload')" class="mt-2" />
             @if($isEdit && $udalost->propozice_pdf)
@@ -59,6 +72,29 @@
                     Aktuální soubor:
                     <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
                         otevřít propozice
+                    </a>
+                </p>
+            @endif
+        </div>
+        <div>
+            <x-input-label for="vysledky_pdf_upload" :value="'Nahrát výsledky po závodě (PDF, volitelně)'" />
+            <label for="vysledky_pdf_upload" class="mt-1 flex cursor-pointer items-center justify-between gap-4 rounded-[1.25rem] border border-[#dccdb8] bg-white px-4 py-3 text-sm text-gray-700">
+                <span id="vysledky_pdf_upload_label" class="truncate">Žádný soubor nevybrán</span>
+                <span class="rounded-full bg-[#3d6b4f] px-4 py-2 font-semibold text-white">Vyberte soubor</span>
+            </label>
+            <input
+                id="vysledky_pdf_upload"
+                name="vysledky_pdf_upload"
+                type="file"
+                accept=".pdf"
+                class="sr-only"
+            >
+            <x-input-error :messages="$errors->get('vysledky_pdf_upload')" class="mt-2" />
+            @if($isEdit && $udalost->vysledky_pdf)
+                <p class="mt-2 text-sm text-gray-600">
+                    Aktuální soubor:
+                    <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
+                        otevřít výsledky
                     </a>
                 </p>
             @endif
@@ -120,5 +156,23 @@
         }
 
         editorElement.dataset.quillInitialized = '1';
+
+        [
+            ['propozice_pdf_upload', 'propozice_pdf_upload_label'],
+            ['vysledky_pdf_upload', 'vysledky_pdf_upload_label'],
+        ].forEach(function ([inputId, labelId]) {
+            const input = document.getElementById(inputId);
+            const label = document.getElementById(labelId);
+
+            if (!input || !label) {
+                return;
+            }
+
+            input.addEventListener('change', function () {
+                label.textContent = input.files && input.files[0]
+                    ? input.files[0].name
+                    : 'Žádný soubor nevybrán';
+            });
+        });
     });
 </script>

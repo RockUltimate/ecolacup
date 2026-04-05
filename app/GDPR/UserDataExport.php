@@ -9,7 +9,7 @@ class UserDataExport
     public function toCsv(User $user): string
     {
         $user->load([
-            'osoby.clenstviCmt',
+            'osoby',
             'kone',
             'prihlasky.udalost',
             'prihlasky.osoba',
@@ -34,13 +34,6 @@ class UserDataExport
             $this->writeRow($handle, 'osoba', $osoba->id, 'prijmeni', $osoba->prijmeni);
             $this->writeRow($handle, 'osoba', $osoba->id, 'datum_narozeni', optional($osoba->datum_narozeni)->format('d.m.Y'));
             $this->writeRow($handle, 'osoba', $osoba->id, 'staj', $osoba->staj);
-
-            foreach ($osoba->clenstviCmt as $clenstvi) {
-                $this->writeRow($handle, 'clenstvi_cmt', $clenstvi->id, 'rok', (string) $clenstvi->rok);
-                $this->writeRow($handle, 'clenstvi_cmt', $clenstvi->id, 'typ_clenstvi', $clenstvi->typ_clenstvi);
-                $this->writeRow($handle, 'clenstvi_cmt', $clenstvi->id, 'evidencni_cislo', $clenstvi->evidencni_cislo);
-                $this->writeRow($handle, 'clenstvi_cmt', $clenstvi->id, 'aktivni', $clenstvi->aktivni ? '1' : '0');
-            }
         }
 
         foreach ($user->kone as $kun) {

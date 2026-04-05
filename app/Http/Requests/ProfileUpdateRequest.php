@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\NormalizesCzechDates;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,6 +10,8 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
+    use NormalizesCzechDates;
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -20,7 +23,7 @@ class ProfileUpdateRequest extends FormRequest
             'name' => ['nullable', 'string', 'max:255'],
             'jmeno' => ['nullable', 'string', 'max:255', 'required_without:name'],
             'prijmeni' => ['nullable', 'string', 'max:255', 'required_without:name'],
-            'datum_narozeni' => ['nullable', 'date'],
+            'datum_narozeni' => ['nullable', 'date_format:d.m.Y'],
             'pohlavi' => ['nullable', 'in:M,F'],
             'email' => [
                 'required',
@@ -33,5 +36,10 @@ class ProfileUpdateRequest extends FormRequest
             'telefon' => ['nullable', 'string', 'max:30'],
             'gdpr_souhlas' => ['sometimes', 'accepted'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeCzechDateFields(['datum_narozeni']);
     }
 }

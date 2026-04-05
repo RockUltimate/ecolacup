@@ -122,35 +122,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('clenstvi_cmt', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('osoba_id')->constrained('osoby')->cascadeOnDelete();
-            $table->unsignedBigInteger('organizace_id')->default(2);
-            $table->string('evidencni_cislo', 20)->nullable();
-            $table->string('titul')->nullable();
-            $table->string('bydliste')->nullable();
-            $table->string('telefon')->nullable();
-            $table->string('email')->nullable();
-            $table->string('nazev_organizace')->nullable();
-            $table->string('ico')->nullable();
-            $table->string('typ_clenstvi');
-            $table->unsignedSmallInteger('rok');
-            $table->decimal('cena', 8, 2);
-            $table->boolean('aktivni')->default(false);
-            $table->string('zastupce_titul')->nullable();
-            $table->string('zastupce_jmeno')->nullable();
-            $table->string('zastupce_prijmeni')->nullable();
-            $table->unsignedSmallInteger('zastupce_rok_narozeni')->nullable();
-            $table->string('zastupce_vztah')->nullable();
-            $table->string('zastupce_bydliste')->nullable();
-            $table->string('zastupce_telefon')->nullable();
-            $table->string('zastupce_email')->nullable();
-            $table->string('sken_prihlaska')->nullable();
-            $table->boolean('souhlas_gdpr')->default(false);
-            $table->boolean('souhlas_email')->default(false);
-            $table->boolean('souhlas_zverejneni')->default(false);
-            $table->timestamps();
-        });
     }
 
     /**
@@ -158,7 +129,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clenstvi_cmt');
         Schema::dropIfExists('prihlasky_ustajeni');
         Schema::dropIfExists('prihlasky_polozky');
         Schema::dropIfExists('prihlasky');

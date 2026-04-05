@@ -17,7 +17,7 @@
                     <p class="section-eyebrow">Kalendar akcí</p>
                     <div class="mt-5 max-w-3xl">
                         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">ECOLAKONĚ</p>
-                        <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">Moderní přihlášky na CMT závody, které fungují i přímo v areálu.</h1>
+                        <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">Moderní přihlášky na koňské závody</h1>
                         <p class="mt-5 max-w-2xl text-base leading-7 text-gray-600">Veřejný kalendář, přehled uzávěrek, disciplín a kapacit. Přihlášení jezdci navazují rovnou na správu osob, koní a přihlášek bez ruční administrativy navíc.</p>
                     </div>
 
@@ -112,7 +112,13 @@
                                 </div>
                                 <div>
                                     <h3 class="text-2xl text-[#20392c]">{{ $udalost->nazev }}</h3>
-                                    <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600">{{ $udalost->popis ?: 'Detail akce obsahuje všechny disciplíny, možnosti ustájení i stav registrace.' }}</p>
+                                    @if($udalost->popis)
+                                        <div class="mt-2 max-w-2xl space-y-3 text-sm leading-6 text-gray-600 [&_p]:mt-3 [&_p:first-child]:mt-0 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mt-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-semibold [&_a]:text-[#7b5230] [&_a]:underline">
+                                            {!! $udalost->popis !!}
+                                        </div>
+                                    @else
+                                        <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600">Detail akce obsahuje všechny disciplíny, možnosti ustájení i stav registrace.</p>
+                                    @endif
                                 </div>
                             </div>
 
