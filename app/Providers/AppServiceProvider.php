@@ -28,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->environment('production')) {
+        $appUrlScheme = strtolower((string) parse_url((string) config('app.url'), PHP_URL_SCHEME));
+
+        if ($this->app->environment('production') && $appUrlScheme === 'https') {
             URL::forceScheme('https');
         }
         Gate::policy(Osoba::class, OsobaPolicy::class);
