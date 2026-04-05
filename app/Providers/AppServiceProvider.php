@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Kun;
 use App\Models\Osoba;
+use App\Models\Prihlaska;
 use App\Policies\KunPolicy;
 use App\Policies\OsobaPolicy;
+use App\Policies\PrihlaskaPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         }
         Gate::policy(Osoba::class, OsobaPolicy::class);
         Gate::policy(Kun::class, KunPolicy::class);
+        Gate::policy(Prihlaska::class, PrihlaskaPolicy::class);
 
         RateLimiter::for('auth-login', function (Request $request) {
             return Limit::perMinute(5)->by((string) $request->ip());
