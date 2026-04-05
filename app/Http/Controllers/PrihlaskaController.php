@@ -205,6 +205,7 @@ class PrihlaskaController extends Controller
     {
         $osobaId = (int) $request->query('osoba');
         $osoba = Osoba::query()->where('id', $osobaId)->where('user_id', $request->user()->id)->firstOrFail();
+        $hasMembership = $osoba->clenstviCmt()->exists();
 
         $alreadyCharged = Prihlaska::query()
             ->where('udalost_id', $udalost->id)
@@ -215,6 +216,8 @@ class PrihlaskaController extends Controller
 
         return response()->json([
             'already_charged' => $alreadyCharged,
+            'has_membership' => $hasMembership,
+            'auto_fee_required' => ! $hasMembership && ! $alreadyCharged,
         ]);
     }
 

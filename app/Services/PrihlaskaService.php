@@ -29,6 +29,7 @@ class PrihlaskaService
                 ->where('udalost_id', $udalost->id)
                 ->whereIn('id', $ustajeniIds)
                 ->get();
+            $selectedMoznosti = $this->applyNewMemberAdminFee($prihlaska, $selectedMoznosti, $udalost);
 
             $selectedMoznosti = $this->applyAdminFeeDedup($prihlaska, $selectedMoznosti);
 
@@ -99,6 +100,34 @@ class PrihlaskaService
         return $selectedMoznosti->reject(
             fn (UdalostMoznost $item): bool => (bool) $item->je_administrativni_poplatek
         )->values();
+    }
+
+    /**
+     * @param Collection<int, UdalostMoznost> $selectedMoznosti
+     */
+    private function applyNewMemberAdminFee(Prihlaska $prihlaska, Collection $selectedMoznosti, Udalost $udalost): Collection
+    {
+        $osoba = $prihlaska->osoba()->first();
+        if (! $osoba || $osoba->clenstviCmt()->exists()) {
+            return $selectedMoznosti;
+        }
+
+        $adminFeeAlreadySelected = $selectedMoznosti
+            ->contains(fn (UdalostMoznost $item): bool => (bool) $item->je_administrativni_poplatek);
+        if ($adminFeeAlreadySelected) {
+            return $selectedMoznosti;
+        }
+
+        $adminFeeOption = UdalostMoznost::query()
+            ->where('udalost_id', $udalost->id)
+            ->where('je_administrativni_poplatek', true)
+            ->orderBy('id')
+            ->first();
+        if (! $adminFeeOption) {
+            return $selectedMoznosti;
+        }
+
+        return $selectedMoznosti->push($adminFeeOption);
     }
 
     /**

@@ -13,16 +13,23 @@
         selectedUstajeni: @js(array_map('intval', $selectedUstajeni)),
         clenstvi: { status: 'none', label: 'Bez aktivního členství CMT' },
         ockovani: { ehv_datum: null, aie_datum: null, chripka_datum: null, ockovani: {} },
-        moznostiMeta: @js($udalost->moznosti->map(fn($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena])->values()),
+        adminFeeStatus: { alreadyCharged: false, hasMembership: true, autoFeeRequired: false, loading: false },
+        moznostiMeta: @js($udalost->moznosti->map(fn($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
         ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
         totalPrice: 0,
         init() {
             this.recalculateTotal();
-            if (this.osobaId) this.fetchClenstviStatus();
+            if (this.osobaId) {
+                this.fetchClenstviStatus();
+                this.fetchAdminFeeStatus();
+            }
             if (this.kunId) this.fetchOckovaniStatus();
             this.$watch('selectedMoznosti', () => this.recalculateTotal());
             this.$watch('selectedUstajeni', () => this.recalculateTotal());
-            this.$watch('osobaId', () => this.fetchClenstviStatus());
+            this.$watch('osobaId', () => {
+                this.fetchClenstviStatus();
+                this.fetchAdminFeeStatus();
+            });
             this.$watch('kunId', () => this.fetchOckovaniStatus());
         },
         nextStep() {
@@ -39,10 +46,32 @@
         selectedUstajeniItems() {
             return this.ustajeniMeta.filter(item => this.selectedUstajeni.map(Number).includes(item.id));
         },
+        adminFeeOption() {
+            return this.moznostiMeta.find(item => Boolean(item.je_administrativni_poplatek)) ?? null;
+        },
+        hasSelectedAdminFee() {
+            const adminFee = this.adminFeeOption();
+            if (!adminFee) {
+                return false;
+            }
+
+            return this.selectedMoznosti.map(Number).includes(Number(adminFee.id));
+        },
         recalculateTotal() {
-            const moznosti = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
+            const selectedMoznostiPrice = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
             const ustajeni = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
-            this.totalPrice = moznosti + ustajeni;
+            const adminFee = this.adminFeeOption();
+            const adminFeePrice = adminFee ? Number(adminFee.cena) : 0;
+            const hasSelectedAdminFee = this.hasSelectedAdminFee();
+
+            let correctedMoznostiPrice = selectedMoznostiPrice;
+            if (this.adminFeeStatus.alreadyCharged && hasSelectedAdminFee) {
+                correctedMoznostiPrice -= adminFeePrice;
+            } else if (this.adminFeeStatus.autoFeeRequired && !hasSelectedAdminFee) {
+                correctedMoznostiPrice += adminFeePrice;
+            }
+
+            this.totalPrice = correctedMoznostiPrice + ustajeni;
         },
         formatPrice(value) {
             return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
@@ -64,6 +93,29 @@
             const response = await fetch(`/ajax/kun/${this.kunId}/ockovani`);
             if (!response.ok) return;
             this.ockovani = await response.json();
+        },
+        async fetchAdminFeeStatus() {
+            if (!this.osobaId) {
+                this.adminFeeStatus = { alreadyCharged: false, hasMembership: true, autoFeeRequired: false, loading: false };
+                this.recalculateTotal();
+                return;
+            }
+
+            this.adminFeeStatus.loading = true;
+            try {
+                const response = await fetch(`/ajax/udalost/{{ $udalost->id }}/admin-poplatek?osoba=${this.osobaId}`);
+                if (!response.ok) return;
+                const payload = await response.json();
+                this.adminFeeStatus = {
+                    alreadyCharged: Boolean(payload.already_charged),
+                    hasMembership: Boolean(payload.has_membership),
+                    autoFeeRequired: Boolean(payload.auto_fee_required),
+                    loading: false,
+                };
+                this.recalculateTotal();
+            } catch (e) {
+                this.adminFeeStatus.loading = false;
+            }
         }
     }"
     x-init="init()"
@@ -157,6 +209,13 @@
                     @endforeach
                 </div>
                 <x-input-error :messages="$errors->get('moznosti')" class="mt-2" />
+                <p x-show=\"adminFeeStatus.loading\" class=\"mt-2 text-xs text-gray-500\">Kontroluji administrativní poplatek…</p>
+                <div x-show=\"!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired\" class=\"mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800\">
+                    U osoby bez členství CMT bude při první přihlášce automaticky přidán administrativní poplatek.
+                </div>
+                <div x-show=\"!adminFeeStatus.loading && adminFeeStatus.alreadyCharged\" class=\"mt-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800\">
+                    Administrativní poplatek už byl pro tuto osobu na této akci účtován a nebude přidán znovu.
+                </div>
             </div>
 
             <div>
