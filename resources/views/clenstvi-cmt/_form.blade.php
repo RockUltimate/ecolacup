@@ -128,14 +128,14 @@
     @endif
 
     <div class="panel p-5 space-y-4">
-        <h3 class="text-base font-semibold text-gray-900">Člen a typ členství</h3>
+        <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Člen a typ členství</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <x-input-label for="osoba_id" :value="'Osoba'" />
                 <select
                     id="osoba_id"
                     name="osoba_id"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    class="mt-1 block w-full border-outline-variant dark:border-[#43493e] rounded-md shadow-sm"
                     x-model="selectedOsobaId"
                     @change="loadOsobaData"
                     required
@@ -147,7 +147,7 @@
                         </option>
                     @endforeach
                 </select>
-                <p x-show="loadingOsoba" class="mt-2 text-xs text-gray-500">Načítám údaje osoby…</p>
+                <p x-show="loadingOsoba" class="mt-2 text-xs text-on-surface-variant dark:text-[#c3c8bb]">Načítám údaje osoby…</p>
                 <x-input-error :messages="$errors->get('osoba_id')" class="mt-2" />
             </div>
             <div>
@@ -159,10 +159,10 @@
                             type="button"
                             @click="setType('{{ $key }}')"
                             class="text-left rounded-lg border px-3 py-2 transition"
-                            :class="typClenstvi === '{{ $key }}' ? 'border-[#3d6b4f] bg-emerald-50' : 'border-gray-200 bg-white'"
+                            :class="typClenstvi === '{{ $key }}' ? 'border-primary bg-primary-fixed/20' : 'border-outline-variant dark:border-[#43493e] bg-surface-container-lowest dark:bg-[#252522]'"
                         >
-                            <span class="block text-sm font-semibold text-gray-900">{{ $meta['label'] }}</span>
-                            <span class="block text-xs text-gray-600" x-text="`${formatPrice(resolvePrice('{{ $key }}', rok))} Kč / rok`"></span>
+                            <span class="block text-sm font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $meta['label'] }}</span>
+                            <span class="block text-xs text-on-surface-variant dark:text-[#c3c8bb]" x-text="`${formatPrice(resolvePrice('{{ $key }}', rok))} Kč / rok`"></span>
                         </button>
                     @endforeach
                 </div>
@@ -172,7 +172,7 @@
     </div>
 
     <div class="panel p-5 space-y-4">
-        <h3 class="text-base font-semibold text-gray-900">Platební a kontaktní údaje</h3>
+        <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Platební a kontaktní údaje</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <x-input-label for="rok" :value="'Rok'" />
@@ -182,7 +182,7 @@
             <div>
                 <x-input-label for="cena" :value="'Cena (Kč)'" />
                 <x-text-input id="cena" name="cena" type="number" step="0.01" class="mt-1 block w-full" x-model.number="cena" required readonly />
-                <p x-show="!isEdit && isNewMember" class="mt-2 text-xs text-gray-600">
+                <p x-show="!isEdit && isNewMember" class="mt-2 text-xs text-on-surface-variant dark:text-[#c3c8bb]">
                     Jednorázový administrativní poplatek nového člena:
                     <span class="font-semibold" x-text="`${formatPrice(newMemberAdminFee)} Kč`"></span>.
                     Celkem při vytvoření:
@@ -220,13 +220,13 @@
                 name="sken_prihlaska_upload"
                 type="file"
                 accept=".jpg,.jpeg,.png,.webp,.pdf"
-                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
+                class="mt-1 block w-full text-sm text-on-surface dark:text-[#e5e2dd] file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
             >
             <x-input-error :messages="$errors->get('sken_prihlaska_upload')" class="mt-2" />
             @if(isset($clenstvi) && $clenstvi->sken_prihlaska)
-                <p class="mt-2 text-sm text-gray-600">
+                <p class="mt-2 text-sm text-on-surface-variant dark:text-[#c3c8bb]">
                     Aktuální soubor:
-                    <a href="{{ asset('storage/'.$clenstvi->sken_prihlaska) }}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 underline">
+                    <a href="{{ asset('storage/'.$clenstvi->sken_prihlaska) }}" target="_blank" rel="noopener" class="brand-link">
                         zobrazit sken
                     </a>
                 </p>
@@ -234,27 +234,27 @@
         </div>
     </div>
     <div class="panel p-5 space-y-2">
-        <h3 class="text-base font-semibold text-gray-900">Souhlasy a aktivace</h3>
+        <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Souhlasy a aktivace</h3>
         <label for="aktivni" class="inline-flex items-center">
-            <input id="aktivni" type="checkbox" name="aktivni" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('aktivni', $clenstvi->aktivni ?? true))>
-            <span class="ms-2 text-sm text-gray-700">Aktivní členství</span>
+            <input id="aktivni" type="checkbox" name="aktivni" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('aktivni', $clenstvi->aktivni ?? true))>
+            <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Aktivní členství</span>
         </label>
         <label for="souhlas_gdpr" class="inline-flex items-center">
-            <input id="souhlas_gdpr" type="checkbox" name="souhlas_gdpr" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('souhlas_gdpr', $clenstvi->souhlas_gdpr ?? false))>
-            <span class="ms-2 text-sm text-gray-700">Souhlas GDPR</span>
+            <input id="souhlas_gdpr" type="checkbox" name="souhlas_gdpr" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('souhlas_gdpr', $clenstvi->souhlas_gdpr ?? false))>
+            <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Souhlas GDPR</span>
         </label>
         <label for="souhlas_email" class="inline-flex items-center">
-            <input id="souhlas_email" type="checkbox" name="souhlas_email" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('souhlas_email', $clenstvi->souhlas_email ?? false))>
-            <span class="ms-2 text-sm text-gray-700">Souhlas se zasíláním e-mailů</span>
+            <input id="souhlas_email" type="checkbox" name="souhlas_email" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('souhlas_email', $clenstvi->souhlas_email ?? false))>
+            <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Souhlas se zasíláním e-mailů</span>
         </label>
         <label for="souhlas_zverejneni" class="inline-flex items-center">
-            <input id="souhlas_zverejneni" type="checkbox" name="souhlas_zverejneni" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('souhlas_zverejneni', $clenstvi->souhlas_zverejneni ?? false))>
-            <span class="ms-2 text-sm text-gray-700">Souhlas se zveřejněním</span>
+            <input id="souhlas_zverejneni" type="checkbox" name="souhlas_zverejneni" value="1" class="rounded border-outline-variant dark:border-[#43493e] text-primary shadow-sm focus:ring-indigo-500" @checked(old('souhlas_zverejneni', $clenstvi->souhlas_zverejneni ?? false))>
+            <span class="ms-2 text-sm text-on-surface dark:text-[#e5e2dd]">Souhlas se zveřejněním</span>
         </label>
     </div>
 
     <div class="flex items-center gap-3">
         <x-primary-button>{{ $isEdit ? 'Uložit členství' : 'Vytvořit členství' }}</x-primary-button>
-        <a href="{{ route('clenstvi-cmt.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět</a>
+        <a href="{{ route('clenstvi-cmt.index') }}" class="text-sm text-on-surface-variant dark:text-[#c3c8bb] hover:text-on-surface dark:hover:text-[#e5e2dd] underline">Zpět</a>
     </div>
 </form>

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-on-surface dark:text-[#e5e2dd] leading-tight">
             Nový kůň
         </h2>
     </x-slot>
