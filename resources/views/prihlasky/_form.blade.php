@@ -127,7 +127,7 @@
                 @method('PUT')
             @endif
 
-            <section class="panel px-6 py-5 sm:px-8">
+            <section class="rounded-2xl bg-surface-container-low px-6 py-5 dark:bg-[#252522] sm:px-8">
                 <div class="flex flex-wrap gap-3">
                     <button type="button" @click="step = 1" :class="step === 1 ? 'bg-[#20392c] text-white border-[#20392c]' : 'bg-white/70 text-gray-600 border-[#ddd0bc]'" class="rounded-full border px-4 py-2 text-sm font-semibold transition">
                         1. Osoba a kůň
@@ -141,7 +141,7 @@
                 </div>
             </section>
 
-            <section x-cloak x-show="step === 1" class="panel space-y-6 p-6 sm:p-8">
+            <section x-cloak x-show="step === 1" class="rounded-2xl bg-surface-container-low space-y-6 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 1</p>
                     <h2 class="mt-3 text-2xl text-[#20392c]">Vyberte účastníka a koně</h2>
@@ -149,14 +149,14 @@
                 </div>
 
                 @if($osoby->isEmpty() || $kone->isEmpty())
-                    <div class="status-note border-amber-200 bg-amber-50 text-amber-900">
+                    <div class="status-note mt-4">
                         Pro vytvoření přihlášky je potřeba mít založenou alespoň jednu osobu a jednoho koně.
                     </div>
                 @endif
 
                 <div class="grid gap-5 md:grid-cols-2">
                     <div>
-                        <x-input-label for="osoba_id" :value="'Osoba'" />
+                        <label for="osoba_id" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Osoba</label>
                         <select id="osoba_id" x-model="osobaId" name="osoba_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
                             <option value="">Vyberte osobu</option>
                             @foreach($osoby as $osoba)
@@ -172,7 +172,7 @@
                     </div>
 
                     <div>
-                        <x-input-label for="kun_id" :value="'Kůň'" />
+                        <label for="kun_id" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Kůň</label>
                         <select id="kun_id" x-model="kunId" name="kun_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
                             <option value="">Vyberte koně</option>
                             @foreach($kone as $kun)
@@ -189,7 +189,7 @@
                 </div>
 
                 <div>
-                    <x-input-label for="kun_tandem_id" :value="'Tandem kůň (volitelně)'" />
+                    <label for="kun_tandem_id" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Tandem kůň (volitelně)</label>
                     <select id="kun_tandem_id" name="kun_tandem_id" class="field-shell">
                         <option value="">Bez tandemu</option>
                         @foreach($kone as $kun)
@@ -217,7 +217,7 @@
                 </div>
             </section>
 
-            <section x-cloak x-show="step === 2" class="panel space-y-8 p-6 sm:p-8">
+            <section x-cloak x-show="step === 2" class="rounded-2xl bg-surface-container-low space-y-8 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 2</p>
                     <h2 class="mt-3 text-2xl text-[#20392c]">Zvolte disciplíny a doplňkové služby</h2>
@@ -256,10 +256,10 @@
                     <x-input-error :messages="$errors->get('moznosti')" class="mt-2" />
 
                     <p x-show="adminFeeStatus.loading" class="text-sm text-gray-500">Kontroluji administrativní poplatek…</p>
-                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired" class="status-note border-amber-200 bg-amber-50 text-amber-900">
+                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.autoFeeRequired" class="status-note mt-4">
                         U osoby bez členství CMT bude při první přihlášce na tuto akci automaticky započten administrativní poplatek.
                     </div>
-                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.alreadyCharged" class="status-note border-emerald-200 bg-emerald-50 text-emerald-800">
+                    <div x-show="!adminFeeStatus.loading && adminFeeStatus.alreadyCharged" class="status-note mt-4">
                         Administrativní poplatek už byl pro tuto osobu v rámci akce účtován a nebude přidán znovu.
                     </div>
                 </div>
@@ -288,7 +288,7 @@
                 </div>
             </section>
 
-            <section x-cloak x-show="step === 3" class="panel space-y-6 p-6 sm:p-8">
+            <section x-cloak x-show="step === 3" class="rounded-2xl bg-surface-container-low space-y-6 p-6 dark:bg-[#252522] sm:p-8">
                 <div>
                     <p class="section-eyebrow">Krok 3</p>
                     <h2 class="mt-3 text-2xl text-[#20392c]">Zkontrolujte souhrn a odešlete přihlášku</h2>
@@ -332,7 +332,7 @@
                 </div>
 
                 <div>
-                    <x-input-label for="poznamka" :value="'Poznámka pro pořadatele'" />
+                    <label for="poznamka" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant dark:text-[#c3c8bb]">Poznámka pro pořadatele</label>
                     <textarea id="poznamka" name="poznamka" rows="4" class="field-shell">{{ old('poznamka', $isEdit ? $prihlaska->poznamka : '') }}</textarea>
                     <x-input-error :messages="$errors->get('poznamka')" class="mt-2" />
                 </div>
@@ -344,7 +344,7 @@
                 <x-input-error :messages="$errors->get('gdpr_souhlas')" class="mt-2" />
             </section>
 
-            <section class="panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <section class="rounded-2xl bg-surface-container-low flex flex-col gap-4 p-5 dark:bg-[#252522] sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-3">
                     <button type="button" @click="prevStep()" class="button-secondary" x-show="step > 1">Zpět</button>
                     <button type="button" @click="nextStep()" class="button-primary" x-show="step < 3">Pokračovat</button>
@@ -354,22 +354,22 @@
                     <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-[#7b5230] underline underline-offset-4">
                         {{ $isEdit ? 'Zpět na detail přihlášky' : 'Zpět na detail akce' }}
                     </a>
-                    <x-primary-button x-show="step === 3">
+                    <button type="submit" class="button-primary" x-show="step === 3">
                         {{ $isEdit ? 'Uložit změny' : 'Odeslat přihlášku' }}
-                    </x-primary-button>
+                    </button>
                 </div>
             </section>
         </form>
 
         <aside class="space-y-6">
-            <section class="panel p-6">
+            <section class="glass-card sticky top-24 p-6">
                 <p class="section-eyebrow">Souhrn</p>
                 <h3 class="mt-3 text-2xl text-[#20392c]">Průběžná cena</h3>
                 <p class="mt-4 text-4xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
                 <p class="mt-3 text-sm leading-6 text-gray-600">Vybraných položek: <span class="font-semibold text-[#20392c]" x-text="selectedMoznosti.length + selectedUstajeni.length"></span></p>
             </section>
 
-            <section class="panel p-6">
+            <section class="glass-card p-6">
                 <p class="section-eyebrow">Kontrola</p>
                 <ul class="mt-4 space-y-3 text-sm text-gray-700">
                     <li class="flex items-start justify-between gap-4">
