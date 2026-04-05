@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendPrihlaskaEmail;
+use App\Http\Requests\StorePrihlaskaRequest;
+use App\Http\Requests\UpdatePrihlaskaRequest;
 use App\Models\Kun;
 use App\Models\Osoba;
 use App\Models\Prihlaska;
@@ -43,11 +45,11 @@ class PrihlaskaController extends Controller
         ]);
     }
 
-    public function store(Udalost $udalost, Request $request): RedirectResponse
+    public function store(Udalost $udalost, StorePrihlaskaRequest $request): RedirectResponse
     {
         $this->ensureNotClosed($udalost);
 
-        $validated = $this->validatePayload($request, $udalost);
+        $validated = $this->resolvePayload($request->validated(), $udalost, $request);
 
         $prihlaska = Prihlaska::query()->create([
             'udalost_id' => $udalost->id,
@@ -100,13 +102,12 @@ class PrihlaskaController extends Controller
         ]);
     }
 
-    public function update(Prihlaska $prihlaska, Request $request): RedirectResponse
+    public function update(Prihlaska $prihlaska, UpdatePrihlaskaRequest $request): RedirectResponse
     {
         $this->authorizeOwner($prihlaska, $request);
         $udalost = $prihlaska->udalost()->firstOrFail();
         $this->ensureNotClosed($udalost);
-
-        $validated = $this->validatePayload($request, $udalost, $prihlaska, false);
+        $validated = $this->resolvePayload($request->validated(), $udalost, $request, $prihlaska, false);
 
         $prihlaska->update([
             'kun_tandem_id' => $validated['kun_tandem_id'] ? (int) $validated['kun_tandem_id'] : null,
@@ -218,25 +219,12 @@ class PrihlaskaController extends Controller
     }
 
     /**
+     * @param  array<string, mixed>  $validated
      * @return array<string, mixed>
      */
-    private function validatePayload(Request $request, Udalost $udalost, ?Prihlaska $prihlaska = null, bool $allowChangeCore = true): array
+    private function resolvePayload(array $validated, Udalost $udalost, Request $request, ?Prihlaska $prihlaska = null, bool $allowChangeCore = true): array
     {
         $userId = $request->user()->id;
-
-        $rules = [
-            'osoba_id' => ['required', 'integer', 'exists:osoby,id'],
-            'kun_id' => ['required', 'integer', 'exists:kone,id'],
-            'kun_tandem_id' => ['nullable', 'integer', 'different:kun_id', 'exists:kone,id'],
-            'moznosti' => ['required', 'array', 'min:1'],
-            'moznosti.*' => ['integer', 'exists:udalost_moznosti,id'],
-            'ustajeni' => ['nullable', 'array'],
-            'ustajeni.*' => ['integer', 'exists:udalost_ustajeni,id'],
-            'poznamka' => ['nullable', 'string', 'max:2000'],
-            'gdpr_souhlas' => ['required', 'accepted'],
-        ];
-
-        $validated = $request->validate($rules);
 
         $osoba = Osoba::query()->where('id', $validated['osoba_id'])->where('user_id', $userId)->firstOrFail();
         $kun = Kun::query()->where('id', $validated['kun_id'])->where('user_id', $userId)->firstOrFail();
