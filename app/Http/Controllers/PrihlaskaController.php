@@ -24,6 +24,8 @@ class PrihlaskaController extends Controller
 
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Prihlaska::class);
+
         return view('prihlasky.index', [
             'prihlasky' => $request->user()
                 ->prihlasky()
@@ -36,6 +38,7 @@ class PrihlaskaController extends Controller
 
     public function create(Udalost $udalost, Request $request): View
     {
+        $this->authorize('create', Prihlaska::class);
         $this->ensureNotClosed($udalost);
 
         return view('prihlasky.create', [
@@ -47,16 +50,18 @@ class PrihlaskaController extends Controller
 
     public function store(Udalost $udalost, StorePrihlaskaRequest $request): RedirectResponse
     {
+        $this->authorize('create', Prihlaska::class);
         $this->ensureNotClosed($udalost);
 
         $validated = $this->resolvePayload($request->validated(), $udalost, $request);
+        $kunTandemId = $validated['kun_tandem_id'] ?? null;
 
         $prihlaska = Prihlaska::query()->create([
             'udalost_id' => $udalost->id,
             'user_id' => $request->user()->id,
             'osoba_id' => (int) $validated['osoba_id'],
             'kun_id' => (int) $validated['kun_id'],
-            'kun_tandem_id' => $validated['kun_tandem_id'] ? (int) $validated['kun_tandem_id'] : null,
+            'kun_tandem_id' => $kunTandemId ? (int) $kunTandemId : null,
             'poznamka' => $validated['poznamka'] ?? null,
             'gdpr_souhlas' => true,
             'smazana' => false,
@@ -73,9 +78,9 @@ class PrihlaskaController extends Controller
         return redirect()->route('prihlasky.show', $prihlaska)->with('status', 'prihlaska-created');
     }
 
-    public function show(Prihlaska $prihlaska, Request $request): View
+    public function show(Prihlaska $prihlaska): View
     {
-        $this->authorizeOwner($prihlaska, $request);
+        $this->authorize('view', $prihlaska);
 
         return view('prihlasky.show', [
             'prihlaska' => $prihlaska->load([
@@ -91,7 +96,7 @@ class PrihlaskaController extends Controller
 
     public function edit(Prihlaska $prihlaska, Request $request): View
     {
-        $this->authorizeOwner($prihlaska, $request);
+        $this->authorize('update', $prihlaska);
         $this->ensureNotClosed($prihlaska->udalost()->firstOrFail());
 
         return view('prihlasky.edit', [
@@ -104,13 +109,14 @@ class PrihlaskaController extends Controller
 
     public function update(Prihlaska $prihlaska, UpdatePrihlaskaRequest $request): RedirectResponse
     {
-        $this->authorizeOwner($prihlaska, $request);
+        $this->authorize('update', $prihlaska);
         $udalost = $prihlaska->udalost()->firstOrFail();
         $this->ensureNotClosed($udalost);
         $validated = $this->resolvePayload($request->validated(), $udalost, $request, $prihlaska, false);
+        $kunTandemId = $validated['kun_tandem_id'] ?? null;
 
         $prihlaska->update([
-            'kun_tandem_id' => $validated['kun_tandem_id'] ? (int) $validated['kun_tandem_id'] : null,
+            'kun_tandem_id' => $kunTandemId ? (int) $kunTandemId : null,
             'poznamka' => $validated['poznamka'] ?? null,
             'gdpr_souhlas' => true,
         ]);
@@ -124,9 +130,9 @@ class PrihlaskaController extends Controller
         return redirect()->route('prihlasky.show', $prihlaska)->with('status', 'prihlaska-updated');
     }
 
-    public function destroy(Prihlaska $prihlaska, Request $request): RedirectResponse
+    public function destroy(Prihlaska $prihlaska): RedirectResponse
     {
-        $this->authorizeOwner($prihlaska, $request);
+        $this->authorize('delete', $prihlaska);
 
         $prihlaska->update(['smazana' => true]);
         $prihlaska->delete();
@@ -134,9 +140,9 @@ class PrihlaskaController extends Controller
         return redirect()->route('prihlasky.index')->with('status', 'prihlaska-deleted');
     }
 
-    public function pdf(Prihlaska $prihlaska, Request $request)
+    public function pdf(Prihlaska $prihlaska)
     {
-        $this->authorizeOwner($prihlaska, $request);
+        $this->authorize('view', $prihlaska);
         $prihlaska->load(['udalost', 'osoba', 'kun', 'kunTandem', 'polozky', 'ustajeniChoices.ustajeni']);
 
         $pdf = Pdf::loadView('prihlasky.pdf', [
@@ -268,11 +274,6 @@ class PrihlaskaController extends Controller
         if ($udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita) {
             abort(403, 'Kapacita akce je naplněna.');
         }
-    }
-
-    private function authorizeOwner(Prihlaska $prihlaska, Request $request): void
-    {
-        $this->abortIfNotMine($prihlaska->user_id, $request);
     }
 
     private function abortIfNotMine(int $ownerId, Request $request): void
