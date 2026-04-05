@@ -51,7 +51,7 @@
                 name="propozice_pdf_upload"
                 type="file"
                 accept=".pdf"
-                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-full file:border-0 file:bg-[#3d6b4f] file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-[#31563f]"
+                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-full file:border-0 file:bg-primary dark:file:bg-primary-container file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-primary-container dark:hover:file:bg-[#2d4f1e]"
             >
             <x-input-error :messages="$errors->get('propozice_pdf_upload')" class="mt-2" />
             @if($isEdit && $udalost->propozice_pdf)

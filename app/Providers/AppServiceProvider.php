@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,6 +52,21 @@ class AppServiceProvider extends ServiceProvider
             $key = $request->user()?->id ? 'user:'.$request->user()->id : 'ip:'.$request->ip();
 
             return Limit::perMinute(20)->by($key);
+        });
+
+        View::composer('layouts.app', function ($view) {
+            $upcomingEvents = \App\Models\Udalost::query()
+                ->where('aktivni', true)
+                ->whereDate('datum_zacatek', '>=', now()->startOfDay())
+                ->orderBy('datum_zacatek')
+                ->limit(3)
+                ->get();
+
+            $myOpenRegistrations = auth()->check()
+                ? auth()->user()->prihlasky()->with(['udalost', 'kun'])->where('smazana', false)->latest()->limit(4)->get()
+                : collect();
+
+            $view->with(compact('upcomingEvents', 'myOpenRegistrations'));
         });
     }
 }

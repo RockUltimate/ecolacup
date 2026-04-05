@@ -9,7 +9,7 @@
     @endif
     <div x-data="{ customBreed: @js((bool) old('plemeno_vlastni', $kun->plemeno_vlastni ?? null)) }" class="space-y-6">
         <section class="panel p-5 space-y-4">
-            <h3 class="text-base font-semibold text-gray-900">Základní údaje</h3>
+            <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Základní údaje</h3>
             <div>
                 <x-input-label for="jmeno" :value="'Jméno koně'" />
                 <x-text-input id="jmeno" name="jmeno" type="text" class="mt-1 block w-full" :value="old('jmeno', $kun->jmeno ?? '')" required />
@@ -18,7 +18,7 @@
 
             <div>
                 <x-input-label for="plemeno_kod" :value="'Plemeno (kód)'" />
-                <select id="plemeno_kod" name="plemeno_kod" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                <select id="plemeno_kod" name="plemeno_kod" class="field-shell">
                     <option value="">Vyberte plemeno</option>
                     @foreach($plemena as $pleme)
                         <option value="{{ $pleme->kod }}" @selected(old('plemeno_kod', $kun->plemeno_kod ?? '') === $pleme->kod)>
@@ -26,7 +26,7 @@
                         </option>
                     @endforeach
                 </select>
-                <button type="button" class="mt-2 text-sm text-indigo-600 hover:text-indigo-800 underline" @click="customBreed = !customBreed">
+                <button type="button" class="mt-2 text-sm brand-link" @click="customBreed = !customBreed">
                     Nenašli jste plemeno? Zadat ručně
                 </button>
                 <x-input-error :messages="$errors->get('plemeno_kod')" class="mt-2" />
@@ -46,7 +46,7 @@
                 </div>
                 <div>
                     <x-input-label for="pohlavi" :value="'Pohlaví'" />
-                    <select id="pohlavi" name="pohlavi" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                    <select id="pohlavi" name="pohlavi" class="field-shell" required>
                         <option value="">Vyberte</option>
                         <option value="h" @selected(old('pohlavi', $kun->pohlavi ?? '') === 'h')>Hřebec</option>
                         <option value="k" @selected(old('pohlavi', $kun->pohlavi ?? '') === 'k')>Klisna</option>
@@ -64,8 +64,8 @@
         </section>
 
         <section class="panel p-5 space-y-4">
-            <h3 class="text-base font-semibold text-gray-900">Zdravotní údaje</h3>
-            <p class="text-xs text-gray-600">Uveďte platné termíny vyšetření/očkování. Chybějící data se označí jako nekompletní.</p>
+            <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Zdravotní údaje</h3>
+            <p class="text-xs text-on-surface-variant dark:text-[#c3c8bb]">Uveďte platné termíny vyšetření/očkování. Chybějící data se označí jako nekompletní.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <x-input-label for="ehv_datum" :value="'EHV datum'" />
@@ -86,7 +86,7 @@
         </section>
 
         <section class="panel p-5 space-y-4">
-            <h3 class="text-base font-semibold text-gray-900">Průkaz a vlastník</h3>
+            <h3 class="text-base font-semibold text-on-surface dark:text-[#e5e2dd]">Průkaz a vlastník</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <x-input-label for="cislo_prukazu" :value="'Číslo průkazu'" />
@@ -102,7 +102,7 @@
 
             <div>
                 <x-input-label for="majitel_jmeno_adresa" :value="'Majitel (jméno + adresa)'" />
-                <textarea id="majitel_jmeno_adresa" name="majitel_jmeno_adresa" rows="4" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('majitel_jmeno_adresa', $kun->majitel_jmeno_adresa ?? '') }}</textarea>
+                <textarea id="majitel_jmeno_adresa" name="majitel_jmeno_adresa" rows="4" class="field-shell">{{ old('majitel_jmeno_adresa', $kun->majitel_jmeno_adresa ?? '') }}</textarea>
                 <x-input-error :messages="$errors->get('majitel_jmeno_adresa')" class="mt-2" />
             </div>
         </section>
@@ -110,6 +110,6 @@
 
     <div class="flex items-center gap-3">
         <x-primary-button>{{ $isEdit ? 'Uložit změny' : 'Vytvořit koně' }}</x-primary-button>
-        <a href="{{ route('kone.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
+        <a href="{{ route('kone.index') }}" class="text-sm text-on-surface-variant dark:text-[#c3c8bb] hover:text-on-surface dark:hover:text-[#e5e2dd] underline">Zpět na přehled</a>
     </div>
 </form>

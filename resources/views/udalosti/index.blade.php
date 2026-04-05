@@ -1,171 +1,186 @@
+{{-- resources/views/udalosti/index.blade.php --}}
 <x-site-layout>
-    @php
-        $featured = $upcoming->first();
-        $remainingUpcoming = $upcoming->slice(1);
-        $openEvents = $upcoming->filter(function ($udalost) {
-            $deadlinePassed = $udalost->uzavierka_prihlasek?->lt(now()->startOfDay());
-            $capacityReached = $udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita;
 
-            return ! $deadlinePassed && ! $capacityReached;
-        })->count();
-    @endphp
+{{-- ── Hero ─────────────────────────────────────────────────────── --}}
+<section class="relative min-h-[600px] overflow-hidden">
+    <div class="mx-auto grid max-w-screen-xl items-center gap-8 px-6 py-20 lg:grid-cols-12 lg:px-8">
 
-    <section class="px-4 pb-10 pt-10 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl">
-            <div class="editorial-grid items-stretch">
-                <div class="panel reveal-up overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
-                    <p class="section-eyebrow">Kalendar akcí</p>
-                    <div class="mt-5 max-w-3xl">
-                        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">EcolaCup</p>
-                        <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">Moderní přihlášky na CMT závody, které fungují i přímo v areálu.</h1>
-                        <p class="mt-5 max-w-2xl text-base leading-7 text-gray-600">Veřejný kalendář, přehled uzávěrek, disciplín a kapacit. Přihlášení jezdci navazují rovnou na správu osob, koní a přihlášek bez ruční administrativy navíc.</p>
+        {{-- Left: headline --}}
+        <div class="relative z-10 lg:col-span-6">
+            <p class="section-eyebrow mb-4">Kalendář akcí</p>
+            <h1 class="font-headline text-5xl leading-tight text-primary dark:text-inverse-primary sm:text-6xl lg:text-7xl">
+                Moderní přihlášky<br><span class="italic">na CMT závody.</span>
+            </h1>
+            <p class="mt-6 max-w-lg text-lg leading-relaxed text-on-surface-variant dark:text-[#c3c8bb]">
+                Veřejný kalendář, přehled uzávěrek, disciplín a kapacit. Přihlášení jezdci navazují rovnou na správu osob, koní a přihlášek.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="button-primary px-10 py-4">Pokračovat do aplikace</a>
+                @else
+                    <a href="{{ route('register') }}" class="button-primary px-10 py-4">Začít registraci</a>
+                    <a href="{{ route('login') }}" class="button-secondary px-10 py-4">Mám účet</a>
+                @endauth
+            </div>
+        </div>
+
+        {{-- Right: stats / next event card --}}
+        <div class="lg:col-span-6">
+            @if($upcoming->isNotEmpty())
+                @php $featured = $upcoming->first(); @endphp
+                <div class="panel reveal-up-delay overflow-hidden">
+                    {{-- Gradient hero image placeholder --}}
+                    <div class="h-48 w-full"
+                         style="background: linear-gradient(135deg, #173809 0%, #2d4f1e 40%, #446733 100%);">
+                        <div class="flex h-full items-end p-6">
+                            <span class="brand-pill">Nejbližší akce</span>
+                        </div>
                     </div>
-
-                    <div class="mt-8 flex flex-wrap gap-3">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="button-primary">Pokračovat do aplikace</a>
-                        @else
-                            <a href="{{ route('register') }}" class="button-primary">Začít registraci</a>
-                            <a href="{{ route('login') }}" class="button-secondary">Mám účet</a>
-                        @endauth
-                    </div>
-
-                    <div class="mt-10 grid gap-4 border-t border-[#eadfcc] pt-6 sm:grid-cols-3">
-                        <div>
-                            <p class="text-3xl font-semibold text-[#20392c]">{{ $upcoming->count() }}</p>
-                            <p class="mt-1 text-sm text-gray-600">nadcházejících událostí</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-semibold text-[#20392c]">{{ $openEvents }}</p>
-                            <p class="mt-1 text-sm text-gray-600">právě otevřených registrací</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-semibold text-[#20392c]">{{ $archive->count() }}</p>
-                            <p class="mt-1 text-sm text-gray-600">akcí v archivu</p>
-                        </div>
+                    <div class="p-8">
+                        <h2 class="font-headline text-3xl text-on-surface dark:text-[#e5e2dd]">{{ $featured->nazev }}</h2>
+                        <p class="mt-2 text-on-surface-variant dark:text-[#c3c8bb]">{{ $featured->misto }} • {{ $featured->datum_zacatek?->format('d.m.Y') }}</p>
+                        <a href="{{ route('udalosti.show', $featured) }}" class="button-primary mt-6 inline-flex">
+                            Zobrazit detail
+                        </a>
                     </div>
                 </div>
+            @else
+                <div class="panel reveal-up-delay p-12 text-center">
+                    <p class="font-headline text-2xl italic text-on-surface-variant dark:text-[#c3c8bb]">Brzy budou vypsány nové akce.</p>
+                </div>
+            @endif
+        </div>
+    </div>
+</section>
 
-                <aside class="panel reveal-up-delay flex flex-col justify-between px-6 py-8 sm:px-8">
-                    <div>
-                        <p class="section-eyebrow">Rychlý přehled</p>
-                        @if($featured)
-                            @php
-                                $featuredClosed = ($featured->uzavierka_prihlasek && $featured->uzavierka_prihlasek->lt(now()->startOfDay()))
-                                    || ($featured->kapacita !== null && $featured->pocet_prihlasek >= $featured->kapacita);
-                            @endphp
-                            <div class="mt-5 space-y-4">
-                                <div>
-                                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-[#3d6b4f]">Nejbližší akce</p>
-                                    <h2 class="mt-3 text-3xl text-[#20392c]">{{ $featured->nazev }}</h2>
-                                </div>
-                                <div class="space-y-2 text-sm leading-6 text-gray-600">
-                                    <p>{{ $featured->misto }}</p>
-                                    <p>{{ $featured->datum_zacatek?->format('d.m.Y') }} @if($featured->datum_konec && $featured->datum_konec->ne($featured->datum_zacatek))– {{ $featured->datum_konec->format('d.m.Y') }} @endif</p>
-                                    <p>Uzávěrka přihlášek: {{ $featured->uzavierka_prihlasek?->format('d.m.Y') }}</p>
-                                </div>
-                            </div>
-                        @else
-                            <p class="mt-5 text-sm leading-6 text-gray-600">Po vypsání první akce se tady zobrazí nejbližší termín s kapacitou a uzávěrkou.</p>
+{{-- ── Stats bar ────────────────────────────────────────────────── --}}
+<section class="bg-surface-container-low py-10 dark:bg-[#252522]">
+    <div class="mx-auto grid max-w-screen-xl grid-cols-3 gap-6 px-6 text-center lg:px-8">
+        <div>
+            <p class="font-headline text-4xl text-primary dark:text-inverse-primary">{{ $upcoming->count() }}</p>
+            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">nadcházejících událostí</p>
+        </div>
+        <div>
+            <p class="font-headline text-4xl text-primary dark:text-inverse-primary">{{ $openEvents }}</p>
+            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">otevřených registrací</p>
+        </div>
+        <div>
+            <p class="font-headline text-4xl text-primary dark:text-inverse-primary">{{ $archive->count() }}</p>
+            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">akcí v archivu</p>
+        </div>
+    </div>
+</section>
+
+{{-- ── Upcoming races bento grid ────────────────────────────────── --}}
+@if($upcoming->count() > 0)
+<section class="py-20">
+    <div class="mx-auto max-w-screen-xl px-6 lg:px-8">
+        <div class="mb-10 flex items-end justify-between">
+            <div>
+                <p class="section-eyebrow">Sezóna</p>
+                <h2 class="mt-2 font-headline text-4xl text-on-surface dark:text-[#e5e2dd]">Nadcházející akce</h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            @foreach($upcoming as $i => $udalost)
+                @php
+                    $closed = ($udalost->uzavierka_prihlasek && $udalost->uzavierka_prihlasek->lt(now()->startOfDay()))
+                           || ($udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita);
+                    $isFirst = $i === 0;
+                @endphp
+
+                @if($isFirst)
+                {{-- Featured large card --}}
+                <div class="panel reveal-up overflow-hidden md:col-span-2 md:row-span-2 hover:shadow-xl transition-shadow">
+                    <div class="relative h-64"
+                         style="background: linear-gradient(135deg, #173809 0%, #2d4f1e 50%, #446733 100%);">
+                        <div class="absolute left-4 top-4">
+                            <span class="brand-pill">{{ $closed ? 'Uzavřeno' : 'Registrace otevřena' }}</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="font-headline text-3xl text-on-surface dark:text-[#e5e2dd]">{{ $udalost->nazev }}</h3>
+                        <p class="mt-2 text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->misto }} • {{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
+                        @if($udalost->uzavierka_prihlasek)
+                            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">Uzávěrka: {{ $udalost->uzavierka_prihlasek->format('d.m.Y') }}</p>
                         @endif
+                        @if($udalost->kapacita)
+                            <p class="mt-1 text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->pocet_prihlasek }} / {{ $udalost->kapacita }} přihlášek</p>
+                        @endif
+                        <a href="{{ route('udalosti.show', $udalost) }}" class="button-primary mt-6 inline-flex">Detail akce</a>
                     </div>
-
-                    @if($featured)
-                        <div class="mt-8 rounded-[1.25rem] border border-[#eadfcc] bg-[#f9f4eb] p-5">
-                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">{{ $featuredClosed ? 'Registrace uzavřena' : 'Registrace otevřena' }}</p>
-                            <p class="mt-3 text-sm leading-6 text-gray-600">Detail akce obsahuje disciplíny, ustájení, kapacity i okamžitý vstup do přihlášky.</p>
-                            <a href="{{ route('udalosti.show', $featured) }}" class="button-secondary mt-5">Zobrazit detail</a>
-                        </div>
-                    @endif
-                </aside>
-            </div>
-        </div>
-    </section>
-
-    <section class="px-4 py-6 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl">
-            <div class="flex items-end justify-between gap-6">
-                <div>
-                    <p class="section-eyebrow">Nadcházející akce</p>
-                    <h2 class="mt-2 text-3xl text-[#20392c]">Vypsané termíny a jejich stav</h2>
                 </div>
-            </div>
+                @else
+                {{-- Smaller cards --}}
+                <div class="panel reveal-up flex items-center gap-5 p-6 transition-colors hover:bg-surface-container-low dark:hover:bg-[#2a2a27]">
+                    <div class="h-16 w-16 flex-shrink-0 rounded-xl"
+                         style="background: linear-gradient(135deg, #173809 0%, #446733 100%);"></div>
+                    <div class="min-w-0">
+                        <h3 class="font-headline text-lg truncate text-on-surface dark:text-[#e5e2dd]">{{ $udalost->nazev }}</h3>
+                        <p class="text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
+                        <a href="{{ route('udalosti.show', $udalost) }}"
+                           class="mt-2 inline-block text-xs font-bold uppercase tracking-widest text-primary underline underline-offset-4 dark:text-inverse-primary">
+                            Rezervovat místo
+                        </a>
+                    </div>
+                </div>
+                @endif
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
-            <div class="mt-8 space-y-4">
-                @forelse($upcoming as $index => $udalost)
-                    @php
-                        $deadlinePassed = $udalost->uzavierka_prihlasek?->lt(now()->startOfDay());
-                        $capacityReached = $udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita;
-                        $isClosed = $deadlinePassed || $capacityReached;
-                        $daysToDeadline = $udalost->uzavierka_prihlasek?->diffInDays(now()->startOfDay(), false);
-                    @endphp
-                    <a href="{{ route('udalosti.show', $udalost) }}" class="panel block p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_26px_80px_rgba(71,52,34,0.12)]">
-                        <div class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.6fr)] lg:items-center">
-                            <div class="space-y-3">
-                                <div class="flex flex-wrap items-center gap-3">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[#7b5230]">Akce {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</p>
-                                    @if($isClosed)
-                                        <span class="brand-pill bg-red-100 text-red-700">Uzavřeno</span>
-                                    @elseif($daysToDeadline !== null && $daysToDeadline <= 7)
-                                        <span class="brand-pill bg-amber-100 text-amber-700">Uzávěrka brzy</span>
-                                    @else
-                                        <span class="brand-pill">Otevřeno</span>
-                                    @endif
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl text-[#20392c]">{{ $udalost->nazev }}</h3>
-                                    <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600">{{ $udalost->popis ?: 'Detail akce obsahuje všechny disciplíny, možnosti ustájení i stav registrace.' }}</p>
-                                </div>
-                            </div>
-
-                            <div class="grid gap-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-1">
-                                <div>
-                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#3d6b4f]">Místo a termín</p>
-                                    <p class="mt-1 text-base font-semibold text-[#20392c]">{{ $udalost->misto }}</p>
-                                    <p>{{ $udalost->datum_zacatek?->format('d.m.Y') }} @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))– {{ $udalost->datum_konec->format('d.m.Y') }} @endif</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#3d6b4f]">Přihlášky</p>
-                                    <p class="mt-1">Uzávěrka {{ $udalost->uzavierka_prihlasek?->format('d.m.Y') }}</p>
-                                    <p>{{ $udalost->pocet_prihlasek }} registrací / {{ $udalost->pocet_startu }} startů</p>
-                                </div>
-                            </div>
-                        </div>
+{{-- ── Archive ───────────────────────────────────────────────────── --}}
+@if($archive->isNotEmpty())
+<section class="bg-surface-container-low py-20 dark:bg-[#252522]">
+    <div class="mx-auto max-w-screen-xl px-6 lg:px-8">
+        <p class="section-eyebrow mb-6">Archiv</p>
+        <div class="space-y-0">
+            @foreach($archive as $udalost)
+                <div class="flex items-center justify-between py-5
+                            {{ !$loop->last ? 'border-b border-outline-variant/20 dark:border-[#43493e]/30' : '' }}">
+                    <div>
+                        <p class="font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $udalost->nazev }}</p>
+                        <p class="text-sm text-on-surface-variant dark:text-[#c3c8bb]">{{ $udalost->misto }} • {{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
+                    </div>
+                    <a href="{{ route('udalosti.show', $udalost) }}"
+                       class="ml-4 flex-shrink-0 text-sm font-bold uppercase tracking-widest text-primary transition hover:opacity-70 dark:text-inverse-primary">
+                        Zobrazit
                     </a>
-                @empty
-                    <div class="panel p-8 text-sm leading-6 text-gray-600">Zatím nejsou vypsané žádné nadcházející akce.</div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-    <section class="px-4 pb-14 pt-8 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl">
-            <div class="grid gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
-                <div class="space-y-3">
-                    <p class="section-eyebrow">Archiv</p>
-                    <h2 class="text-3xl text-[#20392c]">Přehled minulých ročníků</h2>
-                    <p class="text-sm leading-6 text-gray-600">Historie zůstává snadno dohledatelná pro pořadatele i účastníky, kteří se vracejí k předchozím akcím a výstupům.</p>
                 </div>
-
-                <div class="panel overflow-hidden">
-                    <div class="divide-y divide-[#eadfcc]">
-                        @forelse($archive as $udalost)
-                            <a href="{{ route('udalosti.show', $udalost) }}" class="block px-6 py-5 transition hover:bg-white/60">
-                                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                    <div>
-                                        <p class="text-lg font-semibold text-[#20392c]">{{ $udalost->nazev }}</p>
-                                        <p class="text-sm text-gray-600">{{ $udalost->misto }}</p>
-                                    </div>
-                                    <p class="text-sm font-medium text-[#7b5230]">{{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
-                                </div>
-                            </a>
-                        @empty
-                            <div class="px-6 py-8 text-sm text-gray-600">Archiv je zatím prázdný.</div>
-                        @endforelse
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
-    </section>
+    </div>
+</section>
+@endif
+
+{{-- ── CTA Banner ───────────────────────────────────────────────── --}}
+<section class="relative overflow-hidden py-32">
+    <div class="absolute inset-0"
+         style="background: linear-gradient(135deg, #173809 0%, #2d4f1e 50%, #446733 100%);"></div>
+    <div class="absolute inset-0 backdrop-blur-sm" style="background: rgba(23,56,9,0.6);"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-8 text-center">
+        <h2 class="font-headline text-5xl text-white sm:text-6xl">Připraveni na start?</h2>
+        <p class="mt-6 text-xl text-white/80">
+            Vytvořte účet a přihlaste se na nadcházející závody během pár minut.
+        </p>
+        <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            @auth
+                <a href="{{ route('dashboard') }}" class="bg-white px-10 py-4 rounded-lg text-sm font-bold uppercase tracking-widest text-primary hover:bg-stone-100 transition shadow-2xl">
+                    Otevřít aplikaci
+                </a>
+            @else
+                <a href="{{ route('register') }}" class="bg-white px-10 py-4 rounded-lg text-sm font-bold uppercase tracking-widest text-primary hover:bg-stone-100 transition shadow-2xl">
+                    Vytvořit profil jezdce
+                </a>
+                <a href="{{ route('udalosti.index') }}" class="border-2 border-white/30 px-10 py-4 rounded-lg text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition">
+                    Prohlédnout akce
+                </a>
+            @endauth
+        </div>
+    </div>
+</section>
+
 </x-site-layout>

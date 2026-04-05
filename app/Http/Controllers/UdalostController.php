@@ -25,9 +25,17 @@ class UdalostController extends Controller
             ->orderByDesc('datum_zacatek')
             ->get();
 
+        $openEvents = $upcoming->filter(function ($udalost) {
+            $deadlinePassed = $udalost->uzavierka_prihlasek?->lt(now()->startOfDay());
+            $capacityReached = $udalost->kapacita !== null && $udalost->pocet_prihlasek >= $udalost->kapacita;
+
+            return ! $deadlinePassed && ! $capacityReached;
+        })->count();
+
         return view('udalosti.index', [
             'upcoming' => $upcoming,
             'archive' => $archive,
+            'openEvents' => $openEvents,
         ]);
     }
 

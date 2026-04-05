@@ -28,7 +28,7 @@
 @endphp
 
 @if ($status)
-    <div class="mb-4 panel p-3 text-sm text-[#3d6b4f]">
+    <div class="mb-4 panel p-3 text-sm text-primary dark:text-inverse-primary">
         {{ $messages[$status] ?? $status }}
     </div>
 @endif
