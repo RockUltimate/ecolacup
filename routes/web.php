@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StartCislaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UdalostController::class, 'index']);
+Route::view('/gdpr', 'gdpr')->name('gdpr');
 
 Route::get('/dashboard', function () {
     return redirect()->route('udalosti.index');
@@ -106,6 +107,8 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::get('/users/{user}/gdpr-export', [AdminUserController::class, 'gdprExport'])->name('users.gdpr-export');
+    Route::delete('/users/{user}/purge', [AdminUserController::class, 'purge'])->name('users.purge');
 
     Route::get('/clenstvi', [ClenstviAdminController::class, 'index'])->name('clenstvi.index');
     Route::get('/clenstvi/{clenstviCmt}/edit', [ClenstviAdminController::class, 'edit'])->name('clenstvi.edit');

@@ -59,6 +59,17 @@
                     <x-primary-button>Uložit uživatele</x-primary-button>
                 </div>
             </form>
+            <div class="panel p-5 space-y-3">
+                <h3 class="text-base font-semibold text-gray-900">GDPR nástroje</h3>
+                <a href="{{ route('admin.users.gdpr-export', $managedUser) }}" class="inline-flex text-sm text-indigo-600 hover:text-indigo-800 underline">
+                    Exportovat uživatelská data (CSV)
+                </a>
+                <form method="POST" action="{{ route('admin.users.purge', $managedUser) }}" onsubmit="return confirm('Opravdu trvale odstranit uživatele a všechna jeho data? Tato akce je nevratná.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="inline-flex text-sm text-red-600 hover:text-red-800 underline">Trvale odstranit uživatele (purge)</button>
+                </form>
+            </div>
         </div>
     </div>
 </x-app-layout>

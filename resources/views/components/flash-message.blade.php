@@ -21,6 +21,8 @@
         'udalost-updated' => 'Událost byla upravena.',
         'udalost-deleted' => 'Událost byla smazána.',
         'admin-user-updated' => 'Uživatel byl upraven.',
+        'admin-user-purged' => 'Uživatel byl trvale odstraněn (GDPR purge).',
+        'admin-user-purge-self-denied' => 'Nelze odstranit právě přihlášeného administrátora.',
         'admin-clenstvi-updated' => 'Členství bylo upraveno v administraci.',
     ];
 @endphp
