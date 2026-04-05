@@ -9,7 +9,7 @@
         {{ $slot }}
         <div class="flex items-center gap-2">
             <x-primary-button>Filtrovat</x-primary-button>
-            <a href="{{ $resetHref }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Reset</a>
+            <a href="{{ $resetHref }}" class="button-secondary">Reset</a>
         </div>
     </form>
 </div>

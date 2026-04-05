@@ -1,20 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Upravit přihlášku #{{ $prihlaska->id }}
-        </h2>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Úprava přihlášky</p>
+            <h1 class="text-3xl text-[#20392c]">Přihláška #{{ $prihlaska->id }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Upravujete doplňkové položky, poznámku a souhrn. Účastník i hlavní kůň zůstávají po vytvoření uzamčené.</p>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
-                @include('prihlasky._form', [
-                    'prihlaska' => $prihlaska,
-                    'udalost' => $udalost,
-                    'osoby' => $osoby,
-                    'kone' => $kone,
-                ])
-            </div>
+    <div class="py-10">
+        <div class="mx-auto max-w-6xl">
+            @include('prihlasky._form', [
+                'prihlaska' => $prihlaska,
+                'udalost' => $udalost,
+                'osoby' => $osoby,
+                'kone' => $kone,
+            ])
         </div>
     </div>
 </x-app-layout>

@@ -1,31 +1,35 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
-
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+    <div class="space-y-6">
+        <div>
+            <p class="section-eyebrow">Ověření e-mailu</p>
+            <h1 class="mt-3 text-3xl text-[#20392c]">Ještě potvrďte svou e-mailovou adresu</h1>
+            <p class="mt-3 text-sm leading-6 text-gray-600">Klikněte na odkaz v e-mailu, který jsme poslali po registraci. Tím se účet aktivuje pro další kroky v aplikaci.</p>
         </div>
-    @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
-            @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
+        @if (session('status') === 'verification-link-sent')
+            <div class="status-note border-emerald-200 bg-emerald-50 text-emerald-800">
+                Nový ověřovací e-mail byl právě odeslán.
             </div>
-        </form>
+        @endif
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
+        <div class="surface-muted">
+            <p class="text-sm leading-6 text-gray-700">Pokud zprávu nevidíte, zkontrolujte i složku hromadné pošty nebo si nechte poslat nový odkaz.</p>
+        </div>
 
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
-            </button>
-        </form>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <form method="POST" action="{{ route('verification.send') }}">
+                @csrf
+                <x-primary-button>
+                    Poslat ověřovací e-mail znovu
+                </x-primary-button>
+            </form>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="text-sm text-[#7b5230] underline underline-offset-4">
+                    Odhlásit se
+                </button>
+            </form>
+        </div>
     </div>
 </x-guest-layout>

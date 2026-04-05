@@ -1,48 +1,49 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Události</h2>
-            <div class="flex items-center gap-2">
-                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-[#3d6b4f] rounded-md font-semibold text-xs uppercase tracking-widest text-[#3d6b4f] hover:bg-emerald-50">
-                    Dashboard
-                </a>
-                <a href="{{ route('admin.udalosti.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
-                    Nová událost
-                </a>
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div class="space-y-3">
+                <p class="section-eyebrow">Administrace událostí</p>
+                <h1 class="text-3xl text-[#20392c]">Přehled vypsaných akcí</h1>
+                <p class="max-w-3xl text-sm leading-6 text-gray-600">Odtud se vstupuje do detailu akce, správy disciplín, ustájení i pořadatelských reportů.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('admin.dashboard') }}" class="button-secondary">Dashboard</a>
+                <a href="{{ route('admin.udalosti.create') }}" class="button-primary">Nová událost</a>
             </div>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (session('status'))
-                <div class="mb-4 p-4 rounded-md bg-green-50 text-green-700 text-sm">
-                    @if (session('status') === 'udalost-created') Událost byla vytvořena. @endif
-                    @if (session('status') === 'udalost-deleted') Událost byla smazána. @endif
-                </div>
-            @endif
-            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-                <div class="divide-y divide-gray-200">
-                    @forelse($udalosti as $udalost)
-                        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $udalost->nazev }}</p>
-                                <p class="text-sm text-gray-600">{{ $udalost->misto }} • {{ $udalost->datum_zacatek?->format('d.m.Y') }}</p>
+    <div class="py-10">
+        <div class="mx-auto max-w-7xl">
+            <div class="space-y-4">
+                @forelse($udalosti as $udalost)
+                    <article class="panel p-6">
+                        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                            <div class="space-y-3">
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <p class="text-xl font-semibold text-[#20392c]">{{ $udalost->nazev }}</p>
+                                    <span class="brand-pill">{{ $udalost->aktivni ? 'Aktivní' : 'Archiv' }}</span>
+                                </div>
+                                <div class="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
+                                    <p>{{ $udalost->misto }}</p>
+                                    <p>{{ $udalost->datum_zacatek?->format('d.m.Y') }} @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))– {{ $udalost->datum_konec->format('d.m.Y') }} @endif</p>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Detail</a>
-                                <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Nastavení</a>
+
+                            <div class="flex flex-wrap gap-3">
+                                <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-primary">Detail</a>
+                                <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení</a>
                                 <form method="POST" action="{{ route('admin.udalosti.destroy', $udalost) }}" onsubmit="return confirm('Opravdu smazat událost?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">Smazat</button>
+                                    <button type="submit" class="text-sm text-red-700 underline underline-offset-4">Smazat</button>
                                 </form>
                             </div>
                         </div>
-                    @empty
-                        <div class="p-5 text-sm text-gray-600">Zatím nejsou vytvořené žádné události.</div>
-                    @endforelse
-                </div>
+                    </article>
+                @empty
+                    <div class="panel p-8 text-sm text-gray-600">Zatím nejsou vytvořené žádné události.</div>
+                @endforelse
             </div>
         </div>
     </div>

@@ -51,13 +51,13 @@
                 name="propozice_pdf_upload"
                 type="file"
                 accept=".pdf"
-                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
+                class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-full file:border-0 file:bg-[#3d6b4f] file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-[#31563f]"
             >
             <x-input-error :messages="$errors->get('propozice_pdf_upload')" class="mt-2" />
             @if($isEdit && $udalost->propozice_pdf)
                 <p class="mt-2 text-sm text-gray-600">
                     Aktuální soubor:
-                    <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 underline">
+                    <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
                         otevřít propozice
                     </a>
                 </p>
@@ -68,20 +68,20 @@
     <div>
         <x-input-label for="popis_editor" :value="'Popis'" />
         <input id="popis" name="popis" type="hidden" value="{{ old('popis', $udalost->popis ?? '') }}">
-        <div id="popis_editor" class="mt-1 rounded-md border border-gray-300 bg-white min-h-[220px]"></div>
+        <div id="popis_editor" class="mt-1 min-h-[220px] overflow-hidden rounded-[1.25rem] border border-[#dccdb8] bg-white"></div>
         <x-input-error :messages="$errors->get('popis')" class="mt-2" />
     </div>
 
     <div>
-        <label for="aktivni" class="inline-flex items-center">
-            <input id="aktivni" type="checkbox" name="aktivni" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('aktivni', $udalost->aktivni ?? true))>
-            <span class="ms-2 text-sm text-gray-700">Aktivní událost</span>
+        <label for="aktivni" class="flex items-center gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-3 text-sm text-gray-700">
+            <input id="aktivni" type="checkbox" name="aktivni" value="1" class="rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('aktivni', $udalost->aktivni ?? true))>
+            <span>Aktivní událost</span>
         </label>
     </div>
 
     <div class="flex items-center gap-3">
         <x-primary-button>{{ $isEdit ? 'Uložit událost' : 'Vytvořit událost' }}</x-primary-button>
-        <a href="{{ route('admin.udalosti.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na seznam</a>
+        <a href="{{ route('admin.udalosti.index') }}" class="text-sm text-[#7b5230] underline underline-offset-4">Zpět na seznam</a>
     </div>
 </form>
 

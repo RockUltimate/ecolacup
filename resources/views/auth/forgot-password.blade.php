@@ -1,25 +1,28 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
+    <div class="space-y-6">
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <p class="section-eyebrow">Obnova hesla</p>
+            <h1 class="mt-3 text-3xl text-[#20392c]">Pošleme vám odkaz pro nastavení nového hesla</h1>
+            <p class="mt-3 text-sm leading-6 text-gray-600">Zadejte e-mail použitý při registraci. Odkaz dorazí do schránky a umožní bezpečně nastavit nové heslo.</p>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
+        <x-auth-session-status :status="session('status')" />
+
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+            @csrf
+
+            <div>
+                <x-input-label for="email" :value="'E-mail'" />
+                <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
+
+            <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                <a href="{{ route('login') }}" class="text-sm text-[#7b5230] underline underline-offset-4">Zpět na přihlášení</a>
+                <x-primary-button>
+                    Poslat odkaz pro reset
+                </x-primary-button>
+            </div>
+        </form>
+    </div>
 </x-guest-layout>

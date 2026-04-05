@@ -15,21 +15,22 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased">
+    <body class="site-shell antialiased">
         <div class="min-h-screen">
+            <div class="site-chroma" aria-hidden="true"></div>
             @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header class="border-b border-white/60 bg-white/50 backdrop-blur-sm">
+                    <div class="max-w-7xl mx-auto py-7 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
             <!-- Page Content -->
-            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <main class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <x-flash-message />
                 @php
                     $upcomingEvents = \App\Models\Udalost::query()
@@ -48,7 +49,8 @@
                     </div>
                     <aside class="space-y-4">
                         <section class="panel p-4">
-                            <h3 class="text-lg font-semibold text-[#3d6b4f]">Nadcházející události</h3>
+                            <p class="section-eyebrow">Kalendář</p>
+                            <h3 class="mt-2 text-lg font-semibold text-[#3d6b4f]">Nadcházející události</h3>
                             <ul class="mt-3 space-y-2 text-sm">
                                 @forelse($upcomingEvents as $event)
                                     <li>
@@ -61,7 +63,8 @@
                             </ul>
                         </section>
                         <section class="panel p-4">
-                            <h3 class="text-lg font-semibold text-[#7b5230]">Moje otevřené přihlášky</h3>
+                            <p class="section-eyebrow">Moje agenda</p>
+                            <h3 class="mt-2 text-lg font-semibold text-[#7b5230]">Moje otevřené přihlášky</h3>
                             <ul class="mt-3 space-y-2 text-sm">
                                 @forelse($myOpenRegistrations as $registration)
                                     <li>
