@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOsobaRequest;
 use App\Http\Requests\UpdateOsobaRequest;
 use App\Models\Osoba;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -37,7 +38,7 @@ class OsobaController extends Controller
         $request->user()->osoby()->create([
             'jmeno' => $request->string('jmeno')->toString(),
             'prijmeni' => $request->string('prijmeni')->toString(),
-            'datum_narozeni' => $request->date('datum_narozeni'),
+            'datum_narozeni' => Carbon::createFromFormat('d.m.Y', $request->input('datum_narozeni'))->toDateString(),
             'staj' => $request->string('staj')->toString(),
             'gdpr_souhlas' => true,
             'gdpr_souhlas_at' => now(),
@@ -68,7 +69,7 @@ class OsobaController extends Controller
         $osoba->update([
             'jmeno' => $request->string('jmeno')->toString(),
             'prijmeni' => $request->string('prijmeni')->toString(),
-            'datum_narozeni' => $request->date('datum_narozeni'),
+            'datum_narozeni' => Carbon::createFromFormat('d.m.Y', $request->input('datum_narozeni'))->toDateString(),
             'staj' => $request->string('staj')->toString(),
             'gdpr_souhlas' => $gdprSouhlas,
             'gdpr_odvolano' => $gdprOdvolano,

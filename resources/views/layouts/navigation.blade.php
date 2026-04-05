@@ -4,13 +4,13 @@
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
                 <span class="site-mark">EC</span>
                 <span class="hidden sm:flex sm:flex-col">
-                    <span class="text-sm font-semibold uppercase tracking-[0.28em] text-[#7b5230]">EcolaCup</span>
+                    <span class="text-sm font-semibold tracking-[0.08em] text-[#7b5230]">ECOLAKONĚ</span>
                     <span class="text-xs text-gray-500">provozní přehled a registrace</span>
                 </span>
             </a>
 
             <div class="hidden items-center gap-5 text-sm md:flex">
-                <a href="{{ route('dashboard') }}" class="brand-link {{ request()->routeIs('dashboard') || request()->routeIs('udalosti.*') ? 'font-semibold' : '' }}">Události</a>
+                <a href="{{ route('udalosti.index') }}" class="brand-link {{ request()->routeIs('udalosti.*') ? 'font-semibold' : '' }}">Události</a>
                 <a href="{{ route('osoby.index') }}" class="brand-link {{ request()->routeIs('osoby.*') ? 'font-semibold' : '' }}">Osoby</a>
                 <a href="{{ route('kone.index') }}" class="brand-link {{ request()->routeIs('kone.*') ? 'font-semibold' : '' }}">Koně</a>
                 <a href="{{ route('prihlasky.index') }}" class="brand-link {{ request()->routeIs('prihlasky.*') ? 'font-semibold' : '' }}">Přihlášky</a>
@@ -39,7 +39,7 @@
 
     <div x-cloak x-show="open" x-transition.opacity class="border-t border-white/60 bg-[#fffaf2]/95 px-4 py-4 md:hidden">
         <div class="mx-auto flex max-w-7xl flex-col gap-3 text-sm text-gray-700">
-            <a href="{{ route('dashboard') }}" class="brand-link">Události</a>
+            <a href="{{ route('udalosti.index') }}" class="brand-link">Události</a>
             <a href="{{ route('osoby.index') }}" class="brand-link">Osoby</a>
             <a href="{{ route('kone.index') }}" class="brand-link">Koně</a>
             <a href="{{ route('prihlasky.index') }}" class="brand-link">Přihlášky</a>

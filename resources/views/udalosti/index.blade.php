@@ -16,19 +16,17 @@
                 <div class="panel reveal-up overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
                     <p class="section-eyebrow">Kalendar akcí</p>
                     <div class="mt-5 max-w-3xl">
-                        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">EcolaCup</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">ECOLAKONĚ</p>
                         <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">Moderní přihlášky na CMT závody, které fungují i přímo v areálu.</h1>
                         <p class="mt-5 max-w-2xl text-base leading-7 text-gray-600">Veřejný kalendář, přehled uzávěrek, disciplín a kapacit. Přihlášení jezdci navazují rovnou na správu osob, koní a přihlášek bez ruční administrativy navíc.</p>
                     </div>
 
+                    @guest
                     <div class="mt-8 flex flex-wrap gap-3">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="button-primary">Pokračovat do aplikace</a>
-                        @else
-                            <a href="{{ route('register') }}" class="button-primary">Začít registraci</a>
-                            <a href="{{ route('login') }}" class="button-secondary">Mám účet</a>
-                        @endauth
+                        <a href="{{ route('register') }}" class="button-primary">Začít registraci</a>
+                        <a href="{{ route('login') }}" class="button-secondary">Mám účet</a>
                     </div>
+                    @endguest
 
                     <div class="mt-10 grid gap-4 border-t border-[#eadfcc] pt-6 sm:grid-cols-3">
                         <div>

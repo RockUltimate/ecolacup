@@ -24,7 +24,7 @@ class StoreOsobaRequest extends FormRequest
         return [
             'jmeno' => ['required', 'string', 'max:255'],
             'prijmeni' => ['required', 'string', 'max:255'],
-            'datum_narozeni' => ['required', 'date'],
+            'datum_narozeni' => ['required', 'date_format:d.m.Y'],
             'staj' => ['required', 'string', 'max:255'],
             'gdpr_souhlas' => ['required', 'accepted'],
         ];

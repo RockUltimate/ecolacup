@@ -20,7 +20,7 @@ class OsobaCrudTest extends TestCase
         $this->actingAs($user)->post(route('osoby.store'), [
             'jmeno' => 'Anna',
             'prijmeni' => 'Novakova',
-            'datum_narozeni' => '2001-05-10',
+            'datum_narozeni' => '10.05.2001',
             'staj' => 'Ranč Sever',
             'gdpr_souhlas' => '1',
         ])->assertRedirect(route('osoby.index', absolute: false));
@@ -40,7 +40,7 @@ class OsobaCrudTest extends TestCase
         $this->actingAs($user)->put(route('osoby.update', $osoba), [
             'jmeno' => 'Anna Marie',
             'prijmeni' => 'Novakova',
-            'datum_narozeni' => '2001-05-10',
+            'datum_narozeni' => '10.05.2001',
             'staj' => 'Ranč Jih',
             'gdpr_odvolano' => '1',
         ])->assertRedirect(route('osoby.index', absolute: false));
@@ -84,7 +84,7 @@ class OsobaCrudTest extends TestCase
         $this->actingAs($user)->put(route('osoby.update', $osoba), [
             'jmeno' => 'Neplatne',
             'prijmeni' => 'Uprava',
-            'datum_narozeni' => '2000-01-01',
+            'datum_narozeni' => '01.01.2000',
             'staj' => 'Staj B',
             'gdpr_souhlas' => '1',
         ])->assertForbidden();
