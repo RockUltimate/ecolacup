@@ -10,7 +10,7 @@
                 <p class="mt-2 text-on-surface-variant dark:text-[#c3c8bb]">Správa událostí, přihlášek a uživatelů.</p>
             </div>
             <a href="{{ route('admin.udalosti.create') }}" class="button-primary flex items-center gap-2">
-                + Vytvořit événost
+                + Vytvořit událost
             </a>
         </div>
     </x-slot>

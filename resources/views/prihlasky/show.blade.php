@@ -19,7 +19,7 @@
             <section class="editorial-grid items-start">
                 <div class="panel p-6 sm:p-8">
                     <div class="flex flex-wrap items-center gap-3">
-                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#3d6b4f]">{{ $prihlaska->udalost?->misto }}</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary dark:text-inverse-primary">{{ $prihlaska->udalost?->misto }}</p>
                         <span @class([
                             'brand-pill',
                             'bg-primary-fixed text-on-primary-fixed' => ! $deleted,
@@ -37,7 +37,7 @@
                         @endif
                     </p>
 
-                    <div class="mt-8 grid gap-4 border-t border-[#eadfcc] pt-6 sm:grid-cols-3">
+                    <div class="mt-8 grid gap-4 border-t border-outline-variant/30 dark:border-[#43493e]/30 pt-6 sm:grid-cols-3">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-[0.18em] text-secondary dark:text-secondary-fixed-dim">Startovní číslo</p>
                             <p class="mt-2 text-2xl font-semibold text-on-surface dark:text-[#e5e2dd]">{{ $prihlaska->start_cislo ?? '—' }}</p>

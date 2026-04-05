@@ -86,6 +86,10 @@
         background-color: theme('colors.surface-container');
     }
 
+    .btn-gradient {
+        background: linear-gradient(135deg, theme('colors.primary') 0%, theme('colors.primary-container') 100%);
+    }
+
     /* ── Form fields ─────────────────────────────────────────── */
     .field-shell {
         @apply mt-1 block w-full bg-transparent px-0 py-3 text-sm;

@@ -49,7 +49,7 @@
                         name="sken_prihlaska_upload"
                         type="file"
                         accept=".jpg,.jpeg,.png,.webp,.pdf"
-                        class="mt-1 block w-full text-sm text-on-surface dark:text-[#e5e2dd] file:mr-3 file:rounded-md file:border-0 file:bg-[#3d6b4f] file:px-3 file:py-2 file:text-white hover:file:bg-[#31563f]"
+                        class="mt-1 block w-full text-sm text-on-surface dark:text-[#e5e2dd] file:mr-3 file:rounded-md file:border-0 file:bg-primary dark:file:bg-primary-container file:px-3 file:py-2 file:text-white hover:file:bg-primary-container dark:hover:file:bg-[#2d4f1e]"
                     >
                     <x-input-error :messages="$errors->get('sken_prihlaska_upload')" class="mt-2" />
                     @if($membership->sken_prihlaska)

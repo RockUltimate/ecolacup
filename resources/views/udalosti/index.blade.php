@@ -7,7 +7,7 @@
 
         {{-- Left: headline --}}
         <div class="relative z-10 lg:col-span-6">
-            <p class="section-eyebrow mb-4">Kalendár akcí</p>
+            <p class="section-eyebrow mb-4">Kalendář akcí</p>
             <h1 class="font-headline text-5xl leading-tight text-primary dark:text-inverse-primary sm:text-6xl lg:text-7xl">
                 Moderní přihlášky<br><span class="italic">na CMT závody.</span>
             </h1>
