@@ -28,7 +28,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('udalosti.index', absolute: false));
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
             'jmeno' => 'Test',
