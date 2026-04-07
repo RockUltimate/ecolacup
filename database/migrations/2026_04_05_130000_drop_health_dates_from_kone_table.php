@@ -9,7 +9,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kone', function (Blueprint $table) {
-            $table->dropColumn(['ehv_datum', 'aie_datum', 'chripka_datum']);
+            $columns = array_filter(
+                ['ehv_datum', 'aie_datum', 'chripka_datum'],
+                fn($col) => Schema::hasColumn('kone', $col)
+            );
+            if (!empty($columns)) {
+                $table->dropColumn($columns);
+            }
         });
     }
 
