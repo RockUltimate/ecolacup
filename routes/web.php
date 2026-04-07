@@ -51,11 +51,11 @@ Route::middleware('auth')->group(function () {
         ->name('prihlasky.store');
 
     Route::get('/prihlasky', [PrihlaskaController::class, 'index'])->name('prihlasky.index');
-    Route::get('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'show'])->name('prihlasky.show');
+    Route::get('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'show'])->name('prihlasky.show')->withTrashed();
     Route::get('/prihlasky/{prihlaska}/edit', [PrihlaskaController::class, 'edit'])->name('prihlasky.edit');
     Route::put('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'update'])->name('prihlasky.update');
     Route::delete('/prihlasky/{prihlaska}', [PrihlaskaController::class, 'destroy'])->name('prihlasky.destroy');
-    Route::get('/prihlasky/{prihlaska}/pdf', [PrihlaskaController::class, 'pdf'])->name('prihlasky.pdf');
+    Route::get('/prihlasky/{prihlaska}/pdf', [PrihlaskaController::class, 'pdf'])->name('prihlasky.pdf')->withTrashed();
 
     Route::get('/ajax/osoba/{osoba}/polozky', [PrihlaskaController::class, 'ajaxOsobaPolozky']);
 });

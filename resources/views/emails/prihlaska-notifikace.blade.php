@@ -71,7 +71,7 @@
     </table>
 
     <p style="margin-top: 20px;">
-        <a href="{{ route('admin.udalosti.prihlasky.index', ['udalost' => $prihlaska->udalost_id]) }}">Zobrazit v administraci</a>
+        <a href="{{ route('admin.reports.prihlasky', ['udalost' => $prihlaska->udalost_id]) }}">Zobrazit v administraci</a>
     </p>
 
     <p style="margin-top: 24px; color: #6b7280; font-size: 12px;">Ecolakoně – automatická notifikace</p>

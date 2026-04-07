@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\PrihlaskaPotvrzeniMail;
+use App\Mail\PrihlaskaNotifikaceMail;
 use App\Models\Prihlaska;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendPrihlaskaEmail implements ShouldQueue
+class SendPrihlaskaNotifikaceEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
 
@@ -30,12 +30,6 @@ class SendPrihlaskaEmail implements ShouldQueue
             'user',
         ]);
 
-        if (! $prihlaska->user?->email) {
-            return;
-        }
-
-        Mail::to($prihlaska->user->email)->send(new PrihlaskaPotvrzeniMail($prihlaska));
-
-        SendPrihlaskaNotifikaceEmail::dispatch($prihlaska);
+        Mail::to('ecola@ecolakone.cz')->send(new PrihlaskaNotifikaceMail($prihlaska));
     }
 }
