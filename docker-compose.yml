@@ -9,8 +9,8 @@ services:
     environment:
       APP_ENV: production
       APP_DEBUG: false
-      APP_URL: http://localhost:8086
-      APP_NAME: EcolaCup
+      APP_URL: https://ecolakone.cz
+      APP_NAME: Ecolakoně
       APP_LOCALE: cs
       APP_FALLBACK_LOCALE: cs
       APP_FAKER_LOCALE: cs_CZ
@@ -27,6 +27,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ecolacup-cloudflared
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: eyJhIjoiZjdhMTM3ZWYyMGY2OTcxNDE2YTc0NjE5ZWVhMDk3MDQiLCJ0IjoiMzdjMmE2MDItYTBlOC00MzdmLThjOWYtYTg5YTY1YTFiYTlmIiwicyI6Ik9HRXpaREkzTVRZdFpEUmxNaTAwTmpCbExUazNOamd0TVRFeU9XWTVOall4T1dNeSJ9
+    depends_on:
+      - app
     restart: unless-stopped
 
   postgres:

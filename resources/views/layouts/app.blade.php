@@ -14,6 +14,20 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            @media (max-width: 479px) {
+                .site-nav-actions {
+                    align-items: stretch;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .site-nav-toggle {
+                    align-self: flex-start;
+                }
+            }
+        </style>
     </head>
     <body class="site-shell antialiased">
         <div class="min-h-screen">

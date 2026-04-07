@@ -12,6 +12,20 @@
         <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            @media (max-width: 479px) {
+                .site-nav-actions {
+                    align-items: stretch;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .site-nav-toggle {
+                    align-self: flex-start;
+                }
+            }
+        </style>
     </head>
     <body class="site-shell antialiased text-gray-900">
         @php
@@ -29,14 +43,23 @@
         <div class="site-chroma" aria-hidden="true"></div>
         <div class="relative min-h-screen">
             <header x-data="{ open: false }" class="site-nav">
-                <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
-                    <a href="{{ route('udalosti.index') }}" class="flex items-center gap-3">
+                <div class="mx-auto flex max-w-7xl items-start justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col items-start gap-2">
+                        <a href="{{ route('udalosti.index') }}" class="flex items-center gap-3">
                         <span class="site-mark">EC</span>
                         <span class="flex flex-col">
                             <span class="text-sm font-semibold tracking-[0.08em] text-[#7b5230]">ECOLAKONĚ</span>
                             <span class="text-xs text-gray-500">Registrace na koňské závody</span>
                         </span>
-                    </a>
+                        </a>
+
+                        <button @click="open = !open" class="site-nav-toggle inline-flex items-center justify-center rounded-full border border-[#e3d7c4] bg-white/75 p-2 text-[#7b5230] md:hidden">
+                            <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
 
                     <nav class="hidden items-center gap-6 text-sm md:flex">
                         @foreach($publicLinks as $link)
@@ -52,10 +75,10 @@
                         @endauth
                     </nav>
 
-                    <div class="flex items-center gap-3">
+                    <div class="site-nav-actions flex items-center gap-3">
                         @auth
                             <a href="{{ route('ucet.edit') }}" class="button-secondary hidden sm:inline-flex">{{ auth()->user()->celeJmeno() }}</a>
-                            <form method="POST" action="{{ route('logout') }}" class="hidden sm:block">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="button-primary">Odhlásit</button>
                             </form>
@@ -63,13 +86,6 @@
                             <a href="{{ route('login') }}" class="button-secondary">Přihlášení</a>
                             <a href="{{ route('register') }}" class="button-primary">Vytvořit účet</a>
                         @endauth
-
-                        <button @click="open = !open" class="inline-flex items-center justify-center rounded-full border border-[#e3d7c4] bg-white/75 p-2 text-[#7b5230] md:hidden">
-                            <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
 
@@ -87,13 +103,6 @@
                                 <a href="{{ route('admin.dashboard') }}" class="brand-link">Admin</a>
                             @endif
                             <a href="{{ route('ucet.edit') }}" class="brand-link">Můj účet</a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="button-primary mt-2 w-full">Odhlásit</button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="button-secondary w-full justify-center">Přihlášení</a>
-                            <a href="{{ route('register') }}" class="button-primary w-full justify-center">Vytvořit účet</a>
                         @endauth
                     </div>
                 </div>
