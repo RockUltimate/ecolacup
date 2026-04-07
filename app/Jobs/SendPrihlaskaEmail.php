@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\PrihlaskaNotifikaceMail;
 use App\Mail\PrihlaskaPotvrzeniMail;
 use App\Models\Prihlaska;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,5 +36,7 @@ class SendPrihlaskaEmail implements ShouldQueue
         }
 
         Mail::to($prihlaska->user->email)->send(new PrihlaskaPotvrzeniMail($prihlaska));
+
+        Mail::to('ecola@ecolakone.cz')->send(new PrihlaskaNotifikaceMail($prihlaska));
     }
 }

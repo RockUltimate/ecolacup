@@ -24,6 +24,51 @@ services:
       CACHE_STORE: file
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.seznam.cz
+      MAIL_PORT: 465
+      MAIL_ENCRYPTION: ssl
+      MAIL_USERNAME: ecola@ecolakone.cz
+      MAIL_PASSWORD: Haklak2006
+      MAIL_FROM_ADDRESS: ecola@ecolakone.cz
+      MAIL_FROM_NAME: Ecolakoně
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecolacup-queue
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=60"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: https://ecolakone.cz
+      APP_NAME: Ecolakoně
+      APP_LOCALE: cs
+      APP_FALLBACK_LOCALE: cs
+      APP_FAKER_LOCALE: cs_CZ
+      APP_TIMEZONE: Europe/Prague
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ecolacup
+      DB_USERNAME: ecolacup
+      DB_PASSWORD: ecolacup
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.seznam.cz
+      MAIL_PORT: 465
+      MAIL_ENCRYPTION: ssl
+      MAIL_USERNAME: ecola@ecolakone.cz
+      MAIL_PASSWORD: Haklak2006
+      MAIL_FROM_ADDRESS: ecola@ecolakone.cz
+      MAIL_FROM_NAME: Ecolakoně
     depends_on:
       postgres:
         condition: service_healthy
