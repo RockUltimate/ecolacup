@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Udalost;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -114,6 +115,9 @@ class ExampleTest extends TestCase
                 'aktivni' => true,
             ]);
 
+            $updated = Udalost::deactivatePastEvents(now()->startOfDay());
+
+            $this->assertSame(1, $updated);
             $this->get(route('udalosti.index'))->assertOk();
 
             $this->assertDatabaseHas('udalosti', [
