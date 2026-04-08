@@ -12,7 +12,7 @@
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">
-            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'settings'])
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'popis'])
 
             <section class="panel p-6 sm:p-8">
                 @include('admin.udalosti._form', ['udalost' => $udalost])

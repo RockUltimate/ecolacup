@@ -12,7 +12,7 @@
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">
-            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'overview'])
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'popis'])
 
             <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <article class="panel p-6">

@@ -18,7 +18,7 @@
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">
-            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'ubytovani'])
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'sluzby'])
 
             <x-admin-report-filter-form
                 :action="route('admin.reports.ubytovani', $udalost)"
