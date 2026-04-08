@@ -16,6 +16,8 @@ class UdalostController extends Controller
     {
         $today = now()->startOfDay();
 
+        Udalost::deactivatePastEvents($today);
+
         $upcoming = Udalost::query()
             ->where('aktivni', true)
             ->whereDate('datum_konec', '>=', $today)
