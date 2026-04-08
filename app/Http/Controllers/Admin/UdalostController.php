@@ -185,6 +185,47 @@ class UdalostController extends Controller
         return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-created');
     }
 
+    public function editUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): View
+    {
+        if ($ustajeni->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        return view('admin.udalosti._sluzby_edit_modal', [
+            'udalost' => $udalost,
+            'ustajeni' => $ustajeni,
+        ]);
+    }
+
+    public function updateUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni, StoreAdminUdalostUstajeniRequest $request): RedirectResponse
+    {
+        if ($ustajeni->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        $validated = $request->validated();
+
+        // Handle file uploads
+        if ($request->hasFile('foto_path')) {
+            $storedPath = $request->file('foto_path')->store('services', 'public');
+            if ($ustajeni->foto_path && $ustajeni->foto_path !== $storedPath) {
+                Storage::disk('public')->delete($ustajeni->foto_path);
+            }
+            $validated['foto_path'] = $storedPath;
+        }
+        if ($request->hasFile('pdf_path')) {
+            $storedPath = $request->file('pdf_path')->store('services', 'public');
+            if ($ustajeni->pdf_path && $ustajeni->pdf_path !== $storedPath) {
+                Storage::disk('public')->delete($ustajeni->pdf_path);
+            }
+            $validated['pdf_path'] = $storedPath;
+        }
+
+        $ustajeni->update($validated);
+
+        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-updated');
+    }
+
     public function destroyUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): RedirectResponse
     {
         if ($ustajeni->udalost_id !== $udalost->id) {
