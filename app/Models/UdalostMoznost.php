@@ -22,6 +22,10 @@ class UdalostMoznost extends Model
         'cena',
         'poradi',
         'je_administrativni_poplatek',
+        'popis_text',
+        'popis_html',
+        'foto_path',
+        'pdf_path',
     ];
 
     /**
