@@ -5,11 +5,11 @@
 
 @php
     $tabs = [
-        'overview' => ['label' => 'Přehled', 'href' => route('admin.udalosti.show', $udalost)],
+        'popis' => ['label' => 'Popis', 'href' => route('admin.udalosti.edit', $udalost) . '#popis'],
+        'discipliny' => ['label' => 'Disciplíny', 'href' => route('admin.udalosti.edit', $udalost) . '#discipliny'],
+        'sluzby' => ['label' => 'Služby', 'href' => route('admin.udalosti.edit', $udalost) . '#sluzby'],
         'prihlasky' => ['label' => 'Přihlášky', 'href' => route('admin.reports.prihlasky', $udalost)],
         'startky' => ['label' => 'Startky', 'href' => route('admin.reports.startky', $udalost)],
-        'ubytovani' => ['label' => 'Ubytování', 'href' => route('admin.reports.ubytovani', $udalost)],
-        'settings' => ['label' => 'Nastavení', 'href' => route('admin.udalosti.edit', $udalost)],
     ];
 @endphp
 
