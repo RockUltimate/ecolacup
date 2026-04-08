@@ -122,6 +122,49 @@ class UdalostController extends Controller
         return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-created');
     }
 
+    public function editMoznost(Udalost $udalost, UdalostMoznost $moznost): View
+    {
+        if ($moznost->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        return view('admin.udalosti._discipliny_edit_modal', [
+            'udalost' => $udalost,
+            'moznost' => $moznost,
+        ]);
+    }
+
+    public function updateMoznost(Udalost $udalost, UdalostMoznost $moznost, StoreAdminUdalostMoznostRequest $request): RedirectResponse
+    {
+        if ($moznost->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        $validated = $request->validated();
+        $validated['poradi'] = $validated['poradi'] ?? 0;
+        $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+
+        // Handle file uploads
+        if ($request->hasFile('foto_path')) {
+            $storedPath = $request->file('foto_path')->store('disciplines', 'public');
+            if ($moznost->foto_path && $moznost->foto_path !== $storedPath) {
+                Storage::disk('public')->delete($moznost->foto_path);
+            }
+            $validated['foto_path'] = $storedPath;
+        }
+        if ($request->hasFile('pdf_path')) {
+            $storedPath = $request->file('pdf_path')->store('disciplines', 'public');
+            if ($moznost->pdf_path && $moznost->pdf_path !== $storedPath) {
+                Storage::disk('public')->delete($moznost->pdf_path);
+            }
+            $validated['pdf_path'] = $storedPath;
+        }
+
+        $moznost->update($validated);
+
+        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-updated');
+    }
+
     public function destroyMoznost(Udalost $udalost, UdalostMoznost $moznost): RedirectResponse
     {
         if ($moznost->udalost_id !== $udalost->id) {
