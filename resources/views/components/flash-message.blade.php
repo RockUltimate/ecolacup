@@ -6,6 +6,7 @@
         'osoba-deleted' => 'Osoba byla smazána.',
         'start-cislo-updated' => 'Startovní číslo bylo uloženo.',
         'start-cisla-normalized' => 'Startovní čísla byla srovnána.',
+        'homepage-message-updated' => 'Text hlavní novinky byl upraven.',
         'prihlaska-created' => 'Přihláška byla vytvořena.',
         'prihlaska-updated' => 'Přihláška byla upravena.',
         'prihlaska-deleted' => 'Přihláška byla smazána.',
@@ -18,6 +19,7 @@
         'admin-user-updated' => 'Uživatel byl upraven.',
         'admin-user-purged' => 'Uživatel byl trvale odstraněn (GDPR purge).',
         'admin-user-purge-self-denied' => 'Nelze odstranit právě přihlášeného administrátora.',
+        'admin-kun-duplicates-synced' => 'Vybraný popis koně byl zkopírován do všech stejných instancí.',
     ];
 @endphp
 

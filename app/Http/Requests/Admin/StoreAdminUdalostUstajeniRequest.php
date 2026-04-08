@@ -21,6 +21,8 @@ class StoreAdminUdalostUstajeniRequest extends FormRequest
             'typ' => ['required', 'in:ustajeni,ubytovani,strava,ostatni'],
             'cena' => ['required', 'numeric', 'min:0'],
             'kapacita' => ['nullable', 'integer', 'min:1'],
+            'foto_path' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:5120'],
+            'pdf_path' => ['nullable', 'mimes:pdf', 'max:5120'],
         ];
     }
 }

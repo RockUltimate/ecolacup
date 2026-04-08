@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Dashboard | Heritage Field</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .font-serif { font-family: 'Newsreader', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2c160e",
+                        "secondary-container": "#fed3c7",
+                        "on-secondary-container": "#795950",
+                        "tertiary-fixed-dim": "#e5c192",
+                        "outline": "#73796d",
+                        "secondary-fixed": "#ffdbd0",
+                        "tertiary-container": "#5b421e",
+                        "primary-fixed": "#c5efad",
+                        "surface-container-low": "#f6f3ee",
+                        "primary-fixed-dim": "#a9d293",
+                        "on-secondary-fixed-variant": "#5d4037",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-tint": "#446733",
+                        "on-background": "#1c1c19",
+                        "on-primary-fixed-variant": "#2d4f1e",
+                        "on-tertiary-fixed-variant": "#5b421f",
+                        "tertiary": "#422c0a",
+                        "outline-variant": "#c3c8bb",
+                        "inverse-surface": "#31302d",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#98c083",
+                        "surface": "#fcf9f4",
+                        "surface-container": "#f0ede8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#d2af82",
+                        "on-surface-variant": "#43493e",
+                        "on-surface": "#1c1c19",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7bdb1",
+                        "inverse-primary": "#a9d293",
+                        "surface-dim": "#dcdad5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0eb",
+                        "primary-container": "#2d4f1e",
+                        "secondary": "#77574d",
+                        "error-container": "#ffdad6",
+                        "primary": "#173809",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2dd",
+                        "on-primary-fixed": "#062100",
+                        "background": "#fcf9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-serif italic text-emerald-950 dark:text-emerald-100">Heritage Field</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">Find Races</a>
+<a class="text-emerald-900 dark:text-emerald-400 border-b-2 border-emerald-800 pb-1 text-sm font-semibold tracking-wide" href="#">My Dashboard</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">About</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-emerald-900 dark:text-emerald-400 text-sm font-semibold">Login</button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-5 py-2 rounded-lg text-xs uppercase tracking-widest font-bold hover:opacity-80 transition-all duration-400">Sign Up</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto">
+<!-- Header Section with Asymmetry -->
+<header class="mb-16 relative">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+<div class="md:col-span-7">
+<h1 class="text-6xl md:text-8xl font-serif text-on-surface leading-tight tracking-tight">
+                        Welcome back, <br/>
+<span class="italic text-primary-container">Julian Thorne</span>
+</h1>
+<p class="mt-6 text-on-surface-variant max-w-md text-lg body-lg">
+                        Your season progress is ahead of schedule. Three races confirmed for the Autumn circuit.
+                    </p>
+</div>
+<div class="md:col-span-5 relative">
+<div class="aspect-[4/3] rounded-t-[4rem] rounded-bl-[4rem] overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="close-up of a champion racehorse being groomed in a stable with soft morning light filtering through wooden slats" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT2xbhR0rVFz50_W0GAamljDTA6p6xte5JNvZ8sw4hBVwy6S6TDGmAXsnESVURhgqei5axvKBVGnzB8-Va43Sc5yziWcDi-Ib1QnXi4fmPtWKJm1e_sLkQWT77Bk7i4Luo8zAUqtA7WVXuI2al7TQ4ZcjEa_qjOqrFbazqhS6bPjh-T3-ICUfdeUEN7vbIHlbHcsMnzEEQp3ZpnlA9LkeoELoL-nwHyakDxd8wn0_dBhKC5HILvC-m8c4yYiEg6x3LJ3gQhMhnyaMH"/>
+</div>
+<div class="absolute -bottom-6 -left-6 bg-surface-container-lowest p-6 rounded-xl shadow-xl flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">stars</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Rider Rank</p>
+<p class="text-xl font-serif text-primary">Elite Division</p>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Bento Grid Dashboard -->
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<!-- My Upcoming Races -->
+<section class="md:col-span-2 lg:col-span-3 bg-surface-container-low rounded-xl p-8">
+<div class="flex justify-between items-end mb-8">
+<h2 class="text-3xl font-serif text-primary">My Upcoming Races</h2>
+<button class="text-sm font-bold text-primary flex items-center gap-1 group">
+                        View All Calendar <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Race Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 flex flex-col md:flex-row md:items-center gap-6 group hover:scale-[1.01] transition-all duration-400">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="professional horse rider in full racing silks on a horse at the starting gate of a lush green track" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSctInDhx03yk0CPEMoAC_zyhaBam6a3PB_DKG7OO5qedYYQSTqH1fHPB3M3vvdLbttr7fa_ixdNu-TxKjQRISpIBKxcVYMyFxnDMaY37zXubDxQUb9V-r0CynBt60WVYYOLc0Qai66JcDyLC4hI2WErDrejxFxO_4sMldDYnFROgjfO3zyt1ZfIZEb1V56rq_bMOYBldXqNMfewr7pUbzdpKOP_txtsy8A2nwaj4aB605SSOTNinhxGRw01rwxCJ7v7G_JdQhx3Qi"/>
+</div>
+<div class="grow">
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full font-bold">Endurance</span>
+<span class="text-on-surface-variant text-xs">Oct 24, 2024</span>
+</div>
+<h3 class="text-xl font-serif">The Gilded Oaks Classic</h3>
+<p class="text-sm text-on-surface-variant italic">Thoroughbred Estate, Lexington</p>
+</div>
+<div class="flex gap-3 md:flex-col items-end">
+<span class="text-primary font-bold text-lg">Confirmed</span>
+<button class="bg-surface-container-highest p-2 rounded-lg hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+</button>
+</div>
+</div>
+<!-- Race Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 flex flex-col md:flex-row md:items-center gap-6 group hover:scale-[1.01] transition-all duration-400">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="dramatic action shot of several racehorses sprinting on a dirt track, dust kicking up in golden sunset light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtuTaQ0fFfo4Ly2Z1PyJp5QJHTv0f2I_rzY7JnMQH9erECUFD0jghYfd3T1Qco6ZhN3rUhk5DVgVRtEGZ21DyRhihmaV-R55FvmTfwnXOSV9j-9oZI40NQzOPYaeBaaq58EC3-5l1SnoyWBeI2Lav0SDXBuJTq8YgRLBt_FaaNrv9MTgLyG4ZlYnsv2HBkMJE1i6EH_nNpOckhy4rGis0QsMpTdXIO4zKNAyuvmo-NyI0k0v9MgMmSdKLew9TuyjGh87RT159Q1WAF"/>
+</div>
+<div class="grow">
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full font-bold">Sprint</span>
+<span class="text-on-surface-variant text-xs">Nov 02, 2024</span>
+</div>
+<h3 class="text-xl font-serif">Emerald Valley Dash</h3>
+<p class="text-sm text-on-surface-variant italic">Heritage Field Arena</p>
+</div>
+<div class="flex gap-3 md:flex-col items-end">
+<span class="text-on-surface-variant font-bold text-lg">Pending</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest">Complete Registration</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Stats/Profile Management -->
+<aside class="md:col-span-1 bg-primary text-on-primary rounded-xl p-8 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-12">
+<div class="w-20 h-20 rounded-full border-4 border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a confident man in an equestrian polo shirt against a blurred stable background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzsUAULdkEuYYMByBBvM_rUWaa7t2C1YuoV4UrYS1xSGdCVUWFGOzP7DGvLwp99aWJcyF306JMJY_TUVMBC4U4KA2Dmrw4IXJFE7iNt6j1EqP3QUmml7NKv5ubdLQ8T-Bgq5KmbhOqH57otNx68UOd0mD6asLsLZCYFvMaOPUjycnEk2WfX7FqJOwPFTscM4zHq1EgVQ_nSIyMVCDTmNt-nsQgyHN7p1j6YYFrtilXPXRDFgqf6m1oJ3v-EcQwbEd53hGT3zF_aFq"/>
+</div>
+<button class="text-primary-fixed hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<h3 class="text-2xl font-serif mb-2">Julian Thorne</h3>
+<p class="text-on-primary-container text-sm mb-8">Registered Professional Rider<br/>ID: #HF-99201</p>
+<ul class="space-y-6">
+<li class="flex items-center justify-between border-b border-primary-container pb-2">
+<span class="text-xs uppercase tracking-widest opacity-70">Total Races</span>
+<span class="font-serif text-xl">42</span>
+</li>
+<li class="flex items-center justify-between border-b border-primary-container pb-2">
+<span class="text-xs uppercase tracking-widest opacity-70">Victories</span>
+<span class="font-serif text-xl">12</span>
+</li>
+<li class="flex items-center justify-between border-b border-primary-container pb-2">
+<span class="text-xs uppercase tracking-widest opacity-70">Points</span>
+<span class="font-serif text-xl">2,850</span>
+</li>
+</ul>
+</div>
+<button class="mt-12 w-full border border-primary-container py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-on-primary hover:text-primary transition-all">
+                    Edit Rider Profile
+                </button>
+</aside>
+<!-- Race History -->
+<section class="md:col-span-1 lg:col-span-2 bg-surface-container-high rounded-xl p-8">
+<h2 class="text-2xl font-serif text-on-surface mb-6">Recent History</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between bg-surface p-4 rounded-lg">
+<div>
+<p class="text-xs text-on-surface-variant font-bold">Sep 12</p>
+<p class="font-serif text-lg">Autumn Steeples</p>
+</div>
+<div class="text-right">
+<p class="text-xs uppercase font-bold text-primary">2nd Place</p>
+<p class="text-sm font-serif italic">+450 Pts</p>
+</div>
+</div>
+<div class="flex items-center justify-between bg-surface p-4 rounded-lg opacity-70">
+<div>
+<p class="text-xs text-on-surface-variant font-bold">Aug 30</p>
+<p class="font-serif text-lg">Morning Meadow Run</p>
+</div>
+<div class="text-right">
+<p class="text-xs uppercase font-bold">5th Place</p>
+<p class="text-sm font-serif italic">+120 Pts</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Notification Settings Glassmorphism -->
+<section class="md:col-span-2 lg:col-span-2 relative overflow-hidden bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary-fixed/20 rounded-full blur-3xl"></div>
+<h2 class="text-2xl font-serif text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">notifications</span> Alerts &amp; Preferences
+                </h2>
+<div class="space-y-5 relative z-10">
+<div class="flex items-center justify-between">
+<div class="max-w-[70%]">
+<h4 class="font-bold text-sm text-on-surface">Race Reminders</h4>
+<p class="text-xs text-on-surface-variant">Get notified 24 hours before your confirmed races.</p>
+</div>
+<div class="w-10 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="max-w-[70%]">
+<h4 class="font-bold text-sm text-on-surface">Result Announcements</h4>
+<p class="text-xs text-on-surface-variant">Receive instant results and official placements.</p>
+</div>
+<div class="w-10 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between opacity-50">
+<div class="max-w-[70%]">
+<h4 class="font-bold text-sm text-on-surface">Marketing Emails</h4>
+<p class="text-xs text-on-surface-variant">Receive news about new circuits and events.</p>
+</div>
+<div class="w-10 h-6 bg-outline-variant rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-on-primary rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-3xl bg-stone-100 dark:bg-stone-950 mt-12">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+<div>
+<div class="text-xl font-serif text-emerald-900 dark:text-emerald-100 mb-4">Heritage Field</div>
+<p class="text-stone-500 text-sm leading-relaxed max-w-xs">Elevating the equestrian experience through digital precision and timeless tradition.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 dark:hover:text-emerald-300 text-xs uppercase tracking-widest transition-all" href="#">Contact Us</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 dark:hover:text-emerald-300 text-xs uppercase tracking-widest transition-all" href="#">Endurance Trails</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 dark:hover:text-emerald-300 text-xs uppercase tracking-widest transition-all" href="#">Sprint Races</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 dark:hover:text-emerald-300 text-xs uppercase tracking-widest transition-all" href="#">Youth Division</a>
+</div>
+<div class="flex flex-col md:items-end justify-between">
+<p class="text-stone-500 text-xs uppercase tracking-widest">© 2024 The Heritage Field. All rights reserved.</p>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 text-xs uppercase tracking-widest" href="#">Terms of Service</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-700 text-xs uppercase tracking-widest" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

@@ -14,6 +14,17 @@ class UdalostManagementTest extends TestCase
     use CreatesDomainModels;
     use RefreshDatabase;
 
+    public function test_admin_can_open_create_event_page(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $this->actingAs($admin)
+            ->get(route('admin.udalosti.create'))
+            ->assertOk()
+            ->assertSee('Založit novou událost')
+            ->assertSee('Vytvořit událost');
+    }
+
     public function test_admin_can_create_update_and_delete_event_with_pdf(): void
     {
         Storage::fake('public');
@@ -101,7 +112,7 @@ class UdalostManagementTest extends TestCase
             'cena' => 150,
             'poradi' => 9,
             'je_administrativni_poplatek' => '1',
-        ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false));
+        ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#discipliny');
 
         $moznostId = $udalost->moznosti()->firstOrFail()->id;
 
@@ -117,7 +128,7 @@ class UdalostManagementTest extends TestCase
             'typ' => 'ustajeni',
             'cena' => 350,
             'kapacita' => 25,
-        ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false));
+        ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#sluzby');
 
         $ustajeniId = $udalost->ustajeniMoznosti()->firstOrFail()->id;
 
@@ -130,12 +141,65 @@ class UdalostManagementTest extends TestCase
         ]);
 
         $this->actingAs($admin)->delete(route('admin.udalosti.moznosti.destroy', [$udalost, $moznostId]))
-            ->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false));
+            ->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#discipliny');
         $this->actingAs($admin)->delete(route('admin.udalosti.ustajeni.destroy', [$udalost, $ustajeniId]))
-            ->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false));
+            ->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#sluzby');
 
         $this->assertDatabaseMissing('udalost_moznosti', ['id' => $moznostId]);
         $this->assertDatabaseMissing('udalost_ustajeni', ['id' => $ustajeniId]);
+    }
+
+    public function test_admin_can_create_discipline_with_image_and_pdf(): void
+    {
+        Storage::fake('public');
+
+        $admin = $this->createAdminUser();
+        $udalost = $this->createUdalost();
+
+        $this->actingAs($admin)->post(route('admin.udalosti.moznosti.store', $udalost), [
+            'nazev' => 'Trail',
+            'min_vek' => 10,
+            'cena' => 450,
+            'poradi' => 2,
+            'foto_path' => UploadedFile::fake()->image('trail.webp'),
+            'pdf_path' => UploadedFile::fake()->create('trail.pdf', 128, 'application/pdf'),
+        ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#discipliny');
+
+        $moznost = $udalost->moznosti()->firstOrFail();
+
+        $this->assertNotNull($moznost->foto_path);
+        $this->assertNotNull($moznost->pdf_path);
+        Storage::disk('public')->assertExists($moznost->foto_path);
+        Storage::disk('public')->assertExists($moznost->pdf_path);
+    }
+
+    public function test_admin_can_open_option_and_service_edit_pages(): void
+    {
+        $admin = $this->createAdminUser();
+        $udalost = $this->createUdalost();
+        $moznost = $udalost->moznosti()->create([
+            'nazev' => 'Parkur',
+            'cena' => 500,
+            'poradi' => 1,
+        ]);
+        $ustajeni = $udalost->ustajeniMoznosti()->create([
+            'nazev' => 'Box',
+            'typ' => 'ustajeni',
+            'cena' => 350,
+            'kapacita' => 12,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.udalosti.moznosti.edit', [$udalost, $moznost]))
+            ->assertOk()
+            ->assertSee('Upravit disciplínu')
+            ->assertSee('Parkur');
+
+        $this->actingAs($admin)
+            ->get(route('admin.udalosti.ustajeni.edit', [$udalost, $ustajeni]))
+            ->assertOk()
+            ->assertSee('Upravit službu')
+            ->assertSee('Box');
     }
 
     public function test_non_admin_cannot_access_event_management_routes(): void

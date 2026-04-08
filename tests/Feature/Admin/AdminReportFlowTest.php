@@ -150,14 +150,33 @@ class AdminReportFlowTest extends TestCase
         $this->assertDatabaseHas('prihlasky', ['id' => $prihlaskaA->id, 'start_cislo' => 2]);
         $this->assertDatabaseHas('prihlasky', ['id' => $prihlaskaC->id, 'start_cislo' => 3]);
         $this->assertDatabaseHas('prihlasky', ['id' => $deletedPrihlaska->id, 'start_cislo' => 99, 'smazana' => 1]);
+
+        $this->actingAs($admin)
+            ->from(route('admin.reports.prihlasky', $udalost))
+            ->delete(route('admin.reports.prihlasky.destroy', [$udalost, $prihlaskaA]))
+            ->assertRedirect(route('admin.reports.prihlasky', $udalost, absolute: false));
+
+        $this->assertDatabaseHas('prihlasky', [
+            'id' => $prihlaskaA->id,
+            'smazana' => 1,
+        ]);
+        $this->assertSoftDeleted('prihlasky', [
+            'id' => $prihlaskaA->id,
+        ]);
     }
 
     public function test_non_admin_cannot_access_admin_reports(): void
     {
         $user = User::factory()->create();
-        $udalost = $this->createUdalost();
+        $udalost = $this->createUdalost(moznosti: [
+            ['nazev' => 'Trail', 'cena' => 300, 'poradi' => 1],
+        ]);
+        $osoba = $this->createOsoba($user);
+        $kun = $this->createKun($user);
+        $prihlaska = $this->createPrihlaska($udalost, $user, $osoba, $kun, [$udalost->moznosti[0]->id]);
 
         $this->actingAs($user)->get(route('admin.reports.prihlasky', $udalost))->assertForbidden();
+        $this->actingAs($user)->delete(route('admin.reports.prihlasky.destroy', [$udalost, $prihlaska]))->assertForbidden();
         $this->actingAs($user)->put(route('admin.reports.start-cisla.normalize', $udalost))->assertForbidden();
         $this->actingAs($user)->get(route('admin.start-cisla.show', $udalost))->assertForbidden();
     }

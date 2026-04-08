@@ -17,22 +17,22 @@
         <div class="mx-auto max-w-7xl">
             <div class="space-y-4">
                 @forelse($udalosti as $udalost)
-                    <article class="panel p-6">
-                        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                            <div class="space-y-3">
-                                <div class="flex flex-wrap items-center gap-3">
-                                    <p class="text-xl font-semibold text-[#20392c]">{{ $udalost->nazev }}</p>
-                                    <span class="brand-pill">{{ $udalost->aktivni ? 'Aktivní' : 'Archiv' }}</span>
+                    <article class="panel overflow-hidden">
+                        <div class="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+                            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="block flex-1 p-6 transition duration-200 hover:bg-white/70 hover:shadow-[0_26px_80px_rgba(71,52,34,0.08)]">
+                                <div class="flex h-full flex-col justify-center space-y-3">
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <p class="text-xl font-semibold text-[#20392c]">{{ $udalost->nazev }}</p>
+                                        <span class="brand-pill">{{ $udalost->aktivni ? 'Aktivní' : 'Archiv' }}</span>
+                                    </div>
+                                    <div class="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
+                                        <p>{{ $udalost->misto }}</p>
+                                        <p>{{ $udalost->datum_zacatek?->format('d.m.Y') }} @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))– {{ $udalost->datum_konec->format('d.m.Y') }} @endif</p>
+                                    </div>
                                 </div>
-                                <div class="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
-                                    <p>{{ $udalost->misto }}</p>
-                                    <p>{{ $udalost->datum_zacatek?->format('d.m.Y') }} @if($udalost->datum_konec && $udalost->datum_konec->ne($udalost->datum_zacatek))– {{ $udalost->datum_konec->format('d.m.Y') }} @endif</p>
-                                </div>
-                            </div>
+                            </a>
 
-                            <div class="flex flex-wrap gap-3">
-                                <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-primary">Detail</a>
-                                <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení</a>
+                            <div class="flex items-center px-6 pb-6 lg:px-6 lg:pb-0">
                                 <form method="POST" action="{{ route('admin.udalosti.destroy', $udalost) }}" onsubmit="return confirm('Opravdu smazat událost?');">
                                     @csrf
                                     @method('DELETE')

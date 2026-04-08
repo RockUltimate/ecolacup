@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Heritage Field | Premium Mountain Trail Horse Racing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2c160e",
+                        "secondary-container": "#fed3c7",
+                        "on-secondary-container": "#795950",
+                        "tertiary-fixed-dim": "#e5c192",
+                        "outline": "#73796d",
+                        "secondary-fixed": "#ffdbd0",
+                        "tertiary-container": "#5b421e",
+                        "primary-fixed": "#c5efad",
+                        "surface-container-low": "#f6f3ee",
+                        "primary-fixed-dim": "#a9d293",
+                        "on-secondary-fixed-variant": "#5d4037",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-tint": "#446733",
+                        "on-background": "#1c1c19",
+                        "on-primary-fixed-variant": "#2d4f1e",
+                        "on-tertiary-fixed-variant": "#5b421f",
+                        "tertiary": "#422c0a",
+                        "outline-variant": "#c3c8bb",
+                        "inverse-surface": "#31302d",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#98c083",
+                        "surface": "#fcf9f4",
+                        "surface-container": "#f0ede8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#d2af82",
+                        "on-surface-variant": "#43493e",
+                        "on-surface": "#1c1c19",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7bdb1",
+                        "inverse-primary": "#a9d293",
+                        "surface-dim": "#dcdad5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0eb",
+                        "primary-container": "#2d4f1e",
+                        "secondary": "#77574d",
+                        "error-container": "#ffdad6",
+                        "primary": "#173809",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2dd",
+                        "on-primary-fixed": "#062100",
+                        "background": "#fcf9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #fcf9f4; color: #1c1c19; }
+        .font-serif { font-family: 'Newsreader', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .nav-active { border-bottom: 2px solid #173809; padding-bottom: 4px; color: #173809; }
+        .mask-asymmetric { clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%); }
+        .btn-primary-gradient { background: linear-gradient(135deg, #173809 0%, #2d4f1e 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-serif italic text-emerald-950 dark:text-emerald-100">
+                Heritage Field
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold tracking-wide text-emerald-900 dark:text-emerald-400 border-b-2 border-emerald-800 pb-1" href="#">Find Races</a>
+<a class="text-sm font-semibold tracking-wide text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">My Dashboard</a>
+<a class="text-sm font-semibold tracking-wide text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-semibold text-stone-600 px-4 py-2 hover:opacity-80 transition-all duration-400">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all duration-400 shadow-sm">Sign Up</button>
+</div>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section: Intentional Asymmetry -->
+<section class="relative min-h-[921px] flex items-center overflow-hidden">
+<div class="max-w-screen-2xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<div class="lg:col-span-6 z-10">
+<h1 class="text-6xl md:text-8xl font-serif leading-tight text-primary mb-6">
+                        The Soul of the <br/><span class="italic">High Trails.</span>
+</h1>
+<p class="text-xl md:text-2xl text-on-surface-variant font-body max-w-lg mb-10 leading-relaxed">
+                        Experience the prestige of mountain trail racing. Where raw natural power meets the refined elegance of the equestrian tradition.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="btn-primary-gradient text-on-primary px-10 py-5 rounded-lg font-bold text-sm uppercase tracking-widest shadow-xl hover:translate-y-[-2px] transition-all duration-400">
+                            Find Your Next Race
+                        </button>
+<button class="bg-surface-container-highest text-on-surface px-10 py-5 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                            View Calendar
+                        </button>
+</div>
+</div>
+<div class="lg:col-span-7 lg:absolute lg:right-0 lg:w-1/2 h-[716px] lg:h-[870px] z-0">
+<div class="w-full h-full rounded-l-[4rem] overflow-hidden shadow-2xl relative">
+<img alt="Mountain trail horse race" class="w-full h-full object-cover" data-alt="Majestic brown horse galloping through a lush mountain trail with mist and distant pine trees in cinematic morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTaWNIDDoEaPGAleQz9WppAHE0QhXPlpmRYi70M0LTfjUh-jnvoKhh0kDSwmZ7IZUpYM9VBLfvKCSPkh0KWgfxq4TFtcof_3Cclp4q4PDLnDxME2imLOcuLBGTNC7ZjVWfwqAPNefMcp3rIk8TN8HTLVMqxs_V9hT1icJy6FWdp3oiLwjJYpdgsMiXdmDpf82q7RC7I4bTUl-HohH78P-KIXwH6iq8KuaqOxB4Z-kED4GWdJL1AFLJUINgO238rbZLi615L6-PJnQ"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Bento Grid: Upcoming Races -->
+<section class="py-24 bg-surface">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-primary font-bold uppercase tracking-widest text-xs">Seasonal Highlights</span>
+<h2 class="text-5xl font-serif text-on-surface mt-2">Upcoming Pursuits</h2>
+</div>
+<a class="text-primary font-bold text-sm flex items-center gap-2 group" href="#">
+                        View All Races 
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 min-h-[600px]">
+<!-- Large Feature Card -->
+<div class="md:col-span-2 md:row-span-2 bg-surface-container-lowest rounded-xl overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+<div class="h-2/3 overflow-hidden relative">
+<img alt="Alpine Classic" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An equestrian rider on a white horse crossing a shallow mountain stream with snow-capped peaks in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwtY1XNPD4I-pT74J3RqlVj2KBHusaZ40ASbcFsQp_lWOHfLIi2dyohMbMh4ilvQiEMBAFyS8HcTUibT86bOGLP3z6gc8l2TL57C_ylZxQ-502RQFFzcur3K8NxM1ln8urswV1n0BvvCNBY8l9MYd2_FscvBcquwtQVSQWYbr4p5dd0_aqZxOIX8jl-35hMfuBFRZXERb5_NGtulvV18O_c_rLRI3Jt5PUN0sb3OmEYCjaiXKS1o5k2hCnFxSPsjLRMcilIVEw-hyG"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Elite Division</div>
+</div>
+<div class="p-8">
+<h3 class="text-3xl font-serif mb-2">The Alpine Classic</h3>
+<p class="text-on-surface-variant font-body mb-4">St. Moritz Trails • Sept 24, 2024</p>
+<div class="flex gap-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold">12km Sprint</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full text-xs font-bold">Registration Open</span>
+</div>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="md:col-span-2 bg-surface-container-low rounded-xl p-8 flex items-center gap-8 group hover:bg-surface-container transition-colors">
+<div class="w-32 h-32 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Highland Derby" class="w-full h-full object-cover" data-alt="Close up of horse tack and leather saddle with soft focus on a green field at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwZ0MsvjqCPzgaXMc2sBtjVrLdBR-FIGHcbXQOKTKAfFxELmq5YM9yCQkY3ce1lwG2dR1OiIZ-cI1MVjDcntRRzhXGbf3Ru5ma9FdUET00TJWsyOEOeLBUuQDG5gyj5BqC_tfeyOg6Dt5F5MZB7DZpfwSqSdNJr16or5-jxE5wR4y5ii_j4WNv5XR9sgAixC3NBEtdsh8GNq9onhtYTkPe1EMbBhnn73_THjh3Ivki24JCCvSkeIKIqheiA4BWcSipb6QXGIsUa6JQ"/>
+</div>
+<div>
+<h3 class="text-2xl font-serif mb-1">Highland Derby</h3>
+<p class="text-on-surface-variant text-sm mb-3">Scottish Highlands • Oct 12</p>
+<button class="text-primary font-bold text-xs uppercase tracking-widest border-b-2 border-surface-tint">Reserve Spot</button>
+</div>
+</div>
+<!-- Small Card 2 -->
+<div class="md:col-span-1 bg-surface-container-highest rounded-xl p-8 flex flex-col justify-between group hover:bg-primary transition-all duration-500">
+<div>
+<h3 class="text-2xl font-serif mb-1 group-hover:text-on-primary">Tuscany Trail</h3>
+<p class="text-on-surface-variant text-sm group-hover:text-on-primary/70">Val d'Orcia • Nov 05</p>
+</div>
+<div class="mt-4">
+<span class="material-symbols-outlined text-primary text-4xl group-hover:text-on-primary">terrain</span>
+</div>
+</div>
+<!-- Small Card 3 -->
+<div class="md:col-span-1 bg-stone-900 rounded-xl p-8 flex flex-col justify-between relative overflow-hidden">
+<div class="z-10">
+<h3 class="text-2xl font-serif text-white mb-1">Night Ride</h3>
+<p class="text-stone-400 text-sm">Full Moon Event • Oct 28</p>
+</div>
+<div class="mt-4 z-10">
+<span class="text-white text-3xl font-serif italic">Sold Out</span>
+</div>
+<div class="absolute inset-0 opacity-40 bg-gradient-to-br from-indigo-900 to-black"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works Section: Editorial Layout -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div class="relative">
+<div class="grid grid-cols-2 gap-4">
+<div class="pt-12">
+<img alt="Rider" class="rounded-xl shadow-lg w-full h-80 object-cover" data-alt="Professional equestrian rider in traditional attire adjusting their gloves before a mountain race" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2vm_OLJASrugkNdreYIansK1_qDDfeEEFZvl94_mfcHkvj3LfD-QGJHA9jLDor7_oS3njfoufZJCVlFRusy51W-W2hwClcV6HlWjZGGJfSJIT27bpShqYyjNTP6R268fnXicYifOTbuhRBgooIac7tXpop6I22zokQRyJkPeMjAxkYXjtvWHKWcGbIk5So_UG1YhX1C_eMzIOj_XiEMuIsPqoXIjeb6ajDvoRQ-Lm0plCd4QpsxbobIAchcPNYZniYsyGKcC6Gfnk"/>
+</div>
+<div>
+<img alt="Landscape" class="rounded-xl shadow-lg w-full h-96 object-cover" data-alt="Wide expansive shot of a winding dirt trail through golden mountain grass at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNo2joaQw0Tm63-tLswoFVpCqZ9Y2AgVCmUWP1n1VlJJSnCTC9RM24aVpiEqhUFY_4WVuIMNHGTBK3UkaZalHFpm6TlcSORLXKPwC_WQt1NR6Iq-hmdmyYIvjj7OyIZsTNYyRE4GcI2SNXCGFcjDDrBrJuTAKrSiLF7E3Hc1oK0pwdxkzyPIUGn0ZCMtJaFf8ktknqhuRvPzWj894x6L4sN9CRBHHDnNr9X9ipbQuLCjIhQh5BNjkBOWzqcVRGRqSnqxgKillAPwSs"/>
+</div>
+</div>
+<div class="absolute -bottom-8 -right-8 bg-surface-container-lowest p-8 rounded-xl shadow-xl max-w-xs hidden md:block">
+<p class="font-serif italic text-xl text-primary">"The most intuitive registration platform I've used in 20 years of racing."</p>
+<p class="text-xs uppercase tracking-widest font-bold mt-4 text-on-surface-variant">— Julian Vance, Trail Master</p>
+</div>
+</div>
+<div>
+<span class="text-primary font-bold uppercase tracking-widest text-xs">The Infrastructure</span>
+<h2 class="text-5xl font-serif text-on-surface mt-2 mb-8 leading-tight">Crafted for the Community</h2>
+<div class="space-y-10">
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">person_pin_circle</span>
+</div>
+<div>
+<h4 class="text-xl font-bold font-serif mb-2">For Riders</h4>
+<p class="text-on-surface-variant leading-relaxed">Seamlessly browse certified trails, manage your horse's health profiles, and secure your gate position with one-click registration.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+<div>
+<h4 class="text-xl font-bold font-serif mb-2">For Organizers</h4>
+<p class="text-on-surface-variant leading-relaxed">A professional suite for timing, safety coordination, and paddock management. Everything you need to host a world-class event.</p>
+</div>
+</div>
+<div class="pt-6">
+<button class="text-primary font-bold flex items-center gap-2 text-lg hover:gap-4 transition-all">
+                                    Learn More About Our Standards 
+                                    <span class="material-symbols-outlined">trending_flat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA: Glassmorphism -->
+<section class="py-32 relative overflow-hidden flex items-center justify-center">
+<img alt="Gallop background" class="absolute inset-0 w-full h-full object-cover" data-alt="Abstract motion blur of a horse galloping through tall grass, capturing energy and speed in earthy green and gold tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCibCtVzJEvCMU8GMBX_BznV-OD886P7AnHkN9My8_Kca54JTLeN1GehNiDfdmBlMmmVkmAB_tfH2yUUJKpi9wNNqPAjqmZnj2O1tJGq6V5CQ1idJQ0_e2ilJ2LkkDt0rf2ldSICmr5EZgIggQ9Xu0fmo66IWJCC9x23SGSGSSv89c4JlOMa1jcPa6bluCNn8vwRTguJ5O5y_PNLbGmrk1oeV0blEzwLAlaNjOunaaG1-4-kmr-emQw5-bzFhuMd76xKimlm6kgv6Lb"/>
+<div class="absolute inset-0 bg-primary/60 backdrop-blur-sm"></div>
+<div class="relative z-10 text-center max-w-3xl px-8">
+<h2 class="text-5xl md:text-7xl font-serif text-white mb-8">Ready to Lead the Field?</h2>
+<p class="text-white/80 text-xl mb-12 font-body">Join thousands of riders who have found their home on the mountain trails. The next season starts now.</p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<button class="bg-white text-primary px-12 py-5 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-stone-100 transition-all shadow-2xl">
+                        Create Your Rider Profile
+                    </button>
+<button class="border-2 border-white/30 text-white px-12 py-5 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all backdrop-blur-md">
+                        Find a Race
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-100 dark:bg-stone-950 w-full rounded-t-3xl">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+<div>
+<div class="text-xl font-serif text-emerald-900 dark:text-emerald-100 mb-6">Heritage Field</div>
+<p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed mb-6">
+                    The premier destination for the mountain trail horse racing community. Uniting tradition with modern competition.
+                </p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-stone-400 hover:text-primary transition-colors cursor-pointer">public</span>
+<span class="material-symbols-outlined text-stone-400 hover:text-primary transition-colors cursor-pointer">mail</span>
+<span class="material-symbols-outlined text-stone-400 hover:text-primary transition-colors cursor-pointer">share</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-3">
+<span class="text-emerald-900 dark:text-emerald-400 font-bold font-body text-sm mb-2">Race Types</span>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Endurance Trails</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Sprint Races</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Youth Division</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-emerald-900 dark:text-emerald-400 font-bold font-body text-sm mb-2">Support</span>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Contact Us</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Terms of Service</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="#">Privacy Policy</a>
+</div>
+</div>
+<div class="flex flex-col justify-between">
+<div class="bg-surface-container-high p-6 rounded-xl">
+<span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Stay Informed</span>
+<p class="text-xs text-on-surface-variant mb-4">Get seasonal trail reports and race announcements.</p>
+<div class="flex">
+<input class="bg-surface-container-lowest border-none rounded-l-lg text-xs w-full focus:ring-primary" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-r-lg">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+<div class="text-stone-500 dark:text-stone-400 text-[10px] uppercase tracking-widest mt-8">
+                    © 2024 The Heritage Field. All rights reserved.
+                </div>
+</div>
+</div>
+</footer>
+</body></html>

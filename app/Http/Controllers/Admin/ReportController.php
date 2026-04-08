@@ -44,6 +44,18 @@ class ReportController extends Controller
         return back()->with('status', 'start-cislo-updated');
     }
 
+    public function destroy(Udalost $udalost, Prihlaska $prihlaska): RedirectResponse
+    {
+        if ((int) $prihlaska->udalost_id !== (int) $udalost->id) {
+            abort(404);
+        }
+
+        $prihlaska->update(['smazana' => true]);
+        $prihlaska->delete();
+
+        return back()->with('status', 'prihlaska-deleted');
+    }
+
     public function smazane(Udalost $udalost, Request $request)
     {
         $filters = $this->resolveRegistrationsFilters($request, 'deleted');

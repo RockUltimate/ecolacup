@@ -4,102 +4,88 @@
             <div class="space-y-3">
                 <p class="section-eyebrow">Nastavení události</p>
                 <h1 class="text-3xl text-[#20392c]">{{ $udalost->nazev }}</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">Úprava základních údajů, disciplín a možností ustájení z jednoho místa.</p>
+                <p class="max-w-3xl text-sm leading-6 text-gray-600">Spravujte popis, disciplíny, služby a přihlášky na jednom místě.</p>
             </div>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
         </div>
     </x-slot>
 
     <div class="py-10">
-        <div class="mx-auto max-w-7xl space-y-6">
-            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'settings'])
+        <div
+            class="mx-auto max-w-7xl space-y-6"
+            x-data="{
+                allowedTabs: ['popis', 'discipliny', 'sluzby'],
+                activeTab: 'popis',
+                syncFromHash() {
+                    const hash = window.location.hash.replace('#', '');
+                    this.activeTab = this.allowedTabs.includes(hash) ? hash : 'popis';
+                },
+                openTab(tab) {
+                    this.activeTab = tab;
+                    window.location.hash = tab;
+                }
+            }"
+            x-init="syncFromHash(); window.addEventListener('hashchange', () => syncFromHash())"
+        >
+            <div class="panel p-3">
+                <nav class="flex flex-wrap gap-2">
+                    <a
+                        href="{{ route('admin.udalosti.edit', $udalost) }}#popis"
+                        @click.prevent="openTab('popis')"
+                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        :class="activeTab === 'popis'
+                            ? 'border-[#20392c] bg-[#20392c] text-white'
+                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                    >
+                        Popis
+                    </a>
+                    <a
+                        href="{{ route('admin.udalosti.edit', $udalost) }}#discipliny"
+                        @click.prevent="openTab('discipliny')"
+                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        :class="activeTab === 'discipliny'
+                            ? 'border-[#20392c] bg-[#20392c] text-white'
+                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                    >
+                        Disciplíny
+                    </a>
+                    <a
+                        href="{{ route('admin.udalosti.edit', $udalost) }}#sluzby"
+                        @click.prevent="openTab('sluzby')"
+                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        :class="activeTab === 'sluzby'
+                            ? 'border-[#20392c] bg-[#20392c] text-white'
+                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                    >
+                        Služby
+                    </a>
+                    <a
+                        href="{{ route('admin.reports.prihlasky', $udalost) }}"
+                        class="rounded-full border border-[#ddd0bc] bg-white/70 px-4 py-2 text-sm font-semibold text-[#3d6b4f] transition hover:bg-emerald-50"
+                    >
+                        Přihlášky
+                    </a>
+                    <a
+                        href="{{ route('admin.reports.startky', $udalost) }}"
+                        class="rounded-full border border-[#ddd0bc] bg-white/70 px-4 py-2 text-sm font-semibold text-[#3d6b4f] transition hover:bg-emerald-50"
+                    >
+                        Startky
+                    </a>
+                </nav>
+            </div>
 
-            <section class="panel p-6 sm:p-8">
-                @include('admin.udalosti._form', ['udalost' => $udalost])
-            </section>
-
-            <section class="grid gap-6 lg:grid-cols-2">
-                <div class="panel space-y-5 p-6 sm:p-8">
-                    <div>
-                        <p class="section-eyebrow">Disciplíny</p>
-                        <h2 class="mt-2 text-2xl text-[#20392c]">Přidat nebo odebrat</h2>
-                    </div>
-
-                    <form method="POST" action="{{ route('admin.udalosti.moznosti.store', $udalost) }}" class="grid gap-4 md:grid-cols-2">
-                        @csrf
-                        <input type="text" name="nazev" placeholder="Název disciplíny" class="field-shell" required>
-                        <input type="number" name="cena" step="0.01" min="0" placeholder="Cena" class="field-shell" required>
-                        <input type="number" name="min_vek" min="0" placeholder="Min. věk" class="field-shell">
-                        <input type="number" name="poradi" min="0" placeholder="Pořadí" class="field-shell">
-                        <label class="md:col-span-2 flex items-center gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-3 text-sm text-gray-700">
-                            <input type="checkbox" name="je_administrativni_poplatek" value="1" class="rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]">
-                            <span>Administrativní poplatek</span>
-                        </label>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="button-primary">Přidat disciplínu</button>
-                        </div>
-                    </form>
-
-                    <div class="space-y-3">
-                        @forelse($udalost->moznosti as $moznost)
-                            <div class="surface-muted flex items-start justify-between gap-4">
-                                <div>
-                                    <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
-                                    <p class="mt-1 text-sm text-gray-600">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč @if($moznost->min_vek)• min. věk {{ $moznost->min_vek }}@endif</p>
-                                </div>
-                                <form method="POST" action="{{ route('admin.udalosti.moznosti.destroy', [$udalost, $moznost]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-sm text-red-700 underline underline-offset-4">Smazat</button>
-                                </form>
-                            </div>
-                        @empty
-                            <p class="text-sm text-gray-600">Zatím bez disciplín.</p>
-                        @endforelse
-                    </div>
+            <div>
+                <div x-show="activeTab === 'popis'">
+                    @include('admin.udalosti._popis', ['udalost' => $udalost])
                 </div>
 
-                <div class="panel space-y-5 p-6 sm:p-8">
-                    <div>
-                        <p class="section-eyebrow">Ustájení a služby</p>
-                        <h2 class="mt-2 text-2xl text-[#20392c]">Přidat nebo odebrat</h2>
-                    </div>
-
-                    <form method="POST" action="{{ route('admin.udalosti.ustajeni.store', $udalost) }}" class="grid gap-4 md:grid-cols-2">
-                        @csrf
-                        <input type="text" name="nazev" placeholder="Název položky" class="field-shell" required>
-                        <select name="typ" class="field-shell" required>
-                            <option value="ustajeni">Ustájení</option>
-                            <option value="ubytovani">Ubytování</option>
-                            <option value="strava">Strava</option>
-                            <option value="ostatni">Ostatní</option>
-                        </select>
-                        <input type="number" name="cena" step="0.01" min="0" placeholder="Cena" class="field-shell" required>
-                        <input type="number" name="kapacita" min="1" placeholder="Kapacita" class="field-shell">
-                        <div class="md:col-span-2">
-                            <button type="submit" class="button-primary">Přidat možnost</button>
-                        </div>
-                    </form>
-
-                    <div class="space-y-3">
-                        @forelse($udalost->ustajeniMoznosti as $moznost)
-                            <div class="surface-muted flex items-start justify-between gap-4">
-                                <div>
-                                    <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
-                                    <p class="mt-1 text-sm text-gray-600">{{ $moznost->typ }} • {{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč @if($moznost->kapacita)• kapacita {{ $moznost->kapacita }}@endif</p>
-                                </div>
-                                <form method="POST" action="{{ route('admin.udalosti.ustajeni.destroy', [$udalost, $moznost]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-sm text-red-700 underline underline-offset-4">Smazat</button>
-                                </form>
-                            </div>
-                        @empty
-                            <p class="text-sm text-gray-600">Zatím bez možností ustájení.</p>
-                        @endforelse
-                    </div>
+                <div x-show="activeTab === 'discipliny'">
+                    @include('admin.udalosti._discipliny', ['udalost' => $udalost])
                 </div>
-            </section>
+
+                <div x-show="activeTab === 'sluzby'">
+                    @include('admin.udalosti._sluzby', ['udalost' => $udalost])
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

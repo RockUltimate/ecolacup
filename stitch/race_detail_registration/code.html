@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>High Sierra Endurance Trail | Heritage Field</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2c160e",
+                        "secondary-container": "#fed3c7",
+                        "on-secondary-container": "#795950",
+                        "tertiary-fixed-dim": "#e5c192",
+                        "outline": "#73796d",
+                        "secondary-fixed": "#ffdbd0",
+                        "tertiary-container": "#5b421e",
+                        "primary-fixed": "#c5efad",
+                        "surface-container-low": "#f6f3ee",
+                        "primary-fixed-dim": "#a9d293",
+                        "on-secondary-fixed-variant": "#5d4037",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-tint": "#446733",
+                        "on-background": "#1c1c19",
+                        "on-primary-fixed-variant": "#2d4f1e",
+                        "on-tertiary-fixed-variant": "#5b421f",
+                        "tertiary": "#422c0a",
+                        "outline-variant": "#c3c8bb",
+                        "inverse-surface": "#31302d",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#98c083",
+                        "surface": "#fcf9f4",
+                        "surface-container": "#f0ede8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#d2af82",
+                        "on-surface-variant": "#43493e",
+                        "on-surface": "#1c1c19",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7bdb1",
+                        "inverse-primary": "#a9d293",
+                        "surface-dim": "#dcdad5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0eb",
+                        "primary-container": "#2d4f1e",
+                        "secondary": "#77574d",
+                        "error-container": "#ffdad6",
+                        "primary": "#173809",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2dd",
+                        "on-primary-fixed": "#062100",
+                        "background": "#fcf9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .font-serif { font-family: 'Newsreader', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-md">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-serif italic text-emerald-950 dark:text-emerald-100">Heritage Field</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-emerald-900 dark:text-emerald-400 border-b-2 border-emerald-800 pb-1 text-sm font-semibold tracking-wide" href="#">Find Races</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">My Dashboard</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-stone-600 dark:text-stone-400 font-semibold text-sm hover:opacity-80 transition-all duration-400">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-semibold tracking-wide hover:opacity-80 transition-all duration-400">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="pt-24">
+<!-- Hero Section: Intentional Asymmetry -->
+<section class="relative min-h-[716px] flex items-center px-8 max-w-screen-2xl mx-auto overflow-hidden">
+<div class="relative z-10 w-full md:w-3/5">
+<span class="inline-block px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold tracking-widest uppercase mb-6">
+                    Endurance Trail Series
+                </span>
+<h1 class="text-7xl md:text-8xl lg:text-9xl font-serif text-primary leading-none mb-6">
+                    High Sierra <br/> <span class="italic pl-12 md:pl-24">Endurance</span>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant max-w-lg mb-10 leading-relaxed">
+                    A test of spirit and stamina across the granite cathedrals of the Sierra Nevada. Experience the prestige of the high country.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">
+                        Register for Race
+                    </button>
+<button class="bg-surface-container-highest text-on-surface px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-surface-variant transition-all">
+                        View Course
+                    </button>
+</div>
+</div>
+<div class="absolute right-0 top-0 w-1/2 h-full hidden md:block">
+<div class="w-full h-full relative" style="border-radius: 2rem 0.75rem 0.75rem 5rem; overflow: hidden;">
+<img alt="Powerful dark bay horse galloping through a high alpine meadow with jagged snow-capped mountain peaks in the background at sunset" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000" data-alt="Powerful dark bay horse galloping through a high alpine meadow with jagged snow-capped mountain peaks in the background at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEDBieKvJX9t9ubXm1iONBNc4IPkrW29NvZskZjt8E2M_2iUPbU8a_6EirqJwQ5mYH1J0mvOHotMv2FXOLOO9BQfcKj6HZsMfxBOgBN7-oWBKAYqd-HC4AlS2ZaDlTM-L7lRt6bGydDYEVBnHB5vrLhLzrqtN6wnmiyQNpC024Rg5CQKWOUTtFXGHjYaZODgJBQanJtQsMinxiK54ory1YUFiZNao96_cB-1kf5314TChXDHE82FDj3kDhGez-VJztdWLXh8F5s6Wh"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+</div>
+</div>
+</section>
+<!-- Stats & Highlights Bento Grid -->
+<section class="px-8 py-20 max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Elevation Card -->
+<div class="md:col-span-2 bg-surface-container-low p-8 rounded-xl flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" data-icon="terrain">terrain</span>
+<h3 class="text-2xl font-serif text-primary mb-2">Granite Ascent</h3>
+<p class="text-on-surface-variant text-sm mb-6">Navigating technical ridges and glacial basins with a total elevation gain of 12,400ft.</p>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-serif text-primary">12,400</span>
+<span class="text-on-surface-variant uppercase text-xs tracking-widest">ft gain</span>
+</div>
+</div>
+<!-- Distance Card -->
+<div class="bg-surface-container-highest p-8 rounded-xl">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="distance">distance</span>
+<h3 class="text-xl font-serif text-primary mb-1">Length</h3>
+<div class="text-4xl font-serif text-primary mb-4">50 Miles</div>
+<p class="text-on-surface-variant text-xs leading-relaxed">Point-to-point course through the heart of the wilderness.</p>
+</div>
+<!-- Difficulty Card -->
+<div class="bg-primary text-on-primary p-8 rounded-xl flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-on-primary-container mb-2 scale-150" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<div class="uppercase text-xs tracking-widest mb-1 opacity-80">Rating</div>
+<div class="text-3xl font-serif italic">Elite Tier</div>
+</div>
+<!-- Schedule Card -->
+<div class="md:col-span-1 bg-surface-container-low p-8 rounded-xl">
+<h3 class="text-sm uppercase tracking-widest font-bold text-primary mb-6">Schedule</h3>
+<ul class="space-y-4">
+<li class="flex justify-between border-b border-outline-variant/20 pb-2">
+<span class="text-xs font-bold">Check-in</span>
+<span class="text-xs text-on-surface-variant">04:00 AM</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/20 pb-2">
+<span class="text-xs font-bold">Gun Start</span>
+<span class="text-xs text-on-surface-variant">05:30 AM</span>
+</li>
+<li class="flex justify-between">
+<span class="text-xs font-bold">Cut-off</span>
+<span class="text-xs text-on-surface-variant">10:00 PM</span>
+</li>
+</ul>
+</div>
+<!-- Map Integration (Asymmetric) -->
+<div class="md:col-span-3 h-80 rounded-xl overflow-hidden relative group">
+<img alt="Topographic map of high sierra trail route with emerald green and stone grey color palette" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Topographic map of high sierra trail route with emerald green and stone grey color palette" data-location="Sierra Nevada, CA" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV3ofq0DnjinzyR3-wCbVdZrJ1rtBnQDoUwylXRKSZ2Q917Up4l1M2LavL952siRZPNkjnhGThhh79Z4r2jHaYbR5RttnNppH7BNsR6yLe4UmeeZdwv3JMbY_XhMRiR6_CPrbv943VwpGKowcAyn8ANI3KAy0OfxRbrz6co0hKyBh-uyhvCKdKxlJ3H79JNXcnlvN8jfkLTOH2RduXoMqMtsPBDylkyttuvSy-SXY3-hUq_YgL-tlAc10sse0e6r8D_NKeXPNe5zET"/>
+<div class="absolute inset-0 bg-primary/5"></div>
+<div class="absolute bottom-6 left-6 bg-surface-bright/90 backdrop-blur px-6 py-3 rounded-lg shadow-xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<div>
+<div class="text-xs font-bold uppercase tracking-widest">Base Camp</div>
+<div class="text-sm font-serif italic text-primary">Convict Lake Trailhead</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Requirements & Details -->
+<section class="bg-surface-container-low py-24 px-8">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
+<div>
+<h2 class="text-5xl font-serif text-primary mb-8">Entry Requirements</h2>
+<p class="text-on-surface-variant mb-12 leading-relaxed">
+                        The High Sierra is as unforgiving as it is beautiful. To maintain the prestige and safety of the Heritage Field series, all participants must meet the following criteria:
+                    </p>
+<div class="space-y-8">
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="history_edu">history_edu</span>
+</div>
+<div>
+<h4 class="font-bold text-sm uppercase tracking-widest mb-1">Prior Experience</h4>
+<p class="text-sm text-on-surface-variant">Proof of completion of at least one 50K trail race with 5,000ft+ gain within the last 24 months.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="medical_services">medical_services</span>
+</div>
+<div>
+<h4 class="font-bold text-sm uppercase tracking-widest mb-1">Medical Clearance</h4>
+<p class="text-sm text-on-surface-variant">Signed physician’s waiver and high-altitude readiness assessment.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="backpack">backpack</span>
+</div>
+<div>
+<h4 class="font-bold text-sm uppercase tracking-widest mb-1">Mandatory Gear</h4>
+<p class="text-sm text-on-surface-variant">Emergency bivy, whistle, 2L water capacity, and high-traction footwear required at all times.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="bg-surface-container-lowest p-12 rounded-2xl shadow-sm relative z-10">
+<h3 class="text-3xl font-serif text-primary mb-4 italic">The Heritage Pledge</h3>
+<p class="text-on-surface-variant italic leading-relaxed mb-8">
+                            "To race is to respect the land, the horse, and the history written in the stone of these mountains. We run not for the finish, but for the honor of the traverse."
+                        </p>
+<div class="h-px bg-outline-variant/30 mb-8"></div>
+<div class="space-y-4 mb-10">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold">Standard Registration</span>
+<span class="font-serif text-2xl text-primary">$345.00</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="text-xs">Includes finisher medal, racing silk, and catered gala.</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-5 rounded-lg font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3">
+                            Secure Your Place
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center mt-6 text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">Limited to 150 elite entrants</p>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-tertiary-fixed-dim rounded-full mix-blend-multiply opacity-20 -z-0"></div>
+</div>
+</div>
+</section>
+<!-- Image Gallery Callout -->
+<section class="py-24 overflow-hidden">
+<div class="max-w-screen-2xl mx-auto px-8 grid grid-cols-12 gap-4">
+<div class="col-span-12 md:col-span-5 h-[500px]">
+<img alt="Elite trail runner cresting a rocky ridge with panoramic views of the Sierra crest under a clear blue sky" class="w-full h-full object-cover rounded-xl" data-alt="Elite trail runner cresting a rocky ridge with panoramic views of the Sierra crest under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLKxUQLjR8iKol4uXtV_AdNDEbqvKFz6rMmpl6tbytQMiEYKf_tgL3jlXPBLg1wyw21VaZRqwVNE954qkymnvh19rrhGZHHWfGg9wodUvjmCyWh8QGnQ4Y0hhU4OwGUmIba4dcf1vGMDwbwY7Ug4xBAT5T7apjDkQYNNLBDV8Qd3aD17FttFDqK5MEvDJOKl6kEJmxzNwrMFmD8czXeNIBcO6CgTBBfsRH-H6MbgLWB-CEqW7H0VzWmj1c1kznRPhpxIHDDjG8yWrn"/>
+</div>
+<div class="col-span-12 md:col-span-7 flex flex-col gap-4">
+<div class="h-[242px]">
+<img alt="A majestic chestnut horse resting by an alpine lake, surrounded by pine trees and wildflowers" class="w-full h-full object-cover rounded-xl" data-alt="A majestic chestnut horse resting by an alpine lake, surrounded by pine trees and wildflowers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwgTKi3_wevhuXDuLcUyUN-4PPMSXXNTW9wRiv10m8KJCEuGnfABcS9ElxuepSQ162JXao9pnwLHNOm9QNUQ3b2VFq8LS4tn1a3c7ICVnz5MYvPXYodrDiXzaBf00ev59CxOiTXePB_yveb5ePtVEqkk_uEPLsQEHoyHiJVqbcXc6X3GfqplaLNt0aOK6Yk_R74kcX3ufTSpToubBFGaDK_2lU_VW4AdXXQzAEISRg3w2O2Qz4ZolvazmGHLKvpSF_L8MV9wzYpG7R"/>
+</div>
+<div class="grid grid-cols-2 gap-4 h-[242px]">
+<img alt="Close up of traditional leather horse harness and modern high-tech running shoes side by side on a stone surface" class="w-full h-full object-cover rounded-xl" data-alt="Close up of traditional leather horse harness and modern high-tech running shoes side by side on a stone surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRnQ5GZasC1fFo_HefZ3n8RuRry6VqwPL0fUgL8ifw0r8VvwJvfPbWrC32WY45DMVW7l2K3djP-mSzp2E5SQo_5Fpo3djYl1vkFLBwVb4q2IrQsptOAwbmNlWVWYwLTEAY3bx2rIkMctrKSK3dNYJXXgxch5dwLSzlI09SVMtGnh7lGnOXjpRMilYGm01Vme2bWCGwV0qxWcxl0WnQbpimn7gH7mf7cWVk-HSOAK56Zs1xsGMNlVElJVp5wKumXbfh4r9b2DVjI_bc"/>
+<img alt="Heavy bronze finisher medal with an embossed horse head and mountain range, hanging by a green silk ribbon" class="w-full h-full object-cover rounded-xl" data-alt="Heavy bronze finisher medal with an embossed horse head and mountain range, hanging by a green silk ribbon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgRsE26WgfUO8-7DcoZDYLRRT0TwnPflrZtEi4tqKxunySstTNZ_HpOgwglywp5lPah4C1AoL6_-pEcsYCFxnptDGNA5nQ1bsj75YDTT9V6p3UACV35BsohCqNyNg3qkzGWFXHeflMBunm38Nf31302oPOTnAujG2WSAJwPOM-Qsre67JIn3rS_kP8y1UOQhTiEEHPnFo8J-CxyJT0FK2zOQSYcSEJjCLwTbMPAQ4VYtF6ZOlnZrb-qTl2uQAGnqiCOgpuVXBCKxwX"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-100 dark:bg-stone-950 w-full rounded-t-3xl">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-16 w-full">
+<div>
+<div class="text-xl font-serif text-emerald-900 dark:text-emerald-100 mb-6">Heritage Field</div>
+<p class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 leading-relaxed max-w-xs">
+                    Preserving the elegance of endurance through elite competition and equestrian tradition.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-widest text-emerald-900 mb-2">Events</span>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Endurance Trails</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Sprint Races</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Youth Division</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-widest text-emerald-900 mb-2">Heritage</span>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">About Us</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Our Trust</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Archives</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<span class="text-xs font-bold uppercase tracking-widest text-emerald-900">Legal &amp; Support</span>
+<div class="flex flex-wrap gap-x-6 gap-y-2">
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Contact Us</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Terms of Service</a>
+<a class="text-stone-500 dark:text-stone-400 text-xs hover:text-emerald-700 transition-all" href="#">Privacy Policy</a>
+</div>
+<div class="pt-8 border-t border-outline-variant/20 text-[10px] uppercase tracking-widest text-stone-400">
+                    © 2024 The Heritage Field. All rights reserved.
+                </div>
+</div>
+</div>
+</footer>
+</body></html>

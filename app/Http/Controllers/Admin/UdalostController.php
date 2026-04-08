@@ -29,26 +29,9 @@ class UdalostController extends Controller
         return view('admin.udalosti.create');
     }
 
-    public function show(Udalost $udalost): View
+    public function show(Udalost $udalost): RedirectResponse
     {
-        $udalost->loadCount([
-            'prihlasky as active_prihlasky_count' => fn ($query) => $query->where('smazana', false),
-            'prihlasky as deleted_prihlasky_count' => fn ($query) => $query->where('smazana', true),
-            'moznosti',
-            'ustajeniMoznosti',
-        ]);
-
-        $recentRegistrations = $udalost->prihlasky()
-            ->where('smazana', false)
-            ->with(['osoba', 'kun'])
-            ->latest()
-            ->limit(8)
-            ->get();
-
-        return view('admin.udalosti.show', [
-            'udalost' => $udalost,
-            'recentRegistrations' => $recentRegistrations,
-        ]);
+        return redirect()->route('admin.udalosti.edit', $udalost);
     }
 
     public function store(StoreAdminUdalostRequest $request): RedirectResponse
@@ -117,9 +100,60 @@ class UdalostController extends Controller
 
         $validated['poradi'] = $validated['poradi'] ?? 0;
         $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+
+        if ($request->hasFile('foto_path')) {
+            $validated['foto_path'] = $request->file('foto_path')->store('disciplines', 'public');
+        }
+        if ($request->hasFile('pdf_path')) {
+            $validated['pdf_path'] = $request->file('pdf_path')->store('disciplines', 'public');
+        }
+
         $udalost->moznosti()->create($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-created');
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-created');
+    }
+
+    public function editMoznost(Udalost $udalost, UdalostMoznost $moznost): View
+    {
+        if ($moznost->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        return view('admin.udalosti.moznost-edit', [
+            'udalost' => $udalost,
+            'moznost' => $moznost,
+        ]);
+    }
+
+    public function updateMoznost(Udalost $udalost, UdalostMoznost $moznost, StoreAdminUdalostMoznostRequest $request): RedirectResponse
+    {
+        if ($moznost->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        $validated = $request->validated();
+        $validated['poradi'] = $validated['poradi'] ?? 0;
+        $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+
+        // Handle file uploads
+        if ($request->hasFile('foto_path')) {
+            $storedPath = $request->file('foto_path')->store('disciplines', 'public');
+            if ($moznost->foto_path && $moznost->foto_path !== $storedPath) {
+                Storage::disk('public')->delete($moznost->foto_path);
+            }
+            $validated['foto_path'] = $storedPath;
+        }
+        if ($request->hasFile('pdf_path')) {
+            $storedPath = $request->file('pdf_path')->store('disciplines', 'public');
+            if ($moznost->pdf_path && $moznost->pdf_path !== $storedPath) {
+                Storage::disk('public')->delete($moznost->pdf_path);
+            }
+            $validated['pdf_path'] = $storedPath;
+        }
+
+        $moznost->update($validated);
+
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-updated');
     }
 
     public function destroyMoznost(Udalost $udalost, UdalostMoznost $moznost): RedirectResponse
@@ -130,16 +164,64 @@ class UdalostController extends Controller
 
         $moznost->delete();
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-deleted');
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-deleted');
     }
 
     public function storeUstajeni(StoreAdminUdalostUstajeniRequest $request, Udalost $udalost): RedirectResponse
     {
         $validated = $request->validated();
 
+        if ($request->hasFile('foto_path')) {
+            $validated['foto_path'] = $request->file('foto_path')->store('services', 'public');
+        }
+        if ($request->hasFile('pdf_path')) {
+            $validated['pdf_path'] = $request->file('pdf_path')->store('services', 'public');
+        }
+
         $udalost->ustajeniMoznosti()->create($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-created');
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-created');
+    }
+
+    public function editUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): View
+    {
+        if ($ustajeni->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        return view('admin.udalosti.ustajeni-edit', [
+            'udalost' => $udalost,
+            'ustajeni' => $ustajeni,
+        ]);
+    }
+
+    public function updateUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni, StoreAdminUdalostUstajeniRequest $request): RedirectResponse
+    {
+        if ($ustajeni->udalost_id !== $udalost->id) {
+            abort(404);
+        }
+
+        $validated = $request->validated();
+
+        // Handle file uploads
+        if ($request->hasFile('foto_path')) {
+            $storedPath = $request->file('foto_path')->store('services', 'public');
+            if ($ustajeni->foto_path && $ustajeni->foto_path !== $storedPath) {
+                Storage::disk('public')->delete($ustajeni->foto_path);
+            }
+            $validated['foto_path'] = $storedPath;
+        }
+        if ($request->hasFile('pdf_path')) {
+            $storedPath = $request->file('pdf_path')->store('services', 'public');
+            if ($ustajeni->pdf_path && $ustajeni->pdf_path !== $storedPath) {
+                Storage::disk('public')->delete($ustajeni->pdf_path);
+            }
+            $validated['pdf_path'] = $storedPath;
+        }
+
+        $ustajeni->update($validated);
+
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-updated');
     }
 
     public function destroyUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): RedirectResponse
@@ -150,7 +232,7 @@ class UdalostController extends Controller
 
         $ustajeni->delete();
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-deleted');
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-deleted');
     }
 
     /**
@@ -166,5 +248,12 @@ class UdalostController extends Controller
         }
 
         return $validated;
+    }
+
+    protected function redirectToEditTab(Udalost $udalost, string $tab, string $status): RedirectResponse
+    {
+        return redirect()
+            ->to(route('admin.udalosti.edit', $udalost) . '#' . $tab)
+            ->with('status', $status);
     }
 }

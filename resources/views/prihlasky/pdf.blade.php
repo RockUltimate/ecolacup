@@ -26,7 +26,6 @@
         <div class="row"><strong>Název:</strong> {{ $prihlaska->udalost?->nazev }}</div>
         <div class="row"><strong>Místo:</strong> {{ $prihlaska->udalost?->misto }}</div>
         <div class="row"><strong>Termín:</strong> {{ $prihlaska->udalost?->datum_zacatek?->format('d.m.Y') }}</div>
-        <div class="row"><strong>Startovní číslo:</strong> {{ $prihlaska->start_cislo ?? '—' }}</div>
     </div>
 
     <h2>Účastník a kůň</h2>

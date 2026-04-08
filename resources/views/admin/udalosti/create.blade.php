@@ -1,13 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Nová událost</h2>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Nová událost</p>
+            <h1 class="text-3xl text-[#20392c]">Založit novou událost</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Vyplňte základní informace, termín, materiály a popis akce.</p>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
-                @include('admin.udalosti._form')
-            </div>
+    <div class="py-10">
+        <div class="mx-auto max-w-7xl space-y-6">
+            @include('admin.udalosti._popis')
         </div>
     </div>
 </x-app-layout>

@@ -12,7 +12,6 @@
     <p>
         <strong>Účastník:</strong> {{ $prihlaska->osoba?->prijmeni }} {{ $prihlaska->osoba?->jmeno }}<br>
         <strong>Kůň:</strong> {{ $prihlaska->kun?->jmeno }} @if($prihlaska->kunTandem) + {{ $prihlaska->kunTandem->jmeno }} @endif<br>
-        <strong>Startovní číslo:</strong> {{ $prihlaska->start_cislo ?? 'bude doplněno' }}<br>
         <strong>Celkem:</strong> {{ number_format((float) $prihlaska->cena_celkem, 2, ',', ' ') }} Kč
     </p>
     <p>

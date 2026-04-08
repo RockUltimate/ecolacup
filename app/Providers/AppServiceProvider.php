@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,9 +33,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $appUrlScheme = strtolower((string) parse_url((string) config('app.url'), PHP_URL_SCHEME));
 
-        if ($this->app->environment('production') && $appUrlScheme === 'https') {
+        if (
+            $this->app->environment('production')
+            && $appUrlScheme === 'https'
+            && $this->shouldForceHttps(request())
+        ) {
             URL::forceScheme('https');
         }
+
         Gate::policy(Osoba::class, OsobaPolicy::class);
         Gate::policy(Kun::class, KunPolicy::class);
         Gate::policy(Prihlaska::class, PrihlaskaPolicy::class);
@@ -52,5 +58,12 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(20)->by($key);
         });
+    }
+
+    private function shouldForceHttps(SymfonyRequest $request): bool
+    {
+        $host = strtolower((string) $request->getHost());
+
+        return ! in_array($host, ['localhost', '127.0.0.1', '::1'], true);
     }
 }

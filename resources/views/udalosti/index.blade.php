@@ -15,10 +15,55 @@
             <div class="editorial-grid items-stretch">
                 <div class="panel reveal-up overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
                     <p class="section-eyebrow">Kalendar akcí</p>
-                    <div class="mt-5 max-w-3xl">
-                        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">ECOLAKONĚ</p>
-                        <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">Moderní přihlášky na koňské závody</h1>
-                        <p class="mt-5 max-w-2xl text-base leading-7 text-gray-600">Veřejný kalendář, přehled uzávěrek, disciplín a kapacit. Přihlášení jezdci navazují rovnou na správu osob, koní a přihlášek bez ruční administrativy navíc.</p>
+                    <div id="home-news" x-data="{ editing: {{ auth()->check() && auth()->user()->is_admin && $errors->any() ? 'true' : 'false' }} }" class="mt-5 max-w-3xl">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <p class="text-sm font-semibold uppercase tracking-[0.25em] text-[#3d6b4f]">ECOLAKONĚ</p>
+                                <h1 class="mt-4 text-4xl leading-tight text-[#20392c] sm:text-5xl">{{ $homepageMessage->title }}</h1>
+                            </div>
+                            @auth
+                                @if(auth()->user()->is_admin)
+                                    <button type="button" @click="editing = !editing" class="button-secondary">
+                                        <span x-show="!editing">Upravit novinku</span>
+                                        <span x-show="editing" x-cloak>Zavřít editor</span>
+                                    </button>
+                                @endif
+                            @endauth
+                        </div>
+
+                        <div class="mt-5 max-w-2xl rounded-[1.25rem] border border-[#eadfcc] bg-[#f9f4eb]/90 p-5">
+                            <p class="text-base leading-7 text-gray-600 whitespace-pre-line">{{ $homepageMessage->body }}</p>
+                        </div>
+
+                        @auth
+                            @if(auth()->user()->is_admin)
+                                <form x-cloak x-show="editing" x-transition method="POST" action="{{ route('admin.homepage-message.update') }}" class="surface-muted mt-5 space-y-4">
+                                    @csrf
+                                    @method('PUT')
+                                    <div>
+                                        <x-input-label for="homepage_title" :value="'Nadpis novinky'" />
+                                        <x-text-input
+                                            id="homepage_title"
+                                            name="title"
+                                            type="text"
+                                            class="mt-1 block w-full"
+                                            :value="old('title', $homepageMessage->title)"
+                                            required
+                                        />
+                                        <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                                    </div>
+                                    <div>
+                                        <x-input-label for="homepage_body" :value="'Text novinky'" />
+                                        <textarea id="homepage_body" name="body" rows="5" class="field-shell w-full">{{ old('body', $homepageMessage->body) }}</textarea>
+                                        <x-input-error :messages="$errors->get('body')" class="mt-2" />
+                                    </div>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button type="submit" class="button-primary">Uložit novinku</button>
+                                        <button type="button" @click="editing = false" class="button-secondary">Zrušit</button>
+                                    </div>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
 
                     @guest
@@ -73,6 +118,147 @@
                             <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b5230]">{{ $featuredClosed ? 'Registrace uzavřena' : 'Registrace otevřena' }}</p>
                             <p class="mt-3 text-sm leading-6 text-gray-600">Detail akce obsahuje disciplíny, ustájení, kapacity i okamžitý vstup do přihlášky.</p>
                             <a href="{{ route('udalosti.show', $featured) }}" class="button-secondary mt-5">Zobrazit detail</a>
+                        </div>
+                    @endif
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="px-4 py-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+            <div class="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)]">
+                <div class="panel overflow-hidden">
+                    <div class="flex flex-col gap-4 border-b border-[#eadfcc] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+                        <div>
+                            <p class="section-eyebrow">Měsíční kalendář</p>
+                            <h2 class="mt-2 text-2xl text-[#20392c]">{{ $calendarMonthLabel }}</h2>
+                            <p class="mt-2 max-w-xl text-sm leading-6 text-gray-600">Rychlý přehled všech termínů v měsíci.</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <a href="{{ route('udalosti.index', ['month' => $calendarPrevMonth]) }}" class="button-secondary">Předchozí měsíc</a>
+                            @if($calendarMonthParam !== $calendarCurrentMonth)
+                                <a href="{{ route('udalosti.index', ['month' => $calendarCurrentMonth]) }}" class="button-secondary">Aktuální měsíc</a>
+                            @endif
+                            <a href="{{ route('udalosti.index', ['month' => $calendarNextMonth]) }}" class="button-secondary">Další měsíc</a>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[42rem]">
+                            <div class="grid grid-cols-7 border-b border-[#eadfcc] bg-[#f4ede2]/75">
+                                @foreach($calendarWeekdays as $weekday)
+                                    <div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b5230]">{{ $weekday }}</div>
+                                @endforeach
+                            </div>
+
+                            <div class="grid grid-cols-7 border-l border-t border-[#eadfcc]">
+                                @foreach($calendarWeeks as $week)
+                                    @foreach($week as $day)
+                                        <div @class([
+                                            'calendar-day',
+                                            'calendar-day--current' => $day['in_month'],
+                                            'calendar-day--today' => $day['is_today'],
+                                        ])>
+                                            <div class="flex items-start justify-between gap-3">
+                                                <span @class([
+                                                    'inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold',
+                                                    'bg-[#20392c] text-[#fffaf2]' => $day['is_today'],
+                                                    'text-[#20392c]' => ! $day['is_today'] && $day['in_month'],
+                                                    'text-gray-400' => ! $day['in_month'],
+                                                ])>
+                                                    {{ $day['date']->day }}
+                                                </span>
+                                                @if($day['is_today'])
+                                                    <span class="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3d6b4f]">Dnes</span>
+                                                @endif
+                                            </div>
+
+                                            <div class="mt-2 space-y-1.5">
+                                                @foreach($day['events']->take(2) as $event)
+                                                    @php
+                                                        $eventMeta = $calendarEventMeta[$event->id] ?? ['is_closed' => false, 'is_past' => false];
+                                                    @endphp
+                                                    <a
+                                                        href="{{ route('udalosti.show', $event) }}"
+                                                        @class([
+                                                            'calendar-event',
+                                                            'calendar-event--past' => $eventMeta['is_past'],
+                                                            'calendar-event--closed' => ! $eventMeta['is_past'] && $eventMeta['is_closed'],
+                                                        ])
+                                                    >
+                                                        <span class="block truncate text-xs font-semibold">{{ $event->nazev }}</span>
+                                                        <span class="mt-1 block truncate text-[11px] text-gray-500">{{ $event->misto }}</span>
+                                                    </a>
+                                                @endforeach
+
+                                                @if($day['events']->count() > 2)
+                                                    <p class="px-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7b5230]">+{{ $day['events']->count() - 2 }} další</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="panel px-5 py-5 sm:px-6">
+                    <p class="section-eyebrow">Agenda měsíce</p>
+                    <div class="mt-3 flex items-end justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl text-[#20392c]">{{ $calendarMonthLabel }}</h3>
+                            <p class="mt-1.5 text-sm leading-6 text-gray-600">
+                                {{ $calendarMonthEvents->count() }} {{ $calendarMonthEvents->count() === 1 ? 'akce' : ($calendarMonthEvents->count() >= 2 && $calendarMonthEvents->count() <= 4 ? 'akce' : 'akcí') }}
+                                v měsíčním přehledu.
+                            </p>
+                        </div>
+                        @if($calendarMonthParam === $calendarCurrentMonth)
+                            <span class="brand-pill">Právě teď</span>
+                        @endif
+                    </div>
+
+                    @if($calendarMonthEvents->isNotEmpty())
+                        <div class="mt-5 space-y-2.5">
+                            @foreach($calendarMonthEvents as $event)
+                                @php
+                                    $eventMeta = $calendarEventMeta[$event->id] ?? ['is_closed' => false, 'is_past' => false];
+                                    $eventEnd = $event->datum_konec ?? $event->datum_zacatek;
+                                @endphp
+                                <a href="{{ route('udalosti.show', $event) }}" class="block rounded-[1.1rem] border border-[#eadfcc] bg-white/70 px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:bg-white">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[0.95rem] bg-[#f4ede2] text-[#20392c]">
+                                            <span class="text-base font-semibold leading-none">{{ $event->datum_zacatek?->format('d') }}</span>
+                                            <span class="mt-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#7b5230]">{{ $event->datum_zacatek?->format('m') }}</span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex flex-wrap items-center gap-3">
+                                                <p class="truncate text-base font-semibold text-[#20392c]">{{ $event->nazev }}</p>
+                                                @if($eventMeta['is_past'])
+                                                    <span class="brand-pill bg-[#efe7dc] text-[#7b5230]">Proběhlo</span>
+                                                @elseif($eventMeta['is_closed'])
+                                                    <span class="brand-pill bg-red-100 text-red-700">Uzavřeno</span>
+                                                @else
+                                                    <span class="brand-pill">Otevřeno</span>
+                                                @endif
+                                            </div>
+                                            <p class="mt-1 text-sm text-gray-600">{{ $event->misto }}</p>
+                                            <p class="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7b5230]">
+                                                {{ $event->datum_zacatek?->format('d.m.Y') }}
+                                                @if($eventEnd && $eventEnd->ne($event->datum_zacatek))
+                                                    – {{ $eventEnd->format('d.m.Y') }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="mt-5 rounded-[1.1rem] border border-dashed border-[#d8c9b4] bg-[#fbf7f1] px-4 py-5 text-sm leading-6 text-gray-600">
+                            Pro tento měsíc zatím není v kalendáři žádná akce. Přepněte se na další termín nebo otevřete vypsané události níže.
                         </div>
                     @endif
                 </aside>

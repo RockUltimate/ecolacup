@@ -12,13 +12,13 @@
                 <h1 class="text-3xl text-[#20392c]">Přehled obsazenosti podle typu</h1>
                 <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • rozpad na ustájení, ubytování, stravu a ostatní služby.</p>
             </div>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
+            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
         </div>
     </x-slot>
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">
-            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'ubytovani'])
+            @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'sluzby'])
 
             <x-admin-report-filter-form
                 :action="route('admin.reports.ubytovani', $udalost)"

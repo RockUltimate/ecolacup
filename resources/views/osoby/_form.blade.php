@@ -1,8 +1,11 @@
 @php
     $isEdit = isset($osoba);
+    $formAction = $formAction ?? ($isEdit ? route('osoby.update', $osoba) : route('osoby.store'));
+    $backHref = $backHref ?? route('osoby.index');
+    $submitLabel = $submitLabel ?? ($isEdit ? 'Uložit změny' : 'Vytvořit osobu');
 @endphp
 
-<form method="POST" action="{{ $isEdit ? route('osoby.update', $osoba) : route('osoby.store') }}" class="space-y-6">
+<form method="POST" action="{{ $formAction }}" class="space-y-6">
     @csrf
     @if($isEdit)
         @method('PUT')
@@ -54,7 +57,7 @@
     @endif
 
     <div class="flex items-center gap-3">
-        <x-primary-button>{{ $isEdit ? 'Uložit změny' : 'Vytvořit osobu' }}</x-primary-button>
-        <a href="{{ route('osoby.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
+        <x-primary-button>{{ $submitLabel }}</x-primary-button>
+        <a href="{{ $backHref }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
     </div>
 </form>
