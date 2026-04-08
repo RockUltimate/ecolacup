@@ -10,6 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 
@@ -42,6 +43,25 @@ class ReportController extends Controller
         ]);
 
         return back()->with('status', 'start-cislo-updated');
+    }
+
+    public function destroy(Udalost $udalost, Prihlaska $prihlaska): RedirectResponse
+    {
+        if ((int) $prihlaska->udalost_id !== (int) $udalost->id) {
+            abort(404);
+        }
+
+        $deletedAt = now();
+
+        DB::table('prihlasky')
+            ->where('id', $prihlaska->id)
+            ->update([
+                'smazana' => true,
+                'deleted_at' => $deletedAt,
+                'updated_at' => $deletedAt,
+            ]);
+
+        return back()->with('status', 'prihlaska-deleted');
     }
 
     public function smazane(Udalost $udalost, Request $request)

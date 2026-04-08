@@ -29,26 +29,9 @@ class UdalostController extends Controller
         return view('admin.udalosti.create');
     }
 
-    public function show(Udalost $udalost): View
+    public function show(Udalost $udalost): RedirectResponse
     {
-        $udalost->loadCount([
-            'prihlasky as active_prihlasky_count' => fn ($query) => $query->where('smazana', false),
-            'prihlasky as deleted_prihlasky_count' => fn ($query) => $query->where('smazana', true),
-            'moznosti',
-            'ustajeniMoznosti',
-        ]);
-
-        $recentRegistrations = $udalost->prihlasky()
-            ->where('smazana', false)
-            ->with(['osoba', 'kun'])
-            ->latest()
-            ->limit(8)
-            ->get();
-
-        return view('admin.udalosti.show', [
-            'udalost' => $udalost,
-            'recentRegistrations' => $recentRegistrations,
-        ]);
+        return redirect()->route('admin.udalosti.edit', $udalost);
     }
 
     public function store(StoreAdminUdalostRequest $request): RedirectResponse
@@ -117,9 +100,17 @@ class UdalostController extends Controller
 
         $validated['poradi'] = $validated['poradi'] ?? 0;
         $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+
+        if ($request->hasFile('foto_path')) {
+            $validated['foto_path'] = $request->file('foto_path')->store('disciplines', 'public');
+        }
+        if ($request->hasFile('pdf_path')) {
+            $validated['pdf_path'] = $request->file('pdf_path')->store('disciplines', 'public');
+        }
+
         $udalost->moznosti()->create($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-created');
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-created');
     }
 
     public function editMoznost(Udalost $udalost, UdalostMoznost $moznost): View
@@ -128,7 +119,7 @@ class UdalostController extends Controller
             abort(404);
         }
 
-        return view('admin.udalosti._discipliny_edit_modal', [
+        return view('admin.udalosti.moznost-edit', [
             'udalost' => $udalost,
             'moznost' => $moznost,
         ]);
@@ -162,7 +153,7 @@ class UdalostController extends Controller
 
         $moznost->update($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-updated');
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-updated');
     }
 
     public function destroyMoznost(Udalost $udalost, UdalostMoznost $moznost): RedirectResponse
@@ -173,7 +164,7 @@ class UdalostController extends Controller
 
         $moznost->delete();
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'moznost-deleted');
+        return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-deleted');
     }
 
     public function storeUstajeni(StoreAdminUdalostUstajeniRequest $request, Udalost $udalost): RedirectResponse
@@ -182,7 +173,7 @@ class UdalostController extends Controller
 
         $udalost->ustajeniMoznosti()->create($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-created');
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-created');
     }
 
     public function editUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): View
@@ -191,7 +182,7 @@ class UdalostController extends Controller
             abort(404);
         }
 
-        return view('admin.udalosti._sluzby_edit_modal', [
+        return view('admin.udalosti.ustajeni-edit', [
             'udalost' => $udalost,
             'ustajeni' => $ustajeni,
         ]);
@@ -223,7 +214,7 @@ class UdalostController extends Controller
 
         $ustajeni->update($validated);
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-updated');
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-updated');
     }
 
     public function destroyUstajeni(Udalost $udalost, UdalostUstajeni $ustajeni): RedirectResponse
@@ -234,7 +225,7 @@ class UdalostController extends Controller
 
         $ustajeni->delete();
 
-        return redirect()->route('admin.udalosti.edit', $udalost)->with('status', 'ustajeni-deleted');
+        return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-deleted');
     }
 
     /**
@@ -250,5 +241,12 @@ class UdalostController extends Controller
         }
 
         return $validated;
+    }
+
+    protected function redirectToEditTab(Udalost $udalost, string $tab, string $status): RedirectResponse
+    {
+        return redirect()
+            ->to(route('admin.udalosti.edit', $udalost) . '#' . $tab)
+            ->with('status', $status);
     }
 }

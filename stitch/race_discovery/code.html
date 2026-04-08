@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Heritage Field | Race Discovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2c160e",
+                        "secondary-container": "#fed3c7",
+                        "on-secondary-container": "#795950",
+                        "tertiary-fixed-dim": "#e5c192",
+                        "outline": "#73796d",
+                        "secondary-fixed": "#ffdbd0",
+                        "tertiary-container": "#5b421e",
+                        "primary-fixed": "#c5efad",
+                        "surface-container-low": "#f6f3ee",
+                        "primary-fixed-dim": "#a9d293",
+                        "on-secondary-fixed-variant": "#5d4037",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-tint": "#446733",
+                        "on-background": "#1c1c19",
+                        "on-primary-fixed-variant": "#2d4f1e",
+                        "on-tertiary-fixed-variant": "#5b421f",
+                        "tertiary": "#422c0a",
+                        "outline-variant": "#c3c8bb",
+                        "inverse-surface": "#31302d",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#98c083",
+                        "surface": "#fcf9f4",
+                        "surface-container": "#f0ede8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#d2af82",
+                        "on-surface-variant": "#43493e",
+                        "on-surface": "#1c1c19",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7bdb1",
+                        "inverse-primary": "#a9d293",
+                        "surface-dim": "#dcdad5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0eb",
+                        "primary-container": "#2d4f1e",
+                        "secondary": "#77574d",
+                        "error-container": "#ffdad6",
+                        "primary": "#173809",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2dd",
+                        "on-primary-fixed": "#062100",
+                        "background": "#fcf9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Newsreader', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-serif italic text-emerald-950 dark:text-emerald-100">Heritage Field</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-emerald-900 dark:text-emerald-400 border-b-2 border-emerald-800 pb-1 text-sm font-semibold tracking-wide" href="#">Find Races</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">My Dashboard</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors text-sm font-semibold tracking-wide" href="#">About</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-stone-600 dark:text-stone-400 text-sm font-semibold tracking-wide hover:opacity-80 transition-all">Login</button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all">Sign Up</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 max-w-screen-2xl mx-auto px-8">
+<!-- Hero / Header Section -->
+<header class="mb-16 relative">
+<div class="flex flex-col md:flex-row gap-12 items-end">
+<div class="max-w-2xl">
+<h1 class="text-6xl md:text-8xl text-on-surface font-light tracking-tight leading-none mb-6">
+                        The Great <span class="italic font-normal">Wilderness</span> Circuit
+                    </h1>
+<p class="text-xl text-on-surface-variant font-body leading-relaxed">
+                        Curated mountain trail races across the most prestigious terrains. From elite endurance challenges to novice ridge runs.
+                    </p>
+</div>
+<div class="flex-1 w-full h-48 md:h-64 rounded-xl overflow-hidden bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="sweeping aerial view of rugged green mountain peaks and a winding dirt trail at dawn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4JFTCMHlChhf6gxkX-33dsSuZsyQwQRiAQdFXN7vdft6KwCf5HLePFi33e-YKJ5RmpmCjG_aZ5vhkRPqoX2AFhudGq7pXr_rIpefIsQ1Oxc01dJ1EceEZEzVTq86P658lA01UwI641BJnHh2MP4CewUV-XpYnLUZsqycxTF-1V9cbjSLLAOdnRFrlEWbDh_kOntDchOQqxtihEtB7plUKvO-u9Wv_6p1MtyWGsoWmdbZZmSAtQQzaDZeSjUeWKIbOBgXhPpqXE4t1"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+</div>
+</div>
+</header>
+<div class="flex flex-col md:flex-row gap-12">
+<!-- Sidebar Filters -->
+<aside class="w-full md:w-72 space-y-10">
+<div>
+<h3 class="text-sm uppercase tracking-widest text-on-surface-variant font-bold mb-6">Filters</h3>
+<!-- Date Filter -->
+<div class="space-y-4 mb-8">
+<label class="block text-xs font-bold text-primary tracking-widest uppercase">Select Date Range</label>
+<div class="relative group">
+<input class="w-full bg-transparent border-b-2 border-surface-container-highest focus:border-primary focus:ring-0 transition-colors py-2 text-on-surface placeholder-on-surface-variant/50" placeholder="Upcoming Seasons" type="text"/>
+<span class="material-symbols-outlined absolute right-0 top-2 text-on-surface-variant">calendar_today</span>
+</div>
+</div>
+<!-- Location Filter -->
+<div class="space-y-4 mb-8">
+<label class="block text-xs font-bold text-primary tracking-widest uppercase">Region</label>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm text-on-surface group-hover:text-primary transition-colors">Highlands</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm text-on-surface group-hover:text-primary transition-colors">Coastal Ridges</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm text-on-surface group-hover:text-primary transition-colors">Alpine Peaks</span>
+</label>
+</div>
+</div>
+<!-- Difficulty Filter -->
+<div class="space-y-4 mb-8">
+<label class="block text-xs font-bold text-primary tracking-widest uppercase">Difficulty Level</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full text-xs font-bold tracking-tighter bg-secondary-container text-on-secondary-container">Novice</button>
+<button class="px-4 py-2 rounded-full text-xs font-bold tracking-tighter bg-surface-container-highest text-on-surface-variant hover:bg-secondary-container transition-colors">Endurance</button>
+<button class="px-4 py-2 rounded-full text-xs font-bold tracking-tighter bg-surface-container-highest text-on-surface-variant hover:bg-secondary-container transition-colors">Expert</button>
+</div>
+</div>
+<!-- Terrain Filter -->
+<div class="space-y-4">
+<label class="block text-xs font-bold text-primary tracking-widest uppercase">Terrain Type</label>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 border-outline-variant text-primary focus:ring-primary/20" name="terrain" type="radio"/>
+<span class="text-sm text-on-surface">Rocky Technical</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 border-outline-variant text-primary focus:ring-primary/20" name="terrain" type="radio"/>
+<span class="text-sm text-on-surface">Forested Flow</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 border-outline-variant text-primary focus:ring-primary/20" name="terrain" type="radio"/>
+<span class="text-sm text-on-surface">Snow Line</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Race Grid -->
+<section class="flex-1">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Race Card 1 -->
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="trail runners ascending a steep mountain ridge under a dramatic cloudy sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIUzs9UvFVSDt1Ltc2QFWHPLo5An6_jR0fkqIJHrpz8joezI3M2Qn_3XRTEXrkqeWE9sovy2PMGal5OhWjyBNXYzzWlMNQ3EvfI0qg49MiS2uzveyFJ2fC2Fvh68dM5E78h4L8eZMF9gLlSpIHuo2i-9RaoF8o-_5tlv0JU-ZxYl0FbWS4F8ZpWrkG9dAYqOUWP8WB7RTkzhumSPJoX8xEvOVzT2GQaiBpIawZJYA86D8btmzvVu6EIeNteO4sOL0cXrXNu_TlkNEt"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary/90 text-on-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">Endurance</span>
+<span class="bg-surface-bright/90 text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">July 14, 2024</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="text-3xl font-serif text-on-surface group-hover:text-primary transition-colors">The Emerald Ascent</h2>
+<p class="flex items-center gap-2 text-on-surface-variant text-sm mt-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        Glencoe Highlands, Scotland
+                                    </p>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-1">
+                                A grueling 42km sky-race crossing seven peaks with a total elevation gain of 3,200m. Technical ridges and vertical bog climbs.
+                            </p>
+<div class="flex items-center justify-between pt-6 border-t border-surface-container">
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">42KM | +3200M</span>
+<button class="group/btn flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-widest">
+                                    View Details
+                                    <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Race Card 2 -->
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="misty forest trail with tall pine trees and soft morning light filtering through branches" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEhVIK3qUEW_cq5crXp7se-e6vq2im0slkXdsuxEvn6iE-IWu25s-i-xDpdQyXFMKpTi7oqfh1VBQaAzbs0adiZC3-ocGVDfWaySYPuEDjmvlGGukXQgXxBzmAb_rp_GNhSMUUIsSAeF-gRM3_eak4oWET7iKdtOFv2GRUFvuimKE4I8gj9OjhPTGICSNRdm_-SZqLLVjb_Gn_vVrv8eh3HlpajQTT7WBdYbrKS573V6z-GgAp59uURoEhP6prGw8gKBrRsrgSiV59"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary/90 text-on-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">Novice</span>
+<span class="bg-surface-bright/90 text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">Aug 02, 2024</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="text-3xl font-serif text-on-surface group-hover:text-primary transition-colors">Verdant Vale Run</h2>
+<p class="flex items-center gap-2 text-on-surface-variant text-sm mt-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        Lake District, England
+                                    </p>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-1">
+                                A fast, flowing 12km course through ancient woodland and rolling valley paths. Perfect for those new to mountain terrain.
+                            </p>
+<div class="flex items-center justify-between pt-6 border-t border-surface-container">
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">12KM | +450M</span>
+<button class="group/btn flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-widest">
+                                    View Details
+                                    <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Race Card 3 -->
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="a lone runner silhouetted against a bright sunset on a sharp mountain peak" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6AlQ4Jkm74y0ntX1WtJnJhSM3ItkhzU8K0Y23I6yORBJkZN029-ZI8dJEV8T8_DzIX2mxQTJGzXy3pIif-qXpJCcQgQ3vANzdyr8xbhKRGr0AvOCtRX1tdakPdinolZ5LvsUSEs634sK81qJRImpwuokkz4Wg_T8dh7q0sfnROPVbZs9WC-IFq1OOiNiT_hKAjJgG_pCCHBFKRBFCG4rNDef6joyAitBRl_nOOKvKDMZwxfawIzT19cij1TrjAbAvj_aF9Ga6Yveh"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary/90 text-on-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">Expert</span>
+<span class="bg-surface-bright/90 text-primary text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full backdrop-blur-md">Sept 18, 2024</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="text-3xl font-serif text-on-surface group-hover:text-primary transition-colors">Shadow Ridge Ultra</h2>
+<p class="flex items-center gap-2 text-on-surface-variant text-sm mt-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        Snowdonia, Wales
+                                    </p>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-1">
+                                The ultimate test of skill. 80km of technical terrain including the Crib Goch traverse. Night navigation required for late finishers.
+                            </p>
+<div class="flex items-center justify-between pt-6 border-t border-surface-container">
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">80KM | +5800M</span>
+<button class="group/btn flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-widest">
+                                    View Details
+                                    <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Race Card 4 (Asymmetric Large Card) -->
+<div class="lg:col-span-1 group relative bg-primary rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col">
+<div class="absolute inset-0 opacity-20">
+<img class="w-full h-full object-cover" data-alt="abstract topographic map lines texture on a dark green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeMl6lL5MbnOgQWsjXS_qBZVggWDBkj2_OluAoiHgcdlrCgZ6WIcXyRaDRL10cM-lBmGcJZKHCZ38wJvQ6AYr_X8F5xcwsEXrKWNjZRFMIHirpBrNQaewwxB5SuJE6ogStEvV5Akfgb-GrFcjcreu83QY6ZG_ohliolApZKeUI1mKqvQ4ZUhQKJA4LZ1V1t_r5rWiD18VgD6n9Yh4kXS5l82ELshsbge5h290EMTt9E1BCjISkkjqWJNHXt4Fw3TyQ99aXkSfuS2xJ"/>
+</div>
+<div class="relative p-8 h-full flex flex-col justify-center items-center text-center">
+<span class="text-[10px] uppercase font-bold tracking-[0.3em] text-on-primary-container mb-4">Featured Challenge</span>
+<h2 class="text-4xl font-serif text-on-primary mb-6">The Heritage Field Invitational</h2>
+<p class="text-on-primary/70 text-sm max-w-xs mb-8 leading-relaxed">
+                                Join the elite for a private, invitation-only race through our founding estate’s most treacherous peaks.
+                            </p>
+<button class="bg-surface-bright text-primary px-8 py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:scale-105 transition-transform">Apply for entry</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-3xl bg-stone-100 dark:bg-stone-950">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+<div class="space-y-6">
+<div class="text-xl font-serif text-emerald-900 dark:text-emerald-100">Heritage Field</div>
+<p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed max-w-xs">
+                    Elevating the sport of mountain running through prestige, preservation, and peerless performance.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-4">
+<h4 class="text-xs font-bold text-emerald-900 dark:text-emerald-400 uppercase tracking-widest">Disciplines</h4>
+<ul class="space-y-2">
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Endurance Trails</a></li>
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Sprint Races</a></li>
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Youth Division</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-xs font-bold text-emerald-900 dark:text-emerald-400 uppercase tracking-widest">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Terms of Service</a></li>
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Privacy Policy</a></li>
+<li><a class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-700 transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="text-xs font-bold text-emerald-900 dark:text-emerald-400 uppercase tracking-widest">The Newsletter</h4>
+<div class="flex flex-col gap-4">
+<input class="bg-transparent border-b-2 border-stone-300 dark:border-stone-800 focus:border-emerald-800 focus:ring-0 py-2 text-sm" placeholder="Email Address" type="email"/>
+<button class="text-xs font-bold uppercase tracking-widest text-emerald-900 dark:text-emerald-400 hover:translate-x-2 transition-transform self-start">Subscribe</button>
+</div>
+<p class="text-[10px] text-stone-400 uppercase tracking-widest mt-8">© 2024 The Heritage Field. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>

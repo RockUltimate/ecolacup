@@ -13,7 +13,7 @@
                 <h1 class="text-3xl text-[#20392c]">{{ $isDeletedView ? 'Smazané přihlášky' : 'Aktivní přihlášky' }}</h1>
                 <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • přehled registrací, startovních čísel a exportů pro pořadatele.</p>
             </div>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
+            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
         </div>
     </x-slot>
 
@@ -116,17 +116,29 @@
                                 </div>
                             </div>
 
-                            <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex flex-wrap items-end gap-3">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="q" value="{{ $filters['q'] }}">
-                                <input type="hidden" name="stav" value="{{ $filters['stav'] }}">
-                                <div>
-                                    <label for="start_cislo_{{ $p->id }}" class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Startovní číslo</label>
-                                    <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="field-shell w-28" value="{{ $p->start_cislo }}">
-                                </div>
-                                <button type="submit" class="button-primary">Uložit</button>
-                            </form>
+                            <div class="flex flex-wrap items-end gap-3">
+                                <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex flex-wrap items-end gap-3">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="q" value="{{ $filters['q'] }}">
+                                    <input type="hidden" name="stav" value="{{ $filters['stav'] }}">
+                                    <div>
+                                        <label for="start_cislo_{{ $p->id }}" class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Startovní číslo</label>
+                                        <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="field-shell w-28" value="{{ $p->start_cislo }}">
+                                    </div>
+                                    <button type="submit" class="button-primary">Uložit</button>
+                                </form>
+
+                                @if(! $p->smazana)
+                                    <form method="POST" action="{{ route('admin.reports.prihlasky.destroy', [$udalost, $p]) }}" onsubmit="return confirm('Opravdu smazat přihlášku?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="rounded-full border border-red-200 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100">
+                                            Smazat
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </article>
                 @empty

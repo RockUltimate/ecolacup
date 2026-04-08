@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Kun;
 use App\Models\Osoba;
 use App\Models\Prihlaska;
+use App\Models\Udalost;
 use App\Policies\KunPolicy;
 use App\Policies\OsobaPolicy;
 use App\Policies\PrihlaskaPolicy;
@@ -12,8 +13,10 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,9 +35,22 @@ class AppServiceProvider extends ServiceProvider
     {
         $appUrlScheme = strtolower((string) parse_url((string) config('app.url'), PHP_URL_SCHEME));
 
-        if ($this->app->environment('production') && $appUrlScheme === 'https') {
+        if (
+            $this->app->environment('production')
+            && $appUrlScheme === 'https'
+            && $this->shouldForceHttps(request())
+        ) {
             URL::forceScheme('https');
         }
+
+        try {
+            if (Schema::hasTable('udalosti')) {
+                Udalost::deactivatePastEvents();
+            }
+        } catch (\Throwable) {
+            // Ignore bootstrap-time database issues; event cleanup will run on the next valid request.
+        }
+
         Gate::policy(Osoba::class, OsobaPolicy::class);
         Gate::policy(Kun::class, KunPolicy::class);
         Gate::policy(Prihlaska::class, PrihlaskaPolicy::class);
@@ -52,5 +68,12 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(20)->by($key);
         });
+    }
+
+    private function shouldForceHttps(SymfonyRequest $request): bool
+    {
+        $host = strtolower((string) $request->getHost());
+
+        return ! in_array($host, ['localhost', '127.0.0.1', '::1'], true);
     }
 }

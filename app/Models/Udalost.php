@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class Udalost extends Model
 {
@@ -78,5 +79,26 @@ class Udalost extends Model
             ->join('prihlasky', 'prihlasky.id', '=', 'prihlasky_polozky.prihlaska_id')
             ->where('prihlasky.udalost_id', $this->id)
             ->count();
+    }
+
+    public static function deactivatePastEvents(?Carbon $today = null): int
+    {
+        $today ??= now()->startOfDay();
+
+        return static::query()
+            ->where('aktivni', true)
+            ->where(function ($query) use ($today): void {
+                $query
+                    ->whereDate('datum_konec', '<', $today)
+                    ->orWhere(function ($subQuery) use ($today): void {
+                        $subQuery
+                            ->whereNull('datum_konec')
+                            ->whereDate('datum_zacatek', '<', $today);
+                    });
+            })
+            ->update([
+                'aktivni' => false,
+                'updated_at' => now(),
+            ]);
     }
 }

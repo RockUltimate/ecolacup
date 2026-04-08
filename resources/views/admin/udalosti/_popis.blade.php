@@ -1,7 +1,14 @@
+@php
+    $isEdit = isset($udalost) && $udalost->exists;
+    $errors = $errors ?? new \Illuminate\Support\ViewErrorBag;
+@endphp
+
 <section class="panel p-6 sm:p-8">
-    <form method="POST" action="{{ route('admin.udalosti.update', $udalost) }}" class="space-y-6" enctype="multipart/form-data">
+    <form method="POST" action="{{ $isEdit ? route('admin.udalosti.update', $udalost) : route('admin.udalosti.store') }}" class="space-y-6" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
+        @if($isEdit)
+            @method('PUT')
+        @endif
 
         <div>
             <x-input-label for="nazev" :value="'Název'" />
@@ -62,7 +69,7 @@
                     class="sr-only"
                 >
                 <x-input-error :messages="$errors->get('propozice_pdf_upload')" class="mt-2" />
-                @if($udalost->propozice_pdf)
+                @if($isEdit && $udalost->propozice_pdf)
                     <p class="mt-2 text-sm text-gray-600">
                         Aktuální soubor:
                         <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
@@ -85,7 +92,7 @@
                     class="sr-only"
                 >
                 <x-input-error :messages="$errors->get('vysledky_pdf_upload')" class="mt-2" />
-                @if($udalost->vysledky_pdf)
+                @if($isEdit && $udalost->vysledky_pdf)
                     <p class="mt-2 text-sm text-gray-600">
                         Aktuální soubor:
                         <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
@@ -111,7 +118,12 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <x-primary-button>Uložit popis</x-primary-button>
+            <x-primary-button>{{ $isEdit ? 'Uložit popis' : 'Vytvořit událost' }}</x-primary-button>
+            @if($isEdit)
+                <a href="{{ route('admin.udalosti.index') }}" class="button-secondary">Zpět na události</a>
+            @else
+                <a href="{{ route('admin.udalosti.index') }}" class="button-secondary">Zrušit</a>
+            @endif
         </div>
     </form>
 </section>

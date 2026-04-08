@@ -12,7 +12,7 @@
                 <h1 class="text-3xl text-[#20392c]">Přehled obsazenosti podle typu</h1>
                 <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • rozpad na ustájení, ubytování, stravu a ostatní služby.</p>
             </div>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="button-secondary">Přehled události</a>
+            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
         </div>
     </x-slot>
 

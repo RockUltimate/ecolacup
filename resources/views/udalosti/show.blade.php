@@ -139,6 +139,23 @@
                                         Bez věkového omezení.
                                     @endif
                                 </p>
+                                @if($moznost->foto_path || $moznost->pdf_path)
+                                    <div class="mt-3 flex flex-wrap items-center gap-3">
+                                        @if($moznost->foto_path)
+                                            <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
+                                                <img src="{{ asset('storage/'.$moznost->foto_path) }}" alt="Fotografie disciplíny {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
+                                            </a>
+                                        @endif
+                                        <div class="flex flex-wrap gap-2">
+                                            @if($moznost->foto_path)
+                                                <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
+                                            @endif
+                                            @if($moznost->pdf_path)
+                                                <a href="{{ asset('storage/'.$moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="text-sm text-gray-600">
                                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Min. věk</p>

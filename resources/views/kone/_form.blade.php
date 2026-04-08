@@ -1,8 +1,11 @@
 @php
     $isEdit = isset($kun);
+    $formAction = $formAction ?? ($isEdit ? route('kone.update', $kun) : route('kone.store'));
+    $backHref = $backHref ?? route('kone.index');
+    $submitLabel = $submitLabel ?? ($isEdit ? 'Uložit změny' : 'Vytvořit koně');
 @endphp
 
-<form method="POST" action="{{ $isEdit ? route('kone.update', $kun) : route('kone.store') }}" class="space-y-6">
+<form method="POST" action="{{ $formAction }}" class="space-y-6">
     @csrf
     @if($isEdit)
         @method('PUT')
@@ -71,7 +74,7 @@
     </div>
 
     <div class="flex items-center gap-3">
-        <x-primary-button>{{ $isEdit ? 'Uložit změny' : 'Vytvořit koně' }}</x-primary-button>
-        <a href="{{ route('kone.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
+        <x-primary-button>{{ $submitLabel }}</x-primary-button>
+        <a href="{{ $backHref }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
     </div>
 </form>

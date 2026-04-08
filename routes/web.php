@@ -7,9 +7,10 @@ use App\Http\Controllers\UdalostController;
 use App\Http\Controllers\PrihlaskaController;
 use App\Http\Controllers\Admin\UdalostController as AdminUdalostController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HomepageMessageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\KunController as AdminKunController;
+use App\Http\Controllers\Admin\OsobaController as AdminOsobaController;
 use App\Http\Controllers\Admin\StartCislaController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,7 +63,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
-    Route::get('/', AdminDashboardController::class)->name('dashboard');
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
     Route::get('/udalosti', [AdminUdalostController::class, 'index'])->name('udalosti.index');
     Route::get('/udalosti/nova', [AdminUdalostController::class, 'create'])->name('udalosti.create');
     Route::post('/udalosti', [AdminUdalostController::class, 'store'])->name('udalosti.store');
@@ -103,6 +106,15 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::get('/users/{user}/gdpr-export', [AdminUserController::class, 'gdprExport'])->name('users.gdpr-export');
     Route::delete('/users/{user}/purge', [AdminUserController::class, 'purge'])->name('users.purge');
+
+    Route::get('/kone', [AdminKunController::class, 'index'])->name('kone.index');
+    Route::get('/kone/{kun}/edit', [AdminKunController::class, 'edit'])->name('kone.edit');
+    Route::put('/kone/{kun}', [AdminKunController::class, 'update'])->name('kone.update');
+    Route::post('/kone/duplicates/sync', [AdminKunController::class, 'syncDuplicates'])->name('kone.duplicates.sync');
+
+    Route::get('/osoby', [AdminOsobaController::class, 'index'])->name('osoby.index');
+    Route::get('/osoby/{osoba}/edit', [AdminOsobaController::class, 'edit'])->name('osoby.edit');
+    Route::put('/osoby/{osoba}', [AdminOsobaController::class, 'update'])->name('osoby.update');
 
     Route::put('/homepage-message', [HomepageMessageController::class, 'update'])->name('homepage-message.update');
 

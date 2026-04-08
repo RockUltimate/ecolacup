@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Startovní čísla • {{ $udalost->nazev }}</h2>
-            <a href="{{ route('admin.udalosti.show', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Přehled události</a>
+            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Nastavení události</a>
         </div>
     </x-slot>
     <div class="py-12">

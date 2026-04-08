@@ -19,12 +19,34 @@
             <input type="number" name="kapacita" min="1" placeholder="Kapacita" class="field-shell">
 
             <div class="md:col-span-2">
-                <input type="file" name="foto_path" accept="image/*" placeholder="Fotografie" class="field-shell">
+                <label for="ustajeni_create_foto_path" class="flex cursor-pointer items-center justify-between gap-4 rounded-[1.25rem] border border-[#dccdb8] bg-white px-4 py-3 text-sm text-gray-700">
+                    <span id="ustajeni_create_foto_path_label" class="truncate">Žádný soubor nevybrán</span>
+                    <span class="rounded-full bg-[#3d6b4f] px-4 py-2 font-semibold text-white">Vyberte obrázek</span>
+                </label>
+                <input
+                    id="ustajeni_create_foto_path"
+                    type="file"
+                    name="foto_path"
+                    accept="image/*"
+                    class="sr-only"
+                    onchange="document.getElementById('ustajeni_create_foto_path_label').textContent = this.files && this.files[0] ? this.files[0].name : 'Žádný soubor nevybrán'"
+                >
                 <p class="mt-1 text-sm text-gray-500">Volitelně: obrázek služby (JPG, PNG, WebP)</p>
             </div>
 
             <div class="md:col-span-2">
-                <input type="file" name="pdf_path" accept=".pdf" placeholder="PDF" class="field-shell">
+                <label for="ustajeni_create_pdf_path" class="flex cursor-pointer items-center justify-between gap-4 rounded-[1.25rem] border border-[#dccdb8] bg-white px-4 py-3 text-sm text-gray-700">
+                    <span id="ustajeni_create_pdf_path_label" class="truncate">Žádný soubor nevybrán</span>
+                    <span class="rounded-full bg-[#3d6b4f] px-4 py-2 font-semibold text-white">Vyberte PDF</span>
+                </label>
+                <input
+                    id="ustajeni_create_pdf_path"
+                    type="file"
+                    name="pdf_path"
+                    accept=".pdf"
+                    class="sr-only"
+                    onchange="document.getElementById('ustajeni_create_pdf_path_label').textContent = this.files && this.files[0] ? this.files[0].name : 'Žádný soubor nevybrán'"
+                >
                 <p class="mt-1 text-sm text-gray-500">Volitelně: PDF s informacemi o službě</p>
             </div>
 

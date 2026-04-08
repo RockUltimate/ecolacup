@@ -117,6 +117,38 @@ class PrihlaskaFlowTest extends TestCase
         $this->assertDatabaseCount('prihlasky', 0);
     }
 
+    public function test_user_can_see_discipline_image_and_pdf_links(): void
+    {
+        $user = User::factory()->create();
+        $this->createOsoba($user);
+        $this->createKun($user);
+        $udalost = $this->createUdalost(
+            moznosti: [
+                [
+                    'nazev' => 'Trail',
+                    'cena' => 300,
+                    'foto_path' => 'disciplines/trail-photo.webp',
+                    'pdf_path' => 'disciplines/trail-info.pdf',
+                ],
+            ],
+        );
+
+        $this->actingAs($user)
+            ->get(route('prihlasky.create', $udalost))
+            ->assertOk()
+            ->assertSee('Zobrazit obrázek')
+            ->assertSee('Stáhnout PDF')
+            ->assertSee('trail-photo.webp')
+            ->assertSee('trail-info.pdf');
+
+        $this->get(route('udalosti.show', $udalost))
+            ->assertOk()
+            ->assertSee('Zobrazit obrázek')
+            ->assertSee('Stáhnout PDF')
+            ->assertSee('trail-photo.webp')
+            ->assertSee('trail-info.pdf');
+    }
+
     public function test_user_cannot_access_someone_elses_registration_routes(): void
     {
         $owner = User::factory()->create();
