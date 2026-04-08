@@ -84,22 +84,26 @@ class Udalost extends Model
     public static function deactivatePastEvents(?Carbon $today = null): int
     {
         $today ??= now()->startOfDay();
-        $todayDate = $today->toDateString();
+        $updated = 0;
 
-        return static::query()
+        static::query()
             ->where('aktivni', true)
-            ->where(function ($query) use ($todayDate): void {
-                $query
-                    ->where('datum_konec', '<', $todayDate)
-                    ->orWhere(function ($subQuery) use ($todayDate): void {
-                        $subQuery
-                            ->whereNull('datum_konec')
-                            ->where('datum_zacatek', '<', $todayDate);
-                    });
-            })
-            ->update([
-                'aktivni' => false,
-                'updated_at' => now(),
-            ]);
+            ->get()
+            ->each(function (self $udalost) use ($today, &$updated): void {
+                $eventEnd = ($udalost->datum_konec ?? $udalost->datum_zacatek)?->copy()->startOfDay();
+
+                if (! $eventEnd || ! $eventEnd->lt($today)) {
+                    return;
+                }
+
+                $udalost->forceFill([
+                    'aktivni' => false,
+                    'updated_at' => now(),
+                ])->save();
+
+                $updated++;
+            });
+
+        return $updated;
     }
 }
