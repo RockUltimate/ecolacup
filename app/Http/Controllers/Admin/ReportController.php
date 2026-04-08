@@ -10,7 +10,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 
@@ -51,15 +50,8 @@ class ReportController extends Controller
             abort(404);
         }
 
-        $deletedAt = now();
-
-        DB::table('prihlasky')
-            ->where('id', $prihlaska->id)
-            ->update([
-                'smazana' => true,
-                'deleted_at' => $deletedAt,
-                'updated_at' => $deletedAt,
-            ]);
+        $prihlaska->update(['smazana' => true]);
+        $prihlaska->delete();
 
         return back()->with('status', 'prihlaska-deleted');
     }

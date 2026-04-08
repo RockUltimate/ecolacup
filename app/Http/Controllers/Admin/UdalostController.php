@@ -171,6 +171,13 @@ class UdalostController extends Controller
     {
         $validated = $request->validated();
 
+        if ($request->hasFile('foto_path')) {
+            $validated['foto_path'] = $request->file('foto_path')->store('services', 'public');
+        }
+        if ($request->hasFile('pdf_path')) {
+            $validated['pdf_path'] = $request->file('pdf_path')->store('services', 'public');
+        }
+
         $udalost->ustajeniMoznosti()->create($validated);
 
         return $this->redirectToEditTab($udalost, 'sluzby', 'ustajeni-created');

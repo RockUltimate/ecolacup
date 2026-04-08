@@ -14,7 +14,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class PrihlaskaController extends Controller
@@ -135,15 +134,8 @@ class PrihlaskaController extends Controller
     {
         $this->authorize('delete', $prihlaska);
 
-        $deletedAt = now();
-
-        DB::table('prihlasky')
-            ->where('id', $prihlaska->id)
-            ->update([
-                'smazana' => true,
-                'deleted_at' => $deletedAt,
-                'updated_at' => $deletedAt,
-            ]);
+        $prihlaska->update(['smazana' => true]);
+        $prihlaska->delete();
 
         return redirect()->route('prihlasky.index')->with('status', 'prihlaska-deleted');
     }
