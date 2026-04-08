@@ -18,6 +18,10 @@ class UdalostUstajeni extends Model
         'typ',
         'cena',
         'kapacita',
+        'popis_text',
+        'popis_html',
+        'foto_path',
+        'pdf_path',
     ];
 
     /**
