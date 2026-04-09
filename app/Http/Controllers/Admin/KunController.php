@@ -63,6 +63,17 @@ class KunController extends Controller
         return redirect()->route('admin.kone.edit', $kun)->with('status', 'kun-updated');
     }
 
+    public function destroy(Kun $kun): RedirectResponse
+    {
+        if ($kun->prihlasky()->where('smazana', false)->exists()) {
+            return redirect()->route('admin.kone.index')->with('status', 'kun-has-prihlasky');
+        }
+
+        $kun->delete();
+
+        return redirect()->route('admin.kone.index')->with('status', 'kun-deleted');
+    }
+
     public function syncDuplicates(Request $request): RedirectResponse
     {
         $validated = $request->validate([

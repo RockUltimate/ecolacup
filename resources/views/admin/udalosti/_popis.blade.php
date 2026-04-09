@@ -72,7 +72,7 @@
                 @if($isEdit && $udalost->propozice_pdf)
                     <p class="mt-2 text-sm text-gray-600">
                         Aktuální soubor:
-                        <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
+                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
                             otevřít propozice
                         </a>
                     </p>
@@ -95,7 +95,7 @@
                 @if($isEdit && $udalost->vysledky_pdf)
                     <p class="mt-2 text-sm text-gray-600">
                         Aktuální soubor:
-                        <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
+                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline underline-offset-4">
                             otevřít výsledky
                         </a>
                     </p>

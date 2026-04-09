@@ -1,35 +1,37 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Osoby
-            </h2>
-            <a href="{{ route('osoby.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
-                Nová osoba
-            </a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Moje osoby</p>
+            <h1 class="text-3xl text-[#20392c]">Přehled jezdců a účastníků</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Spravujte osoby, které používáte při registracích na jednotlivé události.</p>
         </div>
     </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('osoby.create') }}" class="button-primary w-full">Nová osoba</a>
+    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-10">
+        <div class="mx-auto max-w-6xl">
             <x-flash-message />
 
             <div class="panel overflow-hidden">
-                <div class="divide-y divide-gray-200">
+                <div class="divide-y divide-[#eadfcc]">
                     @forelse ($osoby as $osoba)
-                        <div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $osoba->prijmeni }} {{ $osoba->jmeno }}</p>
+                        <div class="p-5">
+                            <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                                <div class="space-y-2">
+                                    <p class="text-lg font-semibold text-[#20392c]">{{ $osoba->prijmeni }} {{ $osoba->jmeno }}</p>
                                 <p class="text-sm text-gray-600">Datum narození: {{ $osoba->datum_narozeni?->format('d.m.Y') }}</p>
                                 <p class="text-sm text-gray-600">Stáj: {{ $osoba->staj }}</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <a href="{{ route('osoby.edit', $osoba) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
-                                <form method="POST" action="{{ route('osoby.destroy', $osoba) }}" onsubmit="return confirm('Opravdu smazat osobu?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">Smazat</button>
-                                </form>
+                                </div>
+                                <div class="flex w-[170px] max-w-full flex-col gap-3">
+                                    <a href="{{ route('osoby.edit', $osoba) }}" class="button-secondary w-full">Upravit</a>
+                                    <form method="POST" action="{{ route('osoby.destroy', $osoba) }}" class="w-full" onsubmit="return confirm('Opravdu smazat osobu?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @empty

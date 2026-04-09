@@ -73,7 +73,7 @@ class PrihlaskaController extends Controller
             array_map('intval', $validated['moznosti'] ?? []),
             array_map('intval', $validated['ustajeni'] ?? [])
         );
-        SendPrihlaskaEmail::dispatch($prihlaska);
+        SendPrihlaskaEmail::dispatch($prihlaska, 'created', true);
 
         return redirect()->route('prihlasky.show', $prihlaska)->with('status', 'prihlaska-created');
     }
@@ -112,10 +112,12 @@ class PrihlaskaController extends Controller
         $this->authorize('update', $prihlaska);
         $udalost = $prihlaska->udalost()->firstOrFail();
         $this->ensureNotClosed($udalost);
-        $validated = $this->resolvePayload($request->validated(), $udalost, $request, $prihlaska, false);
+        $validated = $this->resolvePayload($request->validated(), $udalost, $request, $prihlaska, true);
         $kunTandemId = $validated['kun_tandem_id'] ?? null;
 
         $prihlaska->update([
+            'osoba_id' => (int) $validated['osoba_id'],
+            'kun_id' => (int) $validated['kun_id'],
             'kun_tandem_id' => $kunTandemId ? (int) $kunTandemId : null,
             'poznamka' => $validated['poznamka'] ?? null,
             'gdpr_souhlas' => true,
@@ -126,6 +128,7 @@ class PrihlaskaController extends Controller
             array_map('intval', $validated['moznosti'] ?? []),
             array_map('intval', $validated['ustajeni'] ?? [])
         );
+        SendPrihlaskaEmail::dispatch($prihlaska, 'updated', false);
 
         return redirect()->route('prihlasky.show', $prihlaska)->with('status', 'prihlaska-updated');
     }
@@ -134,8 +137,11 @@ class PrihlaskaController extends Controller
     {
         $this->authorize('delete', $prihlaska);
 
+        $udalost = $prihlaska->udalost()->firstOrFail();
+        $osobaId = (int) $prihlaska->osoba_id;
         $prihlaska->update(['smazana' => true]);
         $prihlaska->delete();
+        $this->prihlaskaService->rebalanceAdminFeeForPersonEvent($udalost, $osobaId);
 
         return redirect()->route('prihlasky.index')->with('status', 'prihlaska-deleted');
     }
@@ -156,13 +162,19 @@ class PrihlaskaController extends Controller
     {
         $this->abortIfNotMine($osoba->user_id, $request);
         $udalost = Udalost::query()->findOrFail((int) $request->query('udalost'));
+        $ignorePrihlaskaId = (int) $request->query('ignore_prihlaska', 0);
 
-        $adminFeeAlreadyCharged = Prihlaska::query()
+        $adminFeeAlreadyChargedQuery = Prihlaska::query()
             ->where('udalost_id', $udalost->id)
             ->where('osoba_id', $osoba->id)
             ->where('smazana', false)
-            ->whereHas('polozky', fn ($q) => $q->whereHas('moznost', fn ($m) => $m->where('je_administrativni_poplatek', true)))
-            ->exists();
+            ->whereHas('polozky', fn ($q) => $q->whereHas('moznost', fn ($m) => $m->where('je_administrativni_poplatek', true)));
+
+        if ($ignorePrihlaskaId > 0) {
+            $adminFeeAlreadyChargedQuery->whereKeyNot($ignorePrihlaskaId);
+        }
+
+        $adminFeeAlreadyCharged = $adminFeeAlreadyChargedQuery->exists();
 
         return response()->json([
             'moznosti' => $udalost->moznosti()->get(),
@@ -190,6 +202,16 @@ class PrihlaskaController extends Controller
                 abort(422, 'Neplatná disciplína pro tuto událost.');
             }
         }
+
+        $selectedDisciplineCount = $udalost->moznosti()
+            ->whereIn('id', $validated['moznosti'] ?? [])
+            ->where('je_administrativni_poplatek', false)
+            ->count();
+
+        if ($selectedDisciplineCount === 0) {
+            abort(422, 'Vyberte alespoň jednu disciplínu.');
+        }
+
         $eventUstajeniIds = $udalost->ustajeniMoznosti()->pluck('id')->all();
         foreach (($validated['ustajeni'] ?? []) as $id) {
             if (! in_array((int) $id, $eventUstajeniIds, true)) {

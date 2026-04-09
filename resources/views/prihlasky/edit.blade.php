@@ -3,8 +3,11 @@
         <div class="space-y-3">
             <p class="section-eyebrow">Úprava přihlášky</p>
             <h1 class="text-3xl text-[#20392c]">Přihláška #{{ $prihlaska->id }}</h1>
-            <p class="max-w-3xl text-sm leading-6 text-gray-600">Upravujete doplňkové položky, poznámku a souhrn. Účastník i hlavní kůň zůstávají po vytvoření uzamčené.</p>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Upravujete účastníka, koně, doplňkové položky a poznámku.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('prihlasky.index') }}" class="button-secondary w-full">Zpět na přihlášky</a>
     </x-slot>
 
     <div class="py-10">

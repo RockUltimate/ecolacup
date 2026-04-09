@@ -15,7 +15,7 @@ class PrihlaskaFlowTest extends TestCase
     use CreatesDomainModels;
     use RefreshDatabase;
 
-    public function test_user_can_create_registration_and_see_create_another_action(): void
+    public function test_first_registration_for_person_automatically_includes_admin_fee(): void
     {
         Queue::fake();
 
@@ -43,21 +43,21 @@ class PrihlaskaFlowTest extends TestCase
         $prihlaska = Prihlaska::query()->firstOrFail();
 
         $response->assertRedirect(route('prihlasky.show', $prihlaska, absolute: false));
-        $this->assertSame(1, $prihlaska->polozky()->count());
-        $this->assertDatabaseMissing('prihlasky_polozky', [
+        $this->assertSame(2, $prihlaska->polozky()->count());
+        $this->assertDatabaseHas('prihlasky_polozky', [
             'prihlaska_id' => $prihlaska->id,
             'nazev' => 'Administrativní poplatek',
         ]);
-        $this->assertEquals(550.0, (float) $prihlaska->fresh()->cena_celkem);
+        $this->assertEquals(650.0, (float) $prihlaska->fresh()->cena_celkem);
         $this->actingAs($user)
             ->get(route('prihlasky.show', $prihlaska))
             ->assertOk()
-            ->assertSee('Vytvořit novou přihlášku')
+            ->assertSee('Nová přihláška')
             ->assertSee(route('prihlasky.create', $udalost, absolute: false));
         Queue::assertPushed(SendPrihlaskaEmail::class);
     }
 
-    public function test_selected_admin_fee_is_preserved_for_multiple_registrations_of_same_person(): void
+    public function test_additional_registration_for_same_person_does_not_charge_admin_fee_again(): void
     {
         Queue::fake();
 
@@ -73,20 +73,55 @@ class PrihlaskaFlowTest extends TestCase
         $this->actingAs($user)->post(route('prihlasky.store', $udalost), [
             'osoba_id' => $osoba->id,
             'kun_id' => $prvniKun->id,
-            'moznosti' => [$udalost->moznosti[0]->id, $udalost->moznosti[1]->id],
+            'moznosti' => [$udalost->moznosti[0]->id],
             'gdpr_souhlas' => '1',
         ])->assertRedirect();
 
         $this->actingAs($user)->post(route('prihlasky.store', $udalost), [
             'osoba_id' => $osoba->id,
             'kun_id' => $druhyKun->id,
-            'moznosti' => [$udalost->moznosti[0]->id, $udalost->moznosti[1]->id],
+            'moznosti' => [$udalost->moznosti[0]->id],
             'gdpr_souhlas' => '1',
         ])->assertRedirect();
 
+        $prvniPrihlaska = Prihlaska::query()->orderBy('id')->firstOrFail();
         $druhaPrihlaska = Prihlaska::query()->latest('id')->firstOrFail();
 
-        $this->assertSame(2, $druhaPrihlaska->polozky()->count());
+        $this->assertDatabaseHas('prihlasky_polozky', [
+            'prihlaska_id' => $prvniPrihlaska->id,
+            'nazev' => 'Administrativní poplatek',
+        ]);
+        $this->assertDatabaseMissing('prihlasky_polozky', [
+            'prihlaska_id' => $druhaPrihlaska->id,
+            'nazev' => 'Administrativní poplatek',
+        ]);
+        $this->assertEquals(300.0, (float) $druhaPrihlaska->fresh()->cena_celkem);
+    }
+
+    public function test_admin_fee_is_reassigned_when_fee_bearing_registration_is_deleted(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $osoba = $this->createOsoba($user);
+        $prvniKun = $this->createKun($user, ['jmeno' => 'První kůň']);
+        $druhyKun = $this->createKun($user, ['jmeno' => 'Druhý kůň']);
+        $udalost = $this->createUdalost(moznosti: [
+            ['nazev' => 'MT Ruka EASY 8+', 'cena' => 300, 'min_vek' => 8],
+            ['nazev' => 'Administrativní poplatek', 'cena' => 100, 'je_administrativni_poplatek' => true],
+        ]);
+
+        $prvniPrihlaska = $this->createPrihlaska($udalost, $user, $osoba, $prvniKun, [$udalost->moznosti[0]->id]);
+        $druhaPrihlaska = $this->createPrihlaska($udalost, $user, $osoba, $druhyKun, [$udalost->moznosti[0]->id]);
+
+        $this->actingAs($user)
+            ->delete(route('prihlasky.destroy', $prvniPrihlaska))
+            ->assertRedirect(route('prihlasky.index', absolute: false));
+
+        $this->assertDatabaseMissing('prihlasky_polozky', [
+            'prihlaska_id' => $prvniPrihlaska->id,
+            'nazev' => 'Administrativní poplatek',
+        ]);
         $this->assertDatabaseHas('prihlasky_polozky', [
             'prihlaska_id' => $druhaPrihlaska->id,
             'nazev' => 'Administrativní poplatek',
@@ -147,6 +182,50 @@ class PrihlaskaFlowTest extends TestCase
             ->assertSee('Stáhnout PDF')
             ->assertSee('trail-photo.webp')
             ->assertSee('trail-info.pdf');
+    }
+
+    public function test_registration_update_queues_updated_confirmation_email(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $osoba = $this->createOsoba($user);
+        $kun = $this->createKun($user);
+        $udalost = $this->createUdalost(
+            moznosti: [
+                ['nazev' => 'MT Ruka EASY 8+', 'cena' => 300, 'min_vek' => 8],
+                ['nazev' => 'Trail', 'cena' => 250, 'min_vek' => 8],
+                ['nazev' => 'Administrativní poplatek', 'cena' => 100, 'je_administrativni_poplatek' => true],
+            ],
+            ustajeni: [
+                ['nazev' => 'Venkovní box', 'typ' => 'ustajeni', 'cena' => 250],
+            ],
+        );
+
+        $prihlaska = $this->createPrihlaska(
+            $udalost,
+            $user,
+            $osoba,
+            $kun,
+            [$udalost->moznosti[0]->id],
+            [$udalost->ustajeniMoznosti[0]->id]
+        );
+
+        $this->actingAs($user)
+            ->put(route('prihlasky.update', $prihlaska), [
+                'osoba_id' => $osoba->id,
+                'kun_id' => $kun->id,
+                'moznosti' => [$udalost->moznosti[1]->id],
+                'ustajeni' => [],
+                'gdpr_souhlas' => '1',
+            ])
+            ->assertRedirect(route('prihlasky.show', $prihlaska, absolute: false));
+
+        Queue::assertPushed(SendPrihlaskaEmail::class, function (SendPrihlaskaEmail $job) use ($prihlaska) {
+            return (int) $job->prihlaska->id === (int) $prihlaska->id
+                && $job->mode === 'updated'
+                && $job->notifyAdmin === false;
+        });
     }
 
     public function test_user_cannot_access_someone_elses_registration_routes(): void

@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Služba</p>
-                <h1 class="text-3xl text-[#20392c]">Upravit službu</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • aktualizace typu, kapacity, ceny a příloh služby.</p>
-            </div>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}#sluzby" class="button-secondary">Zpět na služby</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Služba</p>
+            <h1 class="text-3xl text-[#20392c]">Upravit službu</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • aktualizace typu, kapacity, ceny a příloh služby.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.edit', $udalost) }}#sluzby" class="button-secondary w-full">Zpět na služby</a>
     </x-slot>
 
     <div class="py-10">
@@ -66,7 +66,7 @@
                         @if($ustajeni->foto_path)
                             <p class="mt-2 text-sm text-gray-600">
                                 Aktuální soubor:
-                                <a href="{{ asset('storage/'.$ustajeni->foto_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit fotografii</a>
+                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($ustajeni->foto_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit fotografii</a>
                             </p>
                         @endif
                     </div>
@@ -89,7 +89,7 @@
                         @if($ustajeni->pdf_path)
                             <p class="mt-2 text-sm text-gray-600">
                                 Aktuální soubor:
-                                <a href="{{ asset('storage/'.$ustajeni->pdf_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit PDF</a>
+                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($ustajeni->pdf_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit PDF</a>
                             </p>
                         @endif
                     </div>

@@ -1,13 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Nová osoba
-        </h2>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Osoby</p>
+            <h1 class="text-3xl text-[#20392c]">Nová osoba</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Založte nového účastníka, kterého můžete použít v dalších přihláškách.</p>
+        </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('osoby.index') }}" class="button-secondary w-full">Zpět na osoby</a>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
+    <div class="py-10">
+        <div class="mx-auto max-w-5xl">
+            <div class="panel p-6">
                 @include('osoby._form')
             </div>
         </div>

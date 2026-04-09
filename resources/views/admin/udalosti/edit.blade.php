@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Nastavení události</p>
-                <h1 class="text-3xl text-[#20392c]">{{ $udalost->nazev }}</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">Spravujte popis, disciplíny, služby a přihlášky na jednom místě.</p>
-            </div>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Nastavení události</p>
+            <h1 class="text-3xl text-[#20392c]">{{ $udalost->nazev }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Spravujte popis, disciplíny, služby, přihlášky, startky i exporty na jednom místě.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
     </x-slot>
 
     <div class="py-10">
@@ -26,49 +27,55 @@
             }"
             x-init="syncFromHash(); window.addEventListener('hashchange', () => syncFromHash())"
         >
-            <div class="panel p-3">
-                <nav class="flex flex-wrap gap-2">
+            <div class="admin-tab-strip">
+                <nav class="admin-tab-nav">
                     <a
                         href="{{ route('admin.udalosti.edit', $udalost) }}#popis"
                         @click.prevent="openTab('popis')"
-                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        class="admin-tab"
                         :class="activeTab === 'popis'
-                            ? 'border-[#20392c] bg-[#20392c] text-white'
-                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                            ? 'admin-tab--active'
+                            : 'admin-tab--inactive'"
                     >
                         Popis
                     </a>
                     <a
                         href="{{ route('admin.udalosti.edit', $udalost) }}#discipliny"
                         @click.prevent="openTab('discipliny')"
-                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        class="admin-tab"
                         :class="activeTab === 'discipliny'
-                            ? 'border-[#20392c] bg-[#20392c] text-white'
-                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                            ? 'admin-tab--active'
+                            : 'admin-tab--inactive'"
                     >
                         Disciplíny
                     </a>
                     <a
                         href="{{ route('admin.udalosti.edit', $udalost) }}#sluzby"
                         @click.prevent="openTab('sluzby')"
-                        class="rounded-full border px-4 py-2 text-sm font-semibold transition"
+                        class="admin-tab"
                         :class="activeTab === 'sluzby'
-                            ? 'border-[#20392c] bg-[#20392c] text-white'
-                            : 'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50'"
+                            ? 'admin-tab--active'
+                            : 'admin-tab--inactive'"
                     >
                         Služby
                     </a>
                     <a
                         href="{{ route('admin.reports.prihlasky', $udalost) }}"
-                        class="rounded-full border border-[#ddd0bc] bg-white/70 px-4 py-2 text-sm font-semibold text-[#3d6b4f] transition hover:bg-emerald-50"
+                        class="admin-tab admin-tab--inactive"
                     >
                         Přihlášky
                     </a>
                     <a
                         href="{{ route('admin.reports.startky', $udalost) }}"
-                        class="rounded-full border border-[#ddd0bc] bg-white/70 px-4 py-2 text-sm font-semibold text-[#3d6b4f] transition hover:bg-emerald-50"
+                        class="admin-tab admin-tab--inactive"
                     >
                         Startky
+                    </a>
+                    <a
+                        href="{{ route('admin.reports.exporty', $udalost) }}"
+                        class="admin-tab admin-tab--inactive"
+                    >
+                        Exporty
                     </a>
                 </nav>
             </div>

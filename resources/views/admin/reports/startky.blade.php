@@ -4,14 +4,14 @@
     @endphp
 
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Startky</p>
-                <h1 class="text-3xl text-[#20392c]">Startovní listiny podle disciplín</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • filtrování podle disciplíny a jména jezdce nebo koně.</p>
-            </div>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Startky</p>
+            <h1 class="text-3xl text-[#20392c]">Startovní listiny podle disciplín</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • filtrování podle disciplíny a jména jezdce nebo koně.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
     </x-slot>
 
     <div class="py-10">
@@ -37,13 +37,6 @@
                     <x-text-input id="q" name="q" type="text" :value="$startkyFilters['q']" />
                 </div>
             </x-admin-report-filter-form>
-
-            <section class="panel p-5">
-                <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('admin.reports.export.startky', $udalost) }}" class="button-secondary">Export startky</a>
-                    <a href="{{ route('admin.reports.export.discipliny-pocty', $udalost) }}" class="button-secondary">Export počty</a>
-                </div>
-            </section>
 
             <section class="panel p-5 text-sm text-gray-700">
                 @if($moznostiSeStartkami->total() > 0)

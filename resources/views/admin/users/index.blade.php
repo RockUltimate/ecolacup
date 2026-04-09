@@ -2,15 +2,19 @@
     @php
         $filters = $filters ?? ['q' => ''];
     @endphp
+
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Uživatelé</h2>
-            <a href="{{ route('admin.dashboard') }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Dashboard</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Admin • Uživatelé</p>
+            <h1 class="text-3xl text-[#20392c]">Všichni uživatelé</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Centrální přehled uživatelských účtů včetně navázaných osob, koní a přihlášek.</p>
         </div>
     </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+
+    <div class="py-10">
+        <div class="mx-auto max-w-7xl space-y-6">
             <x-flash-message />
+
             <x-admin-report-filter-form :action="route('admin.users.index')" :reset-href="route('admin.users.index')">
                 <div>
                     <x-input-label for="q" :value="'Hledat (jméno, příjmení, e-mail)'" />
@@ -18,29 +22,32 @@
                 </div>
             </x-admin-report-filter-form>
 
-            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-                <div class="divide-y divide-gray-200">
+            <section class="panel overflow-hidden">
+                <div class="divide-y divide-[#eadfcc]">
                     @forelse($users as $user)
-                        <div class="p-4 sm:p-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <p class="font-medium text-gray-900">
-                                    {{ $user->prijmeni }} {{ $user->jmeno }}
-                                    @if($user->is_admin)
-                                        <span class="ms-2 inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">ADMIN</span>
-                                    @endif
-                                </p>
-                                <p class="text-sm text-gray-600">{{ $user->email }} @if($user->telefon) • {{ $user->telefon }} @endif</p>
-                                <p class="text-xs text-gray-500">
-                                    Osoby: {{ $user->osoby_count }} • Koně: {{ $user->kone_count }} • Přihlášky: {{ $user->prihlasky_count }}
-                                </p>
+                        <div class="p-5">
+                            <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <p class="text-lg font-semibold text-[#20392c]">{{ $user->prijmeni }} {{ $user->jmeno }}</p>
+                                        @if($user->is_admin)
+                                            <span class="brand-pill">Admin</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-sm text-gray-600">{{ $user->email }} @if($user->telefon) • {{ $user->telefon }} @endif</p>
+                                    <p class="text-xs text-gray-500">Osoby: {{ $user->osoby_count }} • Koně: {{ $user->kone_count }} • Přihlášky: {{ $user->prihlasky_count }}</p>
+                                </div>
+
+                                <div class="flex w-[170px] max-w-full flex-col gap-3">
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="button-secondary w-full">Upravit</a>
+                                </div>
                             </div>
-                            <a href="{{ route('admin.users.edit', $user) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Upravit</a>
                         </div>
                     @empty
                         <div class="p-5 text-sm text-gray-600">Žádní uživatelé nenalezeni.</div>
                     @endforelse
                 </div>
-            </div>
+            </section>
 
             <div>
                 {{ $users->links() }}

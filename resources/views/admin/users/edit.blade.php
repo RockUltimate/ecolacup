@@ -1,9 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Uživatel • {{ $managedUser->prijmeni }} {{ $managedUser->jmeno }}</h2>
-            <a href="{{ route('admin.users.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Zpět na uživatele</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Admin • Uživatel</p>
+            <h1 class="text-3xl text-[#20392c]">{{ $managedUser->prijmeni }} {{ $managedUser->jmeno }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Správa účtu, kontaktních údajů, přístupu administrátora a GDPR nástrojů.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.users.index') }}" class="button-secondary w-full">Zpět na uživatele</a>
     </x-slot>
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-4">

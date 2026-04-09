@@ -1,24 +1,40 @@
 @php
+    $adminFeeOptions = $udalost->moznosti->filter(fn ($moznost) => (bool) $moznost->je_administrativni_poplatek)->values();
+    $adminFeeOption = $adminFeeOptions->first();
+    $adminFeeOptionIds = $adminFeeOptions->pluck('id')->map(fn ($id) => (int) $id)->all();
+    $selectableMoznosti = $udalost->moznosti->reject(fn ($moznost) => (bool) $moznost->je_administrativni_poplatek)->values();
     $isEdit = isset($prihlaska);
-    $selectedMoznosti = old('moznosti', $isEdit ? $prihlaska->polozky->pluck('moznost_id')->all() : []);
+    $selectedMoznosti = array_values(array_filter(
+        old('moznosti', $isEdit ? $prihlaska->polozky->pluck('moznost_id')->all() : []),
+        fn ($id) => ! in_array((int) $id, $adminFeeOptionIds, true)
+    ));
     $selectedUstajeni = old('ustajeni', $isEdit ? $prihlaska->ustajeniChoices->pluck('ustajeni_id')->all() : []);
+    $initialAdminFeeApplied = $isEdit && $adminFeeOption && $prihlaska->polozky->contains(
+        fn ($item) => in_array((int) $item->moznost_id, $adminFeeOptionIds, true)
+    );
 @endphp
 
 <div
     x-data="{
         step: 1,
         isEdit: @js($isEdit),
+        eventId: @js((int) $udalost->id),
+        ignorePrihlaskaId: @js($isEdit ? (int) $prihlaska->id : null),
         osobaId: '{{ old('osoba_id', $isEdit ? $prihlaska->osoba_id : '') }}',
         kunId: '{{ old('kun_id', $isEdit ? $prihlaska->kun_id : '') }}',
         selectedMoznosti: @js(array_map('intval', $selectedMoznosti)),
         selectedUstajeni: @js(array_map('intval', $selectedUstajeni)),
-        moznostiMeta: @js($udalost->moznosti->map(fn ($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena, 'je_administrativni_poplatek' => (bool) $m->je_administrativni_poplatek])->values()),
+        moznostiMeta: @js($selectableMoznosti->map(fn ($m) => ['id' => (int) $m->id, 'nazev' => $m->nazev, 'cena' => (float) $m->cena])->values()),
+        adminFeeMeta: @js($adminFeeOption ? ['id' => (int) $adminFeeOption->id, 'nazev' => $adminFeeOption->nazev, 'cena' => (float) $adminFeeOption->cena] : null),
         ustajeniMeta: @js($udalost->ustajeniMoznosti->map(fn ($u) => ['id' => (int) $u->id, 'nazev' => $u->nazev, 'typ' => $u->typ, 'cena' => (float) $u->cena])->values()),
+        adminFeeApplied: @js($initialAdminFeeApplied),
         totalPrice: 0,
         init() {
             this.recalculateTotal();
             this.$watch('selectedMoznosti', () => this.recalculateTotal());
             this.$watch('selectedUstajeni', () => this.recalculateTotal());
+            this.$watch('osobaId', () => this.refreshAdminFeeState());
+            this.refreshAdminFeeState();
         },
         nextStep() {
             if (this.step === 1 && (!this.osobaId || !this.kunId)) return;
@@ -35,16 +51,47 @@
             return this.ustajeniMeta.filter(item => this.selectedUstajeni.map(Number).includes(item.id));
         },
         adminFeeOption() {
-            return this.moznostiMeta.find(item => Boolean(item.je_administrativni_poplatek)) ?? null;
+            return this.adminFeeMeta;
         },
-        hasSelectedAdminFee() {
+        async refreshAdminFeeState() {
             const adminFee = this.adminFeeOption();
-            return adminFee ? this.selectedMoznosti.map(Number).includes(Number(adminFee.id)) : false;
+
+            if (!adminFee || !this.osobaId) {
+                this.adminFeeApplied = false;
+                this.recalculateTotal();
+                return;
+            }
+
+            const params = new URLSearchParams({ udalost: this.eventId });
+            if (this.ignorePrihlaskaId) {
+                params.set('ignore_prihlaska', this.ignorePrihlaskaId);
+            }
+
+            try {
+                const response = await fetch(`/ajax/osoba/${this.osobaId}/polozky?${params.toString()}`, {
+                    headers: { 'Accept': 'application/json' },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Nepodařilo se načíst stav administrativního poplatku.');
+                }
+
+                const payload = await response.json();
+                this.adminFeeApplied = !Boolean(payload.admin_fee_already_charged);
+            } catch (error) {
+                this.adminFeeApplied = Boolean(this.isEdit && this.adminFeeApplied);
+            }
+
+            this.recalculateTotal();
         },
         recalculateTotal() {
             const selectedMoznostiPrice = this.selectedMoznostiItems().reduce((sum, item) => sum + Number(item.cena), 0);
             const selectedUstajeniPrice = this.selectedUstajeniItems().reduce((sum, item) => sum + Number(item.cena), 0);
-            this.totalPrice = selectedMoznostiPrice + selectedUstajeniPrice;
+            const adminFeePrice = this.adminFeeApplied && this.adminFeeOption() ? Number(this.adminFeeOption().cena) : 0;
+            this.totalPrice = selectedMoznostiPrice + selectedUstajeniPrice + adminFeePrice;
+        },
+        selectedItemsCount() {
+            return this.selectedMoznosti.length + this.selectedUstajeni.length + ((this.adminFeeApplied && this.adminFeeOption()) ? 1 : 0);
         },
         formatPrice(value) {
             return new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
@@ -78,7 +125,7 @@
                 <div>
                     <p class="section-eyebrow">Krok 1</p>
                     <h2 class="mt-3 text-2xl text-[#20392c]">Vyberte účastníka a koně</h2>
-                    <p class="mt-2 text-sm leading-6 text-gray-600">Při úpravě zůstává osoba i hlavní kůň uzamčený, aby zůstala zachovaná historie registrace.</p>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">Vyberte účastníka a koně. Tandem kůň je volitelný.</p>
                 </div>
 
                 @if($osoby->isEmpty() || $kone->isEmpty())
@@ -90,7 +137,7 @@
                 <div class="grid gap-5 md:grid-cols-2">
                     <div>
                         <x-input-label for="osoba_id" :value="'Osoba'" />
-                        <select id="osoba_id" x-model="osobaId" name="osoba_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
+                        <select id="osoba_id" x-model="osobaId" name="osoba_id" class="field-shell" required>
                             <option value="">Vyberte osobu</option>
                             @foreach($osoby as $osoba)
                                 <option value="{{ $osoba->id }}" @selected((int) old('osoba_id', $isEdit ? $prihlaska->osoba_id : 0) === $osoba->id)>
@@ -98,15 +145,12 @@
                                 </option>
                             @endforeach
                         </select>
-                        @if($isEdit)
-                            <input type="hidden" name="osoba_id" value="{{ $prihlaska->osoba_id }}">
-                        @endif
                         <x-input-error :messages="$errors->get('osoba_id')" class="mt-2" />
                     </div>
 
                     <div>
                         <x-input-label for="kun_id" :value="'Kůň'" />
-                        <select id="kun_id" x-model="kunId" name="kun_id" class="field-shell" {{ $isEdit ? 'disabled' : '' }} required>
+                        <select id="kun_id" x-model="kunId" name="kun_id" class="field-shell" required>
                             <option value="">Vyberte koně</option>
                             @foreach($kone as $kun)
                                 <option value="{{ $kun->id }}" @selected((int) old('kun_id', $isEdit ? $prihlaska->kun_id : 0) === $kun->id)>
@@ -114,9 +158,6 @@
                                 </option>
                             @endforeach
                         </select>
-                        @if($isEdit)
-                            <input type="hidden" name="kun_id" value="{{ $prihlaska->kun_id }}">
-                        @endif
                         <x-input-error :messages="$errors->get('kun_id')" class="mt-2" />
                     </div>
                 </div>
@@ -145,11 +186,26 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between gap-4">
                         <h3 class="text-lg font-semibold text-[#20392c]">Disciplíny</h3>
-                        <p class="text-sm text-gray-500">{{ $udalost->moznosti->count() }} možností</p>
+                        <p class="text-sm text-gray-500">{{ $selectableMoznosti->count() }} možností</p>
                     </div>
 
+                    @if($adminFeeOption)
+                        <div class="rounded-[1.25rem] border border-[#eadfcc] bg-[#f9f4eb] px-5 py-4">
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <p class="font-semibold text-[#20392c]">{{ $adminFeeOption->nazev }}</p>
+                                    <p class="mt-1 text-sm text-gray-600">Účtuje se automaticky jen jednou za osobu v rámci této akce.</p>
+                                </div>
+                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $adminFeeOption->cena, 2, ',', ' ') }} Kč</p>
+                            </div>
+                            <p class="mt-3 text-sm text-gray-600" x-show="!osobaId">Vyberte nejprve osobu a poplatek se započte automaticky podle jejích přihlášek.</p>
+                            <p class="mt-3 text-sm text-emerald-700" x-cloak x-show="osobaId && adminFeeApplied">Tento poplatek bude připočten k této přihlášce.</p>
+                            <p class="mt-3 text-sm text-gray-600" x-cloak x-show="osobaId && !adminFeeApplied">U této osoby už je administrativní poplatek v jiné přihlášce započtený.</p>
+                        </div>
+                    @endif
+
                     <div class="space-y-3">
-                        @foreach($udalost->moznosti as $moznost)
+                        @foreach($selectableMoznosti as $moznost)
                             <label class="flex cursor-pointer items-start justify-between gap-4 rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-[#faf6ef]">
                                 <div class="flex items-start gap-3">
                                     <input type="checkbox" x-model="selectedMoznosti" name="moznosti[]" value="{{ $moznost->id }}" class="mt-1 rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]"
@@ -157,9 +213,7 @@
                                     <div>
                                         <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
                                         <p class="mt-1 text-sm text-gray-600">
-                                            @if($moznost->je_administrativni_poplatek)
-                                                Administrativní položka dle pravidel akce.
-                                            @elseif($moznost->min_vek !== null)
+                                            @if($moznost->min_vek !== null)
                                                 Minimální věk účastníka: {{ $moznost->min_vek }} let.
                                             @else
                                                 Bez minimálního věku.
@@ -168,16 +222,16 @@
                                         @if($moznost->foto_path || $moznost->pdf_path)
                                             <div class="mt-3 flex flex-wrap items-center gap-3">
                                                 @if($moznost->foto_path)
-                                                    <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
-                                                        <img src="{{ asset('storage/'.$moznost->foto_path) }}" alt="Fotografie disciplíny {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
+                                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
+                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" alt="Fotografie disciplíny {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
                                                     </a>
                                                 @endif
                                                 <div class="flex flex-wrap gap-2">
                                                     @if($moznost->foto_path)
-                                                        <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
+                                                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
                                                     @endif
                                                     @if($moznost->pdf_path)
-                                                        <a href="{{ asset('storage/'.$moznost->pdf_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
+                                                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->pdf_path) }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
                                                     @endif
                                                 </div>
                                             </div>
@@ -234,6 +288,12 @@
                                     <span class="font-semibold text-[#7b5230]" x-text="`${formatPrice(item.cena)} Kč`"></span>
                                 </li>
                             </template>
+                            @if($adminFeeOption)
+                                <li class="flex items-start justify-between gap-4">
+                                    <span>Administrativní poplatek</span>
+                                    <span class="font-semibold text-[#7b5230]" x-text="adminFeeApplied ? `${formatPrice(adminFeeOption().cena)} Kč` : 'již započteno jinde'"></span>
+                                </li>
+                            @endif
                         </ul>
                     </div>
 
@@ -293,7 +353,7 @@
                 <p class="section-eyebrow">Souhrn</p>
                 <h3 class="mt-3 text-2xl text-[#20392c]">Průběžná cena</h3>
                 <p class="mt-4 text-4xl font-semibold text-[#20392c]" x-text="`${formatPrice(totalPrice)} Kč`"></p>
-                <p class="mt-3 text-sm leading-6 text-gray-600">Vybraných položek: <span class="font-semibold text-[#20392c]" x-text="selectedMoznosti.length + selectedUstajeni.length"></span></p>
+                <p class="mt-3 text-sm leading-6 text-gray-600">Vybraných položek: <span class="font-semibold text-[#20392c]" x-text="selectedItemsCount()"></span></p>
             </section>
 
             <section class="panel p-6">

@@ -14,7 +14,11 @@ class SendPrihlaskaEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
 
-    public function __construct(public readonly Prihlaska $prihlaska)
+    public function __construct(
+        public readonly Prihlaska $prihlaska,
+        public readonly string $mode = 'created',
+        public readonly bool $notifyAdmin = true,
+    )
     {
     }
 
@@ -25,7 +29,7 @@ class SendPrihlaskaEmail implements ShouldQueue
             'osoba',
             'kun',
             'kunTandem',
-            'polozky',
+            'polozky.moznost',
             'ustajeniChoices.ustajeni',
             'user',
         ]);
@@ -34,8 +38,10 @@ class SendPrihlaskaEmail implements ShouldQueue
             return;
         }
 
-        Mail::to($prihlaska->user->email)->send(new PrihlaskaPotvrzeniMail($prihlaska));
+        Mail::to($prihlaska->user->email)->send(new PrihlaskaPotvrzeniMail($prihlaska, $this->mode));
 
-        SendPrihlaskaNotifikaceEmail::dispatch($prihlaska);
+        if ($this->notifyAdmin) {
+            SendPrihlaskaNotifikaceEmail::dispatch($prihlaska);
+        }
     }
 }

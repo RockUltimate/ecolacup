@@ -63,21 +63,21 @@
 
                 <aside class="panel p-6 sm:p-8">
                     <p class="section-eyebrow">Akce</p>
-                    <div class="mt-4 flex flex-wrap gap-3">
+                    <div class="mt-4 flex w-[170px] max-w-full flex-col gap-3">
                         @if($canCreateAnother)
-                            <a href="{{ route('prihlasky.create', $prihlaska->udalost) }}" class="button-secondary">Vytvořit novou přihlášku</a>
+                            <a href="{{ route('prihlasky.create', $prihlaska->udalost) }}" class="button-secondary w-full">Nová přihláška</a>
                         @endif
                         @if($canEdit)
-                            <a href="{{ route('prihlasky.edit', $prihlaska) }}" class="button-primary">Upravit</a>
+                            <a href="{{ route('prihlasky.edit', $prihlaska) }}" class="button-primary w-full">Upravit</a>
                         @endif
-                        <a href="{{ route('prihlasky.pdf', $prihlaska) }}" class="button-secondary">Stáhnout PDF</a>
+                        <a href="{{ route('prihlasky.pdf', $prihlaska) }}" class="button-secondary w-full">Stáhnout PDF</a>
                     </div>
 
                     @if(! $deleted)
-                        <form method="POST" action="{{ route('prihlasky.destroy', $prihlaska) }}" class="mt-4" onsubmit="return confirm('Opravdu smazat přihlášku?');">
+                        <form method="POST" action="{{ route('prihlasky.destroy', $prihlaska) }}" class="mt-4 w-[170px] max-w-full" onsubmit="return confirm('Opravdu smazat přihlášku?');">
                             @csrf
                             @method('DELETE')
-                            <button class="text-sm text-red-700 underline underline-offset-4">Smazat přihlášku</button>
+                            <button class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat přihlášku</button>
                         </form>
                     @endif
                 </aside>

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('icon.png') }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -39,7 +39,28 @@
             @isset($header)
                 <header class="border-b border-white/60 bg-white/50 backdrop-blur-sm">
                     <div class="max-w-7xl mx-auto py-7 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                        @php
+                            $showAdminDashboardShortcut = request()->routeIs('admin.*') && ! request()->routeIs('admin.dashboard');
+                            $hasHeaderActions = isset($headerActions) && trim((string) $headerActions) !== '';
+                        @endphp
+
+                        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                            <div class="min-w-0 flex-1">
+                                {{ $header }}
+                            </div>
+
+                            @if($showAdminDashboardShortcut || $hasHeaderActions)
+                                <div class="flex w-[170px] max-w-full shrink-0 self-start flex-col gap-3">
+                                    @if($showAdminDashboardShortcut)
+                                        <a href="{{ route('admin.dashboard') }}" class="button-secondary w-full">Dashboard</a>
+                                    @endif
+
+                                    @if($hasHeaderActions)
+                                        {{ $headerActions }}
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </header>
             @endisset

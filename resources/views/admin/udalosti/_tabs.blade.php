@@ -1,6 +1,6 @@
 @props([
     'udalost',
-    'active' => 'overview',
+    'active' => 'popis',
 ])
 
 @php
@@ -10,18 +10,19 @@
         'sluzby' => ['label' => 'Služby', 'href' => route('admin.udalosti.edit', $udalost) . '#sluzby'],
         'prihlasky' => ['label' => 'Přihlášky', 'href' => route('admin.reports.prihlasky', $udalost)],
         'startky' => ['label' => 'Startky', 'href' => route('admin.reports.startky', $udalost)],
+        'exporty' => ['label' => 'Exporty', 'href' => route('admin.reports.exporty', $udalost)],
     ];
 @endphp
 
-<div class="panel p-3">
-    <nav class="flex flex-wrap gap-2">
+<div class="admin-tab-strip">
+    <nav class="admin-tab-nav">
         @foreach($tabs as $key => $tab)
             <a
                 href="{{ $tab['href'] }}"
                 @class([
-                    'rounded-full border px-4 py-2 text-sm font-semibold transition',
-                    'border-[#20392c] bg-[#20392c] text-white' => $active === $key,
-                    'border-[#ddd0bc] bg-white/70 text-[#3d6b4f] hover:bg-emerald-50' => $active !== $key,
+                    'admin-tab',
+                    'admin-tab--active' => $active === $key,
+                    'admin-tab--inactive' => $active !== $key,
                 ])
             >
                 {{ $tab['label'] }}

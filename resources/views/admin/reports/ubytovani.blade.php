@@ -6,14 +6,14 @@
     @endphp
 
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Ustájení a služby</p>
-                <h1 class="text-3xl text-[#20392c]">Přehled obsazenosti podle typu</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • rozpad na ustájení, ubytování, stravu a ostatní služby.</p>
-            </div>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Ustájení a služby</p>
+            <h1 class="text-3xl text-[#20392c]">Přehled obsazenosti podle typu</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • rozpad na ustájení, ubytování, stravu a ostatní služby.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
     </x-slot>
 
     <div class="py-10">
@@ -39,10 +39,6 @@
                     <x-text-input id="q" name="q" type="text" :value="$ubytovaniFilters['q']" />
                 </div>
             </x-admin-report-filter-form>
-
-            <section class="panel p-5">
-                <a href="{{ route('admin.reports.export.ubytovani', $udalost) }}" class="button-secondary">Export ustájení a ubytování</a>
-            </section>
 
             <section class="panel p-5 text-sm text-gray-700">
                 @if($optionsPagination->total() > 0)

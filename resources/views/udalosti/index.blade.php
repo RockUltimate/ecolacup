@@ -14,6 +14,7 @@
         <div class="mx-auto max-w-7xl">
             <div class="editorial-grid items-stretch">
                 <div class="panel reveal-up overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
+                    <img src="{{ asset('logo.png') }}" alt="Ecola Equestrian" class="mb-6 h-52 w-auto">
                     <p class="section-eyebrow">Kalendar akcí</p>
                     <div id="home-news" x-data="{ editing: {{ auth()->check() && auth()->user()->is_admin && $errors->any() ? 'true' : 'false' }} }" class="mt-5 max-w-3xl">
                         <div class="flex flex-wrap items-start justify-between gap-4">

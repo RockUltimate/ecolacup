@@ -88,6 +88,13 @@ class AdminReportFlowTest extends TestCase
             ->assertSee('Falco')
             ->assertDontSee('Snídaně');
 
+        $this->actingAs($admin)->get(route('admin.reports.exporty', $udalost))
+            ->assertOk()
+            ->assertSee('Export seznam')
+            ->assertSee('Export startky')
+            ->assertSee('Export ustájení a ubytování')
+            ->assertSee('Bulk PDF ZIP');
+
         $this->actingAs($admin)->get(route('admin.start-cisla.show', $udalost))
             ->assertOk()
             ->assertSee('Falco')
@@ -176,6 +183,7 @@ class AdminReportFlowTest extends TestCase
         $prihlaska = $this->createPrihlaska($udalost, $user, $osoba, $kun, [$udalost->moznosti[0]->id]);
 
         $this->actingAs($user)->get(route('admin.reports.prihlasky', $udalost))->assertForbidden();
+        $this->actingAs($user)->get(route('admin.reports.exporty', $udalost))->assertForbidden();
         $this->actingAs($user)->delete(route('admin.reports.prihlasky.destroy', [$udalost, $prihlaska]))->assertForbidden();
         $this->actingAs($user)->put(route('admin.reports.start-cisla.normalize', $udalost))->assertForbidden();
         $this->actingAs($user)->get(route('admin.start-cisla.show', $udalost))->assertForbidden();

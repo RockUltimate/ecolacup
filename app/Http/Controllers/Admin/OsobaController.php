@@ -72,4 +72,15 @@ class OsobaController extends Controller
 
         return redirect()->route('admin.osoby.edit', $osoba)->with('status', 'osoba-updated');
     }
+
+    public function destroy(Osoba $osoba): RedirectResponse
+    {
+        if ($osoba->prihlasky()->where('smazana', false)->exists()) {
+            return redirect()->route('admin.osoby.index')->with('status', 'osoba-has-prihlasky');
+        }
+
+        $osoba->delete();
+
+        return redirect()->route('admin.osoby.index')->with('status', 'osoba-deleted');
+    }
 }

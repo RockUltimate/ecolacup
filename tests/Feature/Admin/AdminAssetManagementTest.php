@@ -93,6 +93,30 @@ class AdminAssetManagementTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_delete_horse_and_person_records(): void
+    {
+        $admin = $this->createAdminUser();
+        $user = \App\Models\User::factory()->create();
+        $horse = $this->createKun($user, ['jmeno' => 'Blesk']);
+        $person = $this->createOsoba($user, ['jmeno' => 'Eva', 'prijmeni' => 'Jezdkyně']);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.kone.destroy', $horse))
+            ->assertRedirect(route('admin.kone.index', absolute: false));
+
+        $this->assertSoftDeleted('kone', [
+            'id' => $horse->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.osoby.destroy', $person))
+            ->assertRedirect(route('admin.osoby.index', absolute: false));
+
+        $this->assertSoftDeleted('osoby', [
+            'id' => $person->id,
+        ]);
+    }
+
     public function test_admin_can_apply_selected_horse_description_to_duplicates(): void
     {
         $admin = $this->createAdminUser();
@@ -161,6 +185,7 @@ class AdminAssetManagementTest extends TestCase
             'cislo_hospodarstvi' => null,
             'majitel_jmeno_adresa' => null,
         ])->assertForbidden();
+        $this->actingAs($user)->delete(route('admin.kone.destroy', $horse))->assertForbidden();
         $this->actingAs($user)->put(route('admin.osoby.update', $person), [
             'jmeno' => 'Test',
             'prijmeni' => 'Zakazany',
@@ -168,5 +193,6 @@ class AdminAssetManagementTest extends TestCase
             'staj' => 'Staj',
             'gdpr_souhlas' => '1',
         ])->assertForbidden();
+        $this->actingAs($user)->delete(route('admin.osoby.destroy', $person))->assertForbidden();
     }
 }

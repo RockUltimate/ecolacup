@@ -44,10 +44,6 @@
                 <p class="mt-1 text-sm text-gray-500">Volitelně: PDF s informacemi o disciplíně</p>
             </div>
 
-            <label class="md:col-span-2 flex items-center gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-3 text-sm text-gray-700">
-                <input type="checkbox" name="je_administrativni_poplatek" value="1" class="rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]">
-                <span>Administrativní poplatek</span>
-            </label>
             <div class="md:col-span-2">
                 <button type="submit" class="button-primary">Přidat disciplínu</button>
             </div>
@@ -57,9 +53,14 @@
             <h3 class="font-semibold text-[#20392c]">Stávající disciplíny</h3>
             @forelse($udalost->moznosti as $moznost)
                 <div class="surface-muted space-y-3 p-4">
-                    <div class="flex items-start justify-between gap-4">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div class="flex-1">
-                            <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
+                            <div class="flex items-center gap-2">
+                                <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
+                                @if($moznost->je_administrativni_poplatek)
+                                    <span class="rounded-full bg-[#f0ebe3] px-2 py-0.5 text-xs font-medium text-[#7b5230]">automaticky</span>
+                                @endif
+                            </div>
                             <p class="mt-1 text-sm text-gray-600">
                                 {{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč
                                 @if($moznost->min_vek)• min. věk {{ $moznost->min_vek }}@endif
@@ -67,22 +68,24 @@
                             @if($moznost->foto_path || $moznost->pdf_path)
                                 <div class="mt-2 flex gap-2">
                                     @if($moznost->foto_path)
-                                        <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs text-[#7b5230] underline">Fotografie</a>
+                                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs text-[#7b5230] underline">Fotografie</a>
                                     @endif
                                     @if($moznost->pdf_path)
-                                        <a href="{{ asset('storage/'.$moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs text-[#7b5230] underline">PDF</a>
+                                        <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs text-[#7b5230] underline">PDF</a>
                                     @endif
                                 </div>
                             @endif
                         </div>
-                        <div class="flex gap-2">
-                            <a href="{{ route('admin.udalosti.moznosti.edit', [$udalost, $moznost]) }}" class="text-sm text-[#3d6b4f] underline underline-offset-4">Upravit</a>
-                            <form method="POST" action="{{ route('admin.udalosti.moznosti.destroy', [$udalost, $moznost]) }}" class="inline">
+                        @if(!$moznost->je_administrativni_poplatek)
+                        <div class="flex w-[170px] flex-col gap-3">
+                            <a href="{{ route('admin.udalosti.moznosti.edit', [$udalost, $moznost]) }}" class="button-primary w-full">Upravit</a>
+                            <form method="POST" action="{{ route('admin.udalosti.moznosti.destroy', [$udalost, $moznost]) }}" class="w-full">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Opravdu smazat?')" class="text-sm text-red-700 underline underline-offset-4">Smazat</button>
+                                <button type="submit" onclick="return confirm('Opravdu smazat?')" class="w-full rounded-full border border-red-200 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100">Smazat</button>
                             </form>
                         </div>
+                        @endif
                     </div>
                 </div>
             @empty
