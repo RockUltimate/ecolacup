@@ -12,12 +12,16 @@ Laravel 11 project for the new EcolaCup (koneakce) website.
    - `http://localhost:8086`
 3. Stop:
    - `docker compose down`
+4. Public tunnel:
+   - not included in the default local stack
+   - if you ever need one, copy `docker-compose.cloudflare.yml.example` to a private override and provide your own `CLOUDFLARE_TUNNEL_TOKEN`
 ## Development mode (with source mount)
 Use compose override for live code editing:
 - `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build`
 ## Services
 - App container: `ecolacup-app` (Apache + PHP), exposed on port `8086`
 - Database container: `ecolacup-postgres` (PostgreSQL 16), exposed on port `5432`
+- No Cloudflare tunnel is started by default in local development
 ## Database
 Database defaults are configured for PostgreSQL:
 - DB: `ecolacup`

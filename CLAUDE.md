@@ -25,13 +25,15 @@ php artisan test --filter TestName   # run a single test
 npm run build       # production frontend build
 ```
 
-### Docker (production-like)
+### Docker (local-only)
 ```bash
-docker compose up -d                        # start all services (app, postgres, cloudflared)
+docker compose up -d                        # start local services (app, postgres, queue)
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d   # dev mode with live volume mount
 docker compose exec app php artisan migrate --force   # run migrations inside container
 docker compose build app && docker compose up -d app  # rebuild after adding migrations/code changes
 ```
+
+Cloudflare tunnel is intentionally excluded from the default repo compose file. If a tunnel is needed, define it in a private override outside the committed local stack.
 
 **Important:** The app image bakes in all code at build time. After adding new migration files, you must rebuild the image (`docker compose build app`) — copying the file with `docker cp` works as a quick fix but won't survive a container restart.
 
