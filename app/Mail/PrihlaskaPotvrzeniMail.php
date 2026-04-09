@@ -48,7 +48,7 @@ class PrihlaskaPotvrzeniMail extends Mailable
     {
         $pdfBytes = Pdf::loadView('prihlasky.pdf', [
             'prihlaska' => $this->prihlaska->load([
-                'udalost',
+                'udalost.moznosti',
                 'osoba',
                 'kun',
                 'kunTandem',

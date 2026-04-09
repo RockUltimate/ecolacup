@@ -335,11 +335,12 @@ class ReportController extends Controller
         return $udalost->prihlasky()
             ->withTrashed()
             ->with([
+                'udalost.moznosti',
                 'osoba',
                 'kun',
                 'kunTandem',
                 'user',
-                'polozky',
+                'polozky.moznost',
                 'ustajeniChoices',
             ]);
     }

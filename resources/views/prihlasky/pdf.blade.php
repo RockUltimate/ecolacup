@@ -38,6 +38,12 @@
         @endif
     </div>
 
+    @php
+        $adminFeePolozka = $prihlaska->polozky->first(fn ($p) => $p->moznost?->je_administrativni_poplatek);
+        $regularPolozky = $prihlaska->polozky->filter(fn ($p) => !$p->moznost?->je_administrativni_poplatek);
+        $adminFeeMoznost = $prihlaska->udalost?->moznosti->first(fn ($m) => $m->je_administrativni_poplatek);
+    @endphp
+
     <h2>Disciplíny</h2>
     <table>
         <thead>
@@ -47,12 +53,23 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($prihlaska->polozky as $item)
+            @foreach($regularPolozky as $item)
                 <tr>
                     <td>{{ $item->nazev }}</td>
                     <td class="right">{{ number_format((float)$item->cena, 2, ',', ' ') }} Kč</td>
                 </tr>
             @endforeach
+            @if($adminFeeMoznost)
+                <tr>
+                    <td>
+                        {{ $adminFeePolozka?->nazev ?? $adminFeeMoznost->nazev }}
+                        @if(!$adminFeePolozka)
+                            <span style="color:#555;font-size:11px;"> (již uhrazeno v jiné přihlášce)</span>
+                        @endif
+                    </td>
+                    <td class="right">{{ number_format((float)($adminFeePolozka?->cena ?? 0), 2, ',', ' ') }} Kč</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 

@@ -149,7 +149,7 @@ class PrihlaskaController extends Controller
     public function pdf(Prihlaska $prihlaska)
     {
         $this->authorize('view', $prihlaska);
-        $prihlaska->load(['udalost', 'osoba', 'kun', 'kunTandem', 'polozky', 'ustajeniChoices.ustajeni']);
+        $prihlaska->load(['udalost.moznosti', 'osoba', 'kun', 'kunTandem', 'polozky.moznost', 'ustajeniChoices.ustajeni']);
 
         $pdf = Pdf::loadView('prihlasky.pdf', [
             'prihlaska' => $prihlaska,

@@ -40,11 +40,11 @@ class PrihlaskaNotifikaceMail extends Mailable
     {
         $pdfBytes = Pdf::loadView('prihlasky.pdf', [
             'prihlaska' => $this->prihlaska->load([
-                'udalost',
+                'udalost.moznosti',
                 'osoba',
                 'kun',
                 'kunTandem',
-                'polozky',
+                'polozky.moznost',
                 'ustajeniChoices.ustajeni',
             ]),
         ])->output();
