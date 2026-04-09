@@ -24,7 +24,8 @@ RUN apt-get update \
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+    && printf '\n<Directory /var/www/html/storage/app/public>\n    Options FollowSymLinks\n    AllowOverride None\n    Require all granted\n</Directory>\n' >> /etc/apache2/sites-available/000-default.conf
 
 COPY . .
 COPY --from=vendor /var/www/html/vendor ./vendor

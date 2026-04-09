@@ -6,6 +6,8 @@ services:
     container_name: ecolacup-app
     ports:
       - "8086:80"
+    volumes:
+      - storage_data:/var/www/html/storage/app/public
     environment:
       APP_ENV: local
       APP_DEBUG: true
@@ -38,6 +40,8 @@ services:
       dockerfile: Dockerfile
     container_name: ecolacup-queue
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=60"]
+    volumes:
+      - storage_data:/var/www/html/storage/app/public
     environment:
       APP_ENV: local
       APP_DEBUG: true
@@ -84,3 +88,4 @@ services:
 
 volumes:
   pgdata:
+  storage_data:
