@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +33,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Ignore stray public/hot files outside local development so production
+        // always uses the built assets from public/build.
+        if (! $this->app->isLocal()) {
+            Vite::useHotFile(storage_path('framework/vite.hot'));
+        }
+
         $appUrlScheme = strtolower((string) parse_url((string) config('app.url'), PHP_URL_SCHEME));
 
         if (
@@ -64,6 +72,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $host = strtolower((string) $request->getHost());
 
-        return ! in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+        if (in_array($host, ['localhost', '127.0.0.1', '::1'], true)) {
+            return false;
+        }
+
+        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
+        }
+
+        return ! Str::endsWith($host, ['.local', '.test', '.internal', '.lan']);
     }
 }
