@@ -185,7 +185,7 @@
                                     @foreach($stablingByType[$type] as $moznost)
                                         <div class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4">
                                             <div class="flex items-start justify-between gap-4">
-                                                <div>
+                                                <div class="min-w-0 flex-1">
                                                     <p class="font-semibold text-[#20392c]">{{ $moznost->nazev }}</p>
                                                     <p class="mt-1 text-sm text-gray-600">
                                                         @if($moznost->kapacita)
@@ -194,8 +194,25 @@
                                                             Bez pevně stanovené kapacity.
                                                         @endif
                                                     </p>
+                                                    @if($moznost->foto_path || $moznost->pdf_path)
+                                                        <div class="mt-3 flex flex-wrap items-center gap-3">
+                                                            @if($moznost->foto_path)
+                                                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
+                                                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" alt="Fotografie {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
+                                                                </a>
+                                                            @endif
+                                                            <div class="flex flex-wrap gap-2">
+                                                                @if($moznost->foto_path)
+                                                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
+                                                                @endif
+                                                                @if($moznost->pdf_path)
+                                                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                                <p class="text-sm font-semibold text-[#7b5230]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
+                                                <p class="shrink-0 text-sm font-semibold text-[#7b5230]">{{ number_format((float) $moznost->cena, 2, ',', ' ') }} Kč</p>
                                             </div>
                                         </div>
                                     @endforeach
