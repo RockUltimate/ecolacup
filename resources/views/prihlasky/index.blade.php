@@ -46,9 +46,7 @@
                                             <p>Cena: {{ number_format((float) $prihlaska->cena_celkem, 2, ',', ' ') }} Kč</p>
                                         </div>
                                     </div>
-                                    <div class="shrink-0" onclick="event.preventDefault(); window.location='{{ route('prihlasky.pdf', $prihlaska) }}'">
-                                        <span class="button-secondary">PDF</span>
-                                    </div>
+                                    <a href="{{ route('prihlasky.pdf', $prihlaska) }}" class="button-secondary shrink-0" onclick="event.stopPropagation()">PDF</a>
                                 </a>
                             @endforeach
                         </div>

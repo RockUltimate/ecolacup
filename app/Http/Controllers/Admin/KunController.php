@@ -65,6 +65,10 @@ class KunController extends Controller
 
     public function destroy(Kun $kun): RedirectResponse
     {
+        if ($kun->prihlasky()->where('smazana', false)->exists()) {
+            return redirect()->route('admin.kone.index')->with('status', 'kun-has-prihlasky');
+        }
+
         $kun->delete();
 
         return redirect()->route('admin.kone.index')->with('status', 'kun-deleted');

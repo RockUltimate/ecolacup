@@ -85,6 +85,7 @@ class ReportController extends Controller
         $needle = $search !== '' ? '%'.$search.'%' : null;
 
         $moznosti = $udalost->moznosti()
+            ->where('je_administrativni_poplatek', false)
             ->when($selectedMoznostId > 0, fn ($query) => $query->where('id', $selectedMoznostId))
             ->paginate(10)
             ->withQueryString();
@@ -121,7 +122,7 @@ class ReportController extends Controller
                 'moznost_id' => $selectedMoznostId,
                 'q' => $search,
             ],
-            'moznostiOptions' => $udalost->moznosti()->get(['id', 'nazev']),
+            'moznostiOptions' => $udalost->moznosti()->where('je_administrativni_poplatek', false)->get(['id', 'nazev']),
         ]);
     }
 
@@ -205,7 +206,7 @@ class ReportController extends Controller
             ->where('smazana', false)
             ->orderBy('start_cislo')
             ->get();
-        $moznosti = $udalost->moznosti()->orderBy('poradi')->get();
+        $moznosti = $udalost->moznosti()->where('je_administrativni_poplatek', false)->orderBy('poradi')->get();
         $ustajeniOptions = $udalost->ustajeniMoznosti()->get();
 
         return $this->xlsResponse(
@@ -248,7 +249,7 @@ class ReportController extends Controller
 
     public function exportStartky(Udalost $udalost): Response
     {
-        $moznostiSeDisciplinami = $udalost->moznosti()->get()->map(function ($moznost) use ($udalost) {
+        $moznostiSeDisciplinami = $udalost->moznosti()->where('je_administrativni_poplatek', false)->get()->map(function ($moznost) use ($udalost) {
             $registrations = $this->basePrihlaskyQuery($udalost)
                 ->where('smazana', false)
                 ->whereHas('polozky', fn ($query) => $query->where('moznost_id', $moznost->id))
@@ -270,7 +271,7 @@ class ReportController extends Controller
     public function exportDisciplinyPocty(Udalost $udalost): Response
     {
         $pocty = [];
-        foreach ($udalost->moznosti()->orderBy('poradi')->get() as $moznost) {
+        foreach ($udalost->moznosti()->where('je_administrativni_poplatek', false)->orderBy('poradi')->get() as $moznost) {
             $pocty[$moznost->nazev] = $moznost->prihlaskyPolozky()
                 ->whereHas('prihlaska', fn ($query) => $query->where('udalost_id', $udalost->id)->where('smazana', false))
                 ->count();
