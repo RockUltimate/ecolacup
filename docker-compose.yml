@@ -8,27 +8,14 @@ services:
       - "8086:80"
     volumes:
       - storage_data:/var/www/html/storage/app/public
+    env_file:
+      - .env
     environment:
-      APP_ENV: local
-      APP_DEBUG: true
       APP_URL: http://localhost:8086
-      APP_NAME: Ecolakoně
-      APP_LOCALE: cs
-      APP_FALLBACK_LOCALE: cs
-      APP_FAKER_LOCALE: cs_CZ
-      APP_TIMEZONE: Europe/Prague
-      DB_CONNECTION: pgsql
       DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ecolacup
-      DB_USERNAME: ecolacup
-      DB_PASSWORD: ecolacup
       CACHE_STORE: file
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
-      MAIL_MAILER: log
-      MAIL_FROM_ADDRESS: dev@localhost
-      MAIL_FROM_NAME: Ecolakoně
     depends_on:
       postgres:
         condition: service_healthy
@@ -42,27 +29,14 @@ services:
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=60"]
     volumes:
       - storage_data:/var/www/html/storage/app/public
+    env_file:
+      - .env
     environment:
-      APP_ENV: local
-      APP_DEBUG: true
       APP_URL: http://localhost:8086
-      APP_NAME: Ecolakoně
-      APP_LOCALE: cs
-      APP_FALLBACK_LOCALE: cs
-      APP_FAKER_LOCALE: cs_CZ
-      APP_TIMEZONE: Europe/Prague
-      DB_CONNECTION: pgsql
       DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ecolacup
-      DB_USERNAME: ecolacup
-      DB_PASSWORD: ecolacup
       CACHE_STORE: file
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
-      MAIL_MAILER: log
-      MAIL_FROM_ADDRESS: dev@localhost
-      MAIL_FROM_NAME: Ecolakoně
     depends_on:
       postgres:
         condition: service_healthy
