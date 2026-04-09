@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('icon.png') }}">
 
         <title>{{ config('app.name', 'ECOLAKONĚ') }}</title>
 
@@ -47,7 +47,7 @@
                 <div class="mx-auto flex max-w-7xl items-start justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
                     <div class="flex flex-col items-start gap-2">
                         <a href="{{ route('udalosti.index') }}" class="flex items-center gap-3">
-                        <span class="site-mark">EC</span>
+                        <img src="{{ asset('logo.png') }}" alt="Ecola Equestrian" class="h-11 w-auto">
                         <span class="flex flex-col">
                             <span class="text-sm font-semibold tracking-[0.08em] text-[#7b5230]">ECOLAKONĚ</span>
                             <span class="text-xs text-gray-500">Registrace na koňské závody</span>

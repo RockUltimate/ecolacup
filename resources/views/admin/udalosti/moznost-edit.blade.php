@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Disciplína</p>
-                <h1 class="text-3xl text-[#20392c]">Upravit disciplínu</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • aktualizace názvu, ceny, pořadí a příloh disciplíny.</p>
-            </div>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}#discipliny" class="button-secondary">Zpět na disciplíny</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Disciplína</p>
+            <h1 class="text-3xl text-[#20392c]">Upravit disciplínu</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • aktualizace názvu, ceny, pořadí a příloh disciplíny.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.edit', $udalost) }}#discipliny" class="button-secondary w-full">Zpět na disciplíny</a>
     </x-slot>
 
     <div class="py-10">
@@ -61,7 +61,7 @@
                         @if($moznost->foto_path)
                             <p class="mt-2 text-sm text-gray-600">
                                 Aktuální soubor:
-                                <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit fotografii</a>
+                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit fotografii</a>
                             </p>
                         @endif
                     </div>
@@ -84,15 +84,10 @@
                         @if($moznost->pdf_path)
                             <p class="mt-2 text-sm text-gray-600">
                                 Aktuální soubor:
-                                <a href="{{ asset('storage/'.$moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit PDF</a>
+                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-[#7b5230] underline">zobrazit PDF</a>
                             </p>
                         @endif
                     </div>
-
-                    <label class="md:col-span-2 flex items-center gap-3 rounded-[1rem] border border-[#eadfcc] bg-white/60 px-4 py-3 text-sm text-gray-700">
-                        <input type="checkbox" name="je_administrativni_poplatek" value="1" class="rounded border-[#ccb28f] text-[#3d6b4f] focus:ring-[#3d6b4f]" @checked(old('je_administrativni_poplatek', $moznost->je_administrativni_poplatek))>
-                        <span>Administrativní poplatek</span>
-                    </label>
 
                     <div class="md:col-span-2 flex flex-wrap gap-3">
                         <button type="submit" class="button-primary">Uložit disciplínu</button>

@@ -3,9 +3,11 @@
     $formAction = $formAction ?? ($isEdit ? route('osoby.update', $osoba) : route('osoby.store'));
     $backHref = $backHref ?? route('osoby.index');
     $submitLabel = $submitLabel ?? ($isEdit ? 'Uložit změny' : 'Vytvořit osobu');
+    $formId = $formId ?? null;
+    $showFooterActions = $showFooterActions ?? true;
 @endphp
 
-<form method="POST" action="{{ $formAction }}" class="space-y-6">
+<form method="POST" action="{{ $formAction }}" class="space-y-6" @if($formId) id="{{ $formId }}" @endif>
     @csrf
     @if($isEdit)
         @method('PUT')
@@ -56,8 +58,10 @@
         </div>
     @endif
 
-    <div class="flex items-center gap-3">
-        <x-primary-button>{{ $submitLabel }}</x-primary-button>
-        <a href="{{ $backHref }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
-    </div>
+    @if($showFooterActions)
+        <div class="flex items-center gap-3">
+            <x-primary-button>{{ $submitLabel }}</x-primary-button>
+            <a href="{{ $backHref }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Zpět na přehled</a>
+        </div>
+    @endif
 </form>

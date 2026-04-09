@@ -1,0 +1,12 @@
+services:
+  app:
+    environment:
+      APP_DEBUG: false
+      SESSION_DRIVER: file
+      LOCAL_FAST_BOOT: "1"
+
+  queue:
+    environment:
+      APP_DEBUG: false
+      SESSION_DRIVER: file
+      LOCAL_FAST_BOOT: "1"

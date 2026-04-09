@@ -4,13 +4,10 @@
     @endphp
 
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Admin • Osoby</p>
-                <h1 class="text-3xl text-[#20392c]">Všechny osoby</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">Centrální přehled osob napříč účty včetně přiřazeného uživatele a počtu přihlášek.</p>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="button-secondary">Dashboard</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Admin • Osoby</p>
+            <h1 class="text-3xl text-[#20392c]">Všechny osoby</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Centrální přehled osob napříč účty včetně přiřazeného uživatele a počtu přihlášek.</p>
         </div>
     </x-slot>
 
@@ -45,7 +42,14 @@
                                     <p class="text-xs text-gray-500">Přihlášky: {{ $osoba->prihlasky_count }}</p>
                                 </div>
 
-                                <a href="{{ route('admin.osoby.edit', $osoba) }}" class="button-secondary">Upravit</a>
+                                <div class="flex w-[170px] max-w-full flex-col gap-3">
+                                    <a href="{{ route('admin.osoby.edit', $osoba) }}" class="button-secondary w-full">Upravit</a>
+                                    <form method="POST" action="{{ route('admin.osoby.destroy', $osoba) }}" class="w-full" onsubmit="return confirm('Opravdu smazat osobu?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @empty

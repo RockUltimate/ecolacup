@@ -47,7 +47,14 @@ class UdalostController extends Controller
             $validated['vysledky_pdf'] = $request->file('vysledky_pdf_upload')->store('vysledky', 'public');
         }
 
-        Udalost::query()->create($validated);
+        $udalost = Udalost::query()->create($validated);
+
+        $udalost->moznosti()->create([
+            'nazev' => 'Administrativní poplatek',
+            'cena' => 100,
+            'je_administrativni_poplatek' => true,
+            'poradi' => 0,
+        ]);
 
         return redirect()->route('admin.udalosti.index')->with('status', 'udalost-created');
     }
@@ -99,7 +106,7 @@ class UdalostController extends Controller
         $validated = $request->validated();
 
         $validated['poradi'] = $validated['poradi'] ?? 0;
-        $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+        $validated['je_administrativni_poplatek'] = false;
 
         if ($request->hasFile('foto_path')) {
             $validated['foto_path'] = $request->file('foto_path')->store('disciplines', 'public');
@@ -113,10 +120,14 @@ class UdalostController extends Controller
         return $this->redirectToEditTab($udalost, 'discipliny', 'moznost-created');
     }
 
-    public function editMoznost(Udalost $udalost, UdalostMoznost $moznost): View
+    public function editMoznost(Udalost $udalost, UdalostMoznost $moznost): View | RedirectResponse
     {
         if ($moznost->udalost_id !== $udalost->id) {
             abort(404);
+        }
+
+        if ($moznost->je_administrativni_poplatek) {
+            return $this->redirectToEditTab($udalost, 'discipliny', '');
         }
 
         return view('admin.udalosti.moznost-edit', [
@@ -131,9 +142,13 @@ class UdalostController extends Controller
             abort(404);
         }
 
+        if ($moznost->je_administrativni_poplatek) {
+            return $this->redirectToEditTab($udalost, 'discipliny', '');
+        }
+
         $validated = $request->validated();
         $validated['poradi'] = $validated['poradi'] ?? 0;
-        $validated['je_administrativni_poplatek'] = $request->boolean('je_administrativni_poplatek', false);
+        $validated['je_administrativni_poplatek'] = false;
 
         // Handle file uploads
         if ($request->hasFile('foto_path')) {
@@ -160,6 +175,10 @@ class UdalostController extends Controller
     {
         if ($moznost->udalost_id !== $udalost->id) {
             abort(404);
+        }
+
+        if ($moznost->je_administrativni_poplatek) {
+            return $this->redirectToEditTab($udalost, 'discipliny', '');
         }
 
         $moznost->delete();

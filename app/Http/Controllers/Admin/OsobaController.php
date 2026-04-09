@@ -72,4 +72,11 @@ class OsobaController extends Controller
 
         return redirect()->route('admin.osoby.edit', $osoba)->with('status', 'osoba-updated');
     }
+
+    public function destroy(Osoba $osoba): RedirectResponse
+    {
+        $osoba->delete();
+
+        return redirect()->route('admin.osoby.index')->with('status', 'osoba-deleted');
+    }
 }

@@ -6,13 +6,10 @@
     @endphp
 
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Admin • Koně</p>
-                <h1 class="text-3xl text-[#20392c]">Všichni koně</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">Centrální přehled koní napříč účty včetně duplicitních jmen a jejich vlastníků.</p>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="button-secondary">Dashboard</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Admin • Koně</p>
+            <h1 class="text-3xl text-[#20392c]">Všichni koně</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Centrální přehled koní napříč účty včetně duplicitních jmen a jejich vlastníků.</p>
         </div>
     </x-slot>
 
@@ -73,12 +70,17 @@
                                                 <p>Majitel: {{ $kun->majitel_jmeno_adresa ?: 'neuvedeno' }}</p>
                                             </div>
 
-                                            <div class="flex flex-wrap gap-3">
-                                                <a href="{{ route('admin.kone.edit', $kun) }}" class="button-secondary">Upravit</a>
-                                                <form method="POST" action="{{ route('admin.kone.duplicates.sync') }}" onsubmit="return confirm('Použít tento popis pro všechny koně se stejným jménem?');">
+                                            <div class="flex w-[170px] max-w-full flex-col gap-3">
+                                                <a href="{{ route('admin.kone.edit', $kun) }}" class="button-secondary w-full">Upravit</a>
+                                                <form method="POST" action="{{ route('admin.kone.destroy', $kun) }}" class="w-full" onsubmit="return confirm('Opravdu smazat koně?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat</button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.kone.duplicates.sync') }}" class="w-full" onsubmit="return confirm('Použít tento popis pro všechny koně se stejným jménem?');">
                                                     @csrf
                                                     <input type="hidden" name="source_kun_id" value="{{ $kun->id }}">
-                                                    <button type="submit" class="button-primary">Použít pro všechny</button>
+                                                    <button type="submit" class="button-primary w-full">Použít pro všechny</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -118,7 +120,14 @@
                                     <p class="text-xs text-gray-500">Přihlášky: {{ $kun->prihlasky_count }}</p>
                                 </div>
 
-                                <a href="{{ route('admin.kone.edit', $kun) }}" class="button-secondary">Upravit</a>
+                                <div class="flex w-[170px] max-w-full flex-col gap-3">
+                                    <a href="{{ route('admin.kone.edit', $kun) }}" class="button-secondary w-full">Upravit</a>
+                                    <form method="POST" action="{{ route('admin.kone.destroy', $kun) }}" class="w-full" onsubmit="return confirm('Opravdu smazat koně?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @empty

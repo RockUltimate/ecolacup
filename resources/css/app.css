@@ -106,6 +106,76 @@
         background: rgba(255, 255, 255, 0.9);
     }
 
+    .admin-tab-strip {
+        @apply relative overflow-hidden rounded-[1.5rem] border px-4 pt-4;
+        border-color: #decfb9;
+        background:
+            linear-gradient(180deg, rgba(243, 232, 215, 0.92) 0%, rgba(239, 226, 206, 0.72) 100%);
+        box-shadow: 0 24px 70px rgba(71, 52, 34, 0.08);
+    }
+
+    .admin-tab-strip::after {
+        content: "";
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0;
+        height: 1px;
+        background: #d9c7af;
+    }
+
+    .admin-tab-nav {
+        @apply relative z-[1] flex flex-wrap items-end gap-1;
+    }
+
+    .admin-tab {
+        @apply relative inline-flex items-center rounded-t-[1.15rem] px-5 py-3 text-sm font-semibold transition duration-200;
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-bottom: none;
+        color: #7b5230;
+    }
+
+    .admin-tab:hover {
+        background: rgba(255, 255, 255, 0.45);
+        color: #20392c;
+    }
+
+    .admin-tab--active {
+        border-color: #d9c7af;
+        background: linear-gradient(180deg, #ffffff 0%, rgba(255, 252, 247, 0.98) 100%);
+        color: #20392c;
+        box-shadow:
+            0 -10px 18px rgba(71, 52, 34, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .admin-tab--inactive {
+        background: linear-gradient(180deg, rgba(255, 251, 245, 0.24) 0%, rgba(244, 234, 219, 0.12) 100%);
+    }
+
+    .admin-segmented {
+        @apply inline-flex flex-wrap items-center gap-2 rounded-full border p-1;
+        border-color: #dccdb8;
+        background: rgba(248, 243, 234, 0.9);
+    }
+
+    .admin-segmented-link {
+        @apply inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold transition duration-200;
+        color: #7b5230;
+    }
+
+    .admin-segmented-link:hover {
+        background: rgba(255, 255, 255, 0.7);
+        color: #20392c;
+    }
+
+    .admin-segmented-link--active {
+        background: linear-gradient(135deg, #274633 0%, #3d6b4f 100%);
+        color: #fffaf1;
+        box-shadow: 0 12px 24px rgba(39, 70, 51, 0.18);
+    }
+
     .section-eyebrow {
         @apply text-xs font-semibold uppercase tracking-[0.3em];
         color: var(--brand-brown);

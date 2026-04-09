@@ -7,34 +7,19 @@
     @endphp
 
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="space-y-3">
-                <p class="section-eyebrow">Report přihlášek</p>
-                <h1 class="text-3xl text-[#20392c]">{{ $isDeletedView ? 'Smazané přihlášky' : 'Aktivní přihlášky' }}</h1>
-                <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • přehled registrací, startovních čísel a exportů pro pořadatele.</p>
-            </div>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="button-secondary">Nastavení události</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Report přihlášek</p>
+            <h1 class="text-3xl text-[#20392c]">{{ $isDeletedView ? 'Smazané přihlášky' : 'Aktivní přihlášky' }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">{{ $udalost->nazev }} • přehled registrací, startovních čísel a exportů pro pořadatele.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
     </x-slot>
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">
             @include('admin.udalosti._tabs', ['udalost' => $udalost, 'active' => 'prihlasky'])
-
-            <section class="panel p-5">
-                <div class="flex flex-wrap items-center gap-3">
-                    <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class([
-                        'rounded-full border px-4 py-2 text-sm font-semibold transition',
-                        'border-[#20392c] bg-[#20392c] text-white' => ! $isDeletedView,
-                        'border-[#ddd0bc] bg-white/70 text-gray-600' => $isDeletedView,
-                    ])>Aktivní</a>
-                    <a href="{{ route('admin.reports.smazane', $udalost) }}" @class([
-                        'rounded-full border px-4 py-2 text-sm font-semibold transition',
-                        'border-[#20392c] bg-[#20392c] text-white' => $isDeletedView,
-                        'border-[#ddd0bc] bg-white/70 text-gray-600' => ! $isDeletedView,
-                    ])>Smazané</a>
-                </div>
-            </section>
 
             @if(count($duplicateStartNumbers) > 0)
                 <div class="status-note border-amber-200 bg-amber-50 text-amber-900">
@@ -43,13 +28,26 @@
             @endif
 
             <section class="panel p-6">
-                <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
-                    <form method="GET" action="{{ $listingRoute }}" class="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px_auto]">
+                <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                    <form method="GET" action="{{ $listingRoute }}" class="flex flex-1 flex-col gap-4 xl:flex-row xl:items-end">
+                        <div class="space-y-2 xl:min-w-[200px]">
+                            <span class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Přehled</span>
+                            <div class="admin-segmented">
+                                <a href="{{ route('admin.reports.prihlasky', $udalost) }}" @class([
+                                    'admin-segmented-link',
+                                    'admin-segmented-link--active' => ! $isDeletedView,
+                                ])>Aktivní</a>
+                                <a href="{{ route('admin.reports.smazane', $udalost) }}" @class([
+                                    'admin-segmented-link',
+                                    'admin-segmented-link--active' => $isDeletedView,
+                                ])>Smazané</a>
+                            </div>
+                        </div>
                         <div>
                             <x-input-label for="q" :value="'Hledat podle čísla, osoby, koně nebo e-mailu'" />
                             <x-text-input id="q" name="q" type="text" :value="$filters['q']" />
                         </div>
-                        <div>
+                        <div class="xl:w-[180px]">
                             <x-input-label for="stav" :value="'Stav'" />
                             <select id="stav" name="stav" class="field-shell">
                                 <option value="active" @selected($filters['stav'] === 'active')>Aktivní</option>
@@ -57,31 +55,19 @@
                                 <option value="all" @selected($filters['stav'] === 'all')>Všechny</option>
                             </select>
                         </div>
-                        <div class="flex items-end gap-3">
+                        <div class="flex flex-wrap items-end gap-3">
                             <button type="submit" class="button-primary">Filtrovat</button>
                             <a href="{{ $listingRoute }}" class="button-secondary">Reset</a>
                         </div>
                     </form>
 
-                    <div class="flex flex-wrap items-end gap-3 xl:justify-end">
-                        @if(! $isDeletedView)
-                            <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="button-secondary">Srovnat startovní čísla</button>
-                            </form>
-                        @endif
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel p-5">
-                <div class="flex flex-wrap gap-3">
-                    <a class="button-secondary" href="{{ route('admin.reports.export.seznam', $udalost) }}">Export seznam</a>
-                    <a class="button-secondary" href="{{ route('admin.reports.export.discipliny', $udalost) }}">Export disciplíny</a>
-                    <a class="button-secondary" href="{{ route('admin.reports.export.emaily', $udalost) }}">Export e-maily</a>
-                    <a class="button-secondary" href="{{ route('admin.reports.export.kone', $udalost) }}">Export vet</a>
-                    <a class="button-secondary" href="{{ route('admin.reports.export.bulk-pdf', $udalost) }}">Bulk PDF ZIP</a>
+                    @if(! $isDeletedView)
+                        <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}" class="xl:flex-shrink-0">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="button-secondary">Srovnat startovní čísla</button>
+                        </form>
+                    @endif
                 </div>
             </section>
 
@@ -116,24 +102,24 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap items-end gap-3">
-                                <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex flex-wrap items-end gap-3">
+                            <div class="flex w-[170px] flex-col items-start gap-3 xl:items-stretch">
+                                <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex w-full flex-col items-start gap-3 xl:items-stretch">
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="q" value="{{ $filters['q'] }}">
                                     <input type="hidden" name="stav" value="{{ $filters['stav'] }}">
-                                    <div>
+                                    <div class="w-full">
                                         <label for="start_cislo_{{ $p->id }}" class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Startovní číslo</label>
-                                        <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="field-shell w-28" value="{{ $p->start_cislo }}">
+                                        <input id="start_cislo_{{ $p->id }}" name="start_cislo" type="number" min="1" class="field-shell w-full" value="{{ $p->start_cislo }}">
                                     </div>
-                                    <button type="submit" class="button-primary">Uložit</button>
+                                    <button type="submit" class="button-primary w-full">Uložit</button>
                                 </form>
 
                                 @if(! $p->smazana)
-                                    <form method="POST" action="{{ route('admin.reports.prihlasky.destroy', [$udalost, $p]) }}" onsubmit="return confirm('Opravdu smazat přihlášku?');">
+                                    <form method="POST" action="{{ route('admin.reports.prihlasky.destroy', [$udalost, $p]) }}" class="w-full" onsubmit="return confirm('Opravdu smazat přihlášku?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="rounded-full border border-red-200 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100">
+                                        <button type="submit" class="w-full rounded-full border border-red-200 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100">
                                             Smazat
                                         </button>
                                     </form>

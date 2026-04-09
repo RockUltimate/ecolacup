@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateAdminStartCisloRequest;
 use App\Models\Prihlaska;
 use App\Models\Udalost;
+use App\Services\PrihlaskaService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,10 @@ use ZipArchive;
 
 class ReportController extends Controller
 {
+    public function __construct(private readonly PrihlaskaService $prihlaskaService)
+    {
+    }
+
     public function prihlasky(Udalost $udalost, Request $request)
     {
         $filters = $this->resolveRegistrationsFilters($request, 'active');
@@ -50,8 +55,10 @@ class ReportController extends Controller
             abort(404);
         }
 
+        $osobaId = (int) $prihlaska->osoba_id;
         $prihlaska->update(['smazana' => true]);
         $prihlaska->delete();
+        $this->prihlaskaService->rebalanceAdminFeeForPersonEvent($udalost, $osobaId);
 
         return back()->with('status', 'prihlaska-deleted');
     }
@@ -169,6 +176,13 @@ class ReportController extends Controller
                 'typ' => $selectedType,
                 'q' => $search,
             ],
+        ]);
+    }
+
+    public function exporty(Udalost $udalost)
+    {
+        return view('admin.reports.exporty', [
+            'udalost' => $udalost,
         ]);
     }
 

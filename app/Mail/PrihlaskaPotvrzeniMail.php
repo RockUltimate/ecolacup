@@ -15,14 +15,19 @@ class PrihlaskaPotvrzeniMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly Prihlaska $prihlaska)
+    public function __construct(
+        public readonly Prihlaska $prihlaska,
+        public readonly string $mode = 'created',
+    )
     {
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Potvrzení přihlášky #'.$this->prihlaska->id,
+            subject: $this->mode === 'updated'
+                ? 'Aktualizace přihlášky #'.$this->prihlaska->id
+                : 'Potvrzení přihlášky #'.$this->prihlaska->id,
         );
     }
 
@@ -30,6 +35,9 @@ class PrihlaskaPotvrzeniMail extends Mailable
     {
         return new Content(
             view: 'emails.prihlaska-potvrzeni',
+            with: [
+                'mode' => $this->mode,
+            ],
         );
     }
 
@@ -44,7 +52,7 @@ class PrihlaskaPotvrzeniMail extends Mailable
                 'osoba',
                 'kun',
                 'kunTandem',
-                'polozky',
+                'polozky.moznost',
                 'ustajeniChoices.ustajeni',
             ]),
         ])->output();

@@ -16,4 +16,9 @@ fi
 php artisan storage:link || true
 php artisan migrate --force --graceful
 
+if [ "${LOCAL_FAST_BOOT:-0}" = "1" ]; then
+  php artisan config:cache
+  php artisan view:cache
+fi
+
 exec "$@"

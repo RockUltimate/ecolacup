@@ -21,7 +21,6 @@ class StoreAdminUdalostMoznostRequest extends FormRequest
             'min_vek' => ['nullable', 'integer', 'min:0'],
             'cena' => ['required', 'numeric', 'min:0'],
             'poradi' => ['nullable', 'integer', 'min:0'],
-            'je_administrativni_poplatek' => ['nullable', 'boolean'],
             'foto_path' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:5120'],
             'pdf_path' => ['nullable', 'mimes:pdf', 'max:5120'],
         ];

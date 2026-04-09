@@ -142,16 +142,16 @@
                                 @if($moznost->foto_path || $moznost->pdf_path)
                                     <div class="mt-3 flex flex-wrap items-center gap-3">
                                         @if($moznost->foto_path)
-                                            <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
-                                                <img src="{{ asset('storage/'.$moznost->foto_path) }}" alt="Fotografie disciplíny {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="block overflow-hidden rounded-[1rem] border border-[#eadfcc] bg-white">
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" alt="Fotografie disciplíny {{ $moznost->nazev }}" class="h-16 w-16 object-cover">
                                             </a>
                                         @endif
                                         <div class="flex flex-wrap gap-2">
                                             @if($moznost->foto_path)
-                                                <a href="{{ asset('storage/'.$moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
+                                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->foto_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Zobrazit obrázek</a>
                                             @endif
                                             @if($moznost->pdf_path)
-                                                <a href="{{ asset('storage/'.$moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
+                                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($moznost->pdf_path) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-[#7b5230] underline underline-offset-4">Stáhnout PDF</a>
                                             @endif
                                         </div>
                                     </div>
@@ -222,13 +222,13 @@
 
                     <div class="mt-8 grid gap-4 md:grid-cols-3">
                         @if($udalost->propozice_pdf)
-                            <a href="{{ asset('storage/'.$udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
+                            <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($udalost->propozice_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
                                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Propozice</p>
                                 <p class="mt-2 font-semibold text-[#20392c]">Stáhnout PDF</p>
                             </a>
                         @endif
                         @if($udalost->vysledky_pdf)
-                            <a href="{{ asset('storage/'.$udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
+                            <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($udalost->vysledky_pdf) }}" target="_blank" rel="noopener" class="rounded-[1.25rem] border border-[#eadfcc] bg-white/70 px-5 py-4 transition hover:bg-white">
                                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b5230]">Výsledky</p>
                                 <p class="mt-2 font-semibold text-[#20392c]">Otevřít výsledkové PDF</p>
                             </a>

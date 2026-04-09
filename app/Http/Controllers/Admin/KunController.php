@@ -63,6 +63,13 @@ class KunController extends Controller
         return redirect()->route('admin.kone.edit', $kun)->with('status', 'kun-updated');
     }
 
+    public function destroy(Kun $kun): RedirectResponse
+    {
+        $kun->delete();
+
+        return redirect()->route('admin.kone.index')->with('status', 'kun-deleted');
+    }
+
     public function syncDuplicates(Request $request): RedirectResponse
     {
         $validated = $request->validate([

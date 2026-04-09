@@ -1,9 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin • Startovní čísla • {{ $udalost->nazev }}</h2>
-            <a href="{{ route('admin.udalosti.edit', $udalost) }}" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Nastavení události</a>
+        <div class="space-y-3">
+            <p class="section-eyebrow">Admin • Startovní čísla</p>
+            <h1 class="text-3xl text-[#20392c]">{{ $udalost->nazev }}</h1>
+            <p class="max-w-3xl text-sm leading-6 text-gray-600">Ruční úpravy a srovnání startovních čísel přihlášek v jedné tabulce.</p>
         </div>
+    </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">

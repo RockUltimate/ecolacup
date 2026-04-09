@@ -6,6 +6,9 @@
             <p class="max-w-3xl text-sm leading-6 text-gray-600">Vyplňte základní informace, termín, materiály a popis akce.</p>
         </div>
     </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('admin.udalosti.index') }}" class="button-secondary w-full">Zpět na události</a>
+    </x-slot>
 
     <div class="py-10">
         <div class="mx-auto max-w-7xl space-y-6">

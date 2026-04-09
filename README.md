@@ -18,6 +18,13 @@ Laravel 11 project for the new EcolaCup (koneakce) website.
 ## Development mode (with source mount)
 Use compose override for live code editing:
 - `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build`
+## Fast local mode
+Use the fast override when you want better local response times and do not need live-mounted source files:
+- `docker compose -f docker-compose.yml -f docker-compose.fast.yml up -d --build`
+- keeps app code inside the image instead of bind-mounting `./:/var/www/html`
+- disables debug mode for the app/queue containers
+- switches sessions to the file driver
+- warms config + compiled views during container startup
 ## Services
 - App container: `ecolacup-app` (Apache + PHP), exposed on port `8086`
 - Database container: `ecolacup-postgres` (PostgreSQL 16), exposed on port `5432`

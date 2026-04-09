@@ -1,13 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="space-y-4">
             <div class="space-y-3">
                 <p class="section-eyebrow">Administrace událostí</p>
                 <h1 class="text-3xl text-[#20392c]">Přehled vypsaných akcí</h1>
                 <p class="max-w-3xl text-sm leading-6 text-gray-600">Odtud se vstupuje do detailu akce, správy disciplín, ustájení i pořadatelských reportů.</p>
             </div>
-            <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.dashboard') }}" class="button-secondary">Dashboard</a>
+            <div class="flex justify-start">
                 <a href="{{ route('admin.udalosti.create') }}" class="button-primary">Nová událost</a>
             </div>
         </div>
@@ -32,11 +31,11 @@
                                 </div>
                             </a>
 
-                            <div class="flex items-center px-6 pb-6 lg:px-6 lg:pb-0">
-                                <form method="POST" action="{{ route('admin.udalosti.destroy', $udalost) }}" onsubmit="return confirm('Opravdu smazat událost?');">
+                            <div class="flex w-[170px] max-w-full items-center px-6 pb-6 lg:px-6 lg:pb-0">
+                                <form method="POST" action="{{ route('admin.udalosti.destroy', $udalost) }}" class="w-full" onsubmit="return confirm('Opravdu smazat událost?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-sm text-red-700 underline underline-offset-4">Smazat</button>
+                                    <button type="submit" class="button-secondary w-full border-red-200 bg-red-50 text-red-700 hover:bg-red-100">Smazat</button>
                                 </form>
                             </div>
                         </div>

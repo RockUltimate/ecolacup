@@ -91,6 +91,7 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::get('/udalosti/{udalost}/prihlasky/smazane', [ReportController::class, 'smazane'])->name('reports.smazane');
     Route::get('/udalosti/{udalost}/startky', [ReportController::class, 'startky'])->name('reports.startky');
     Route::get('/udalosti/{udalost}/ubytovani', [ReportController::class, 'ubytovani'])->name('reports.ubytovani');
+    Route::get('/udalosti/{udalost}/exporty', [ReportController::class, 'exporty'])->name('reports.exporty');
 
     Route::get('/udalosti/{udalost}/prihlasky/export/seznam', [ReportController::class, 'exportSeznam'])->name('reports.export.seznam');
     Route::get('/udalosti/{udalost}/prihlasky/export/discipliny', [ReportController::class, 'exportDiscipliny'])->name('reports.export.discipliny');
@@ -110,11 +111,13 @@ Route::prefix('/admin')->middleware(['auth', 'admin'])->name('admin.')->group(fu
     Route::get('/kone', [AdminKunController::class, 'index'])->name('kone.index');
     Route::get('/kone/{kun}/edit', [AdminKunController::class, 'edit'])->name('kone.edit');
     Route::put('/kone/{kun}', [AdminKunController::class, 'update'])->name('kone.update');
+    Route::delete('/kone/{kun}', [AdminKunController::class, 'destroy'])->name('kone.destroy');
     Route::post('/kone/duplicates/sync', [AdminKunController::class, 'syncDuplicates'])->name('kone.duplicates.sync');
 
     Route::get('/osoby', [AdminOsobaController::class, 'index'])->name('osoby.index');
     Route::get('/osoby/{osoba}/edit', [AdminOsobaController::class, 'edit'])->name('osoby.edit');
     Route::put('/osoby/{osoba}', [AdminOsobaController::class, 'update'])->name('osoby.update');
+    Route::delete('/osoby/{osoba}', [AdminOsobaController::class, 'destroy'])->name('osoby.destroy');
 
     Route::put('/homepage-message', [HomepageMessageController::class, 'update'])->name('homepage-message.update');
 
