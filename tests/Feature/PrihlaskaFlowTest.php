@@ -52,7 +52,7 @@ class PrihlaskaFlowTest extends TestCase
         $this->actingAs($user)
             ->get(route('prihlasky.show', $prihlaska))
             ->assertOk()
-            ->assertSee('Vytvořit novou přihlášku')
+            ->assertSee('Nová přihláška')
             ->assertSee(route('prihlasky.create', $udalost, absolute: false));
         Queue::assertPushed(SendPrihlaskaEmail::class);
     }

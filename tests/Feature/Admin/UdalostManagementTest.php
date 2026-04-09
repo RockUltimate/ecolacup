@@ -107,20 +107,19 @@ class UdalostManagementTest extends TestCase
         $udalost = $this->createUdalost();
 
         $this->actingAs($admin)->post(route('admin.udalosti.moznosti.store', $udalost), [
-            'nazev' => 'Administrativní poplatek',
-            'min_vek' => 0,
-            'cena' => 150,
-            'poradi' => 9,
-            'je_administrativni_poplatek' => '1',
+            'nazev' => 'Trail EASY',
+            'min_vek' => 8,
+            'cena' => 450,
+            'poradi' => 1,
         ])->assertRedirect(route('admin.udalosti.edit', $udalost, absolute: false) . '#discipliny');
 
-        $moznostId = $udalost->moznosti()->firstOrFail()->id;
+        $moznostId = $udalost->moznosti()->where('je_administrativni_poplatek', false)->firstOrFail()->id;
 
         $this->assertDatabaseHas('udalost_moznosti', [
             'id' => $moznostId,
             'udalost_id' => $udalost->id,
-            'nazev' => 'Administrativní poplatek',
-            'je_administrativni_poplatek' => 1,
+            'nazev' => 'Trail EASY',
+            'je_administrativni_poplatek' => 0,
         ]);
 
         $this->actingAs($admin)->post(route('admin.udalosti.ustajeni.store', $udalost), [
