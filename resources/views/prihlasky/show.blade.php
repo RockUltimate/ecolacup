@@ -6,6 +6,9 @@
             <p class="max-w-3xl text-sm leading-6 text-gray-600">Souhrn účastníka, koně, vybraných položek i aktuálního stavu vůči uzávěrce.</p>
         </div>
     </x-slot>
+    <x-slot name="headerActions">
+        <a href="{{ route('prihlasky.index') }}" class="button-secondary w-full">← Moje přihlášky</a>
+    </x-slot>
 
     <div class="py-10">
         <div class="mx-auto max-w-6xl space-y-6">

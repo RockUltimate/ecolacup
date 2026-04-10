@@ -6,12 +6,11 @@
             <p class="max-w-3xl text-sm leading-6 text-gray-600">Upravujete účastníka, koně, doplňkové položky a poznámku.</p>
         </div>
     </x-slot>
-    <x-slot name="headerActions">
-        <a href="{{ route('prihlasky.index') }}" class="button-secondary w-full">Zpět na přihlášky</a>
-    </x-slot>
-
     <div class="py-10">
-        <div class="mx-auto max-w-6xl">
+        <div class="mx-auto max-w-6xl space-y-4">
+            <div>
+                <a href="{{ route('prihlasky.index') }}" class="button-secondary">← Zpět na přihlášky</a>
+            </div>
             @include('prihlasky._form', [
                 'prihlaska' => $prihlaska,
                 'udalost' => $udalost,
