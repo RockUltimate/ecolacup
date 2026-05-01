@@ -93,11 +93,12 @@
                         'bg-red-50/60' => $p->smazana,
                         'ring-1 ring-amber-300 bg-amber-50/60' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
                     ])>
-                        @if($canEdit)
-                            <a href="{{ route('prihlasky.edit', $p) }}" class="absolute inset-0 z-10 rounded-[1.25rem]" aria-label="Upravit přihlášku #{{ $p->id }}"></a>
-                        @endif
                         <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                            <div class="space-y-3">
+                            @if($canEdit)
+                                <a href="{{ route('prihlasky.edit', $p) }}" class="block flex-1 space-y-3" aria-label="Upravit přihlášku #{{ $p->id }}">
+                            @else
+                                <div class="flex-1 space-y-3">
+                            @endif
                                 <div class="flex flex-wrap items-center gap-3">
                                     <p class="text-xl font-semibold text-[#20392c]">#{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</p>
                                     @if($p->smazana)
@@ -112,9 +113,13 @@
                                     <p>E-mail: {{ $p->user?->email }}</p>
                                     <p>Startovní číslo: {{ $p->start_cislo ?? 'nenastaveno' }}</p>
                                 </div>
-                            </div>
+                            @if($canEdit)
+                                </a>
+                            @else
+                                </div>
+                            @endif
 
-                            <div class="relative z-20 flex w-[170px] flex-col items-start gap-3 xl:items-stretch">
+                            <div class="flex w-[170px] flex-col items-start gap-3 xl:items-stretch">
                                 <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex w-full flex-col items-start gap-3 xl:items-stretch">
                                     @csrf
                                     @method('PUT')
