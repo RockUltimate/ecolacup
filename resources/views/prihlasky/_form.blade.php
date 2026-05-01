@@ -12,6 +12,9 @@
     $initialAdminFeeApplied = $isEdit && $adminFeeOption && $prihlaska->polozky->contains(
         fn ($item) => in_array((int) $item->moznost_id, $adminFeeOptionIds, true)
     );
+    $fallbackBackRoute = $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost);
+    $resolvedBackRoute = $backRoute ?? $fallbackBackRoute;
+    $resolvedBackLabel = $backLabel ?? ($isEdit ? 'Zpět na detail přihlášky' : 'Zpět na detail akce');
 @endphp
 
 <div
@@ -338,8 +341,8 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <a href="{{ $isEdit ? route('prihlasky.show', $prihlaska) : route('udalosti.show', $udalost) }}" class="text-sm text-[#7b5230] underline underline-offset-4">
-                        {{ $isEdit ? 'Zpět na detail přihlášky' : 'Zpět na detail akce' }}
+                    <a href="{{ $resolvedBackRoute }}" class="text-sm text-[#7b5230] underline underline-offset-4">
+                        {{ $resolvedBackLabel }}
                     </a>
                     <x-primary-button x-show="step === 3">
                         {{ $isEdit ? 'Uložit změny' : 'Odeslat přihlášku' }}

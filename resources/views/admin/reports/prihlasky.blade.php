@@ -62,11 +62,14 @@
                     </form>
 
                     @if(! $isDeletedView)
-                        <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}" class="xl:flex-shrink-0">
-                            @csrf
-                            @method('PUT')
-                            <button type="submit" class="button-secondary">Srovnat startovní čísla</button>
-                        </form>
+                        <div class="flex flex-col gap-3 xl:flex-shrink-0">
+                            <a href="{{ route('prihlasky.create', $udalost) }}" class="button-primary w-full text-center">Nová přihláška</a>
+                            <form method="POST" action="{{ route('admin.reports.start-cisla.normalize', $udalost) }}" class="w-full">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="button-secondary w-full">Srovnat startovní čísla</button>
+                            </form>
+                        </div>
                     @endif
                 </div>
             </section>
@@ -81,17 +84,26 @@
 
             <section class="space-y-4">
                 @forelse($prihlasky as $p)
+                    @php
+                        $canEdit = ! $p->smazana;
+                    @endphp
                     <article @class([
                         'panel p-6',
+                        'relative cursor-pointer transition hover:ring-2 hover:ring-[#d9c4a5]' => $canEdit,
                         'bg-red-50/60' => $p->smazana,
                         'ring-1 ring-amber-300 bg-amber-50/60' => $p->start_cislo !== null && in_array((int) $p->start_cislo, $duplicateStartNumbers, true),
                     ])>
+                        @if($canEdit)
+                            <a href="{{ route('prihlasky.edit', $p) }}" class="absolute inset-0 z-10 rounded-[1.25rem]" aria-label="Upravit přihlášku #{{ $p->id }}"></a>
+                        @endif
                         <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                             <div class="space-y-3">
                                 <div class="flex flex-wrap items-center gap-3">
                                     <p class="text-xl font-semibold text-[#20392c]">#{{ $p->start_cislo ?? '—' }} • {{ $p->osoba?->prijmeni }} {{ $p->osoba?->jmeno }}{{ $p->vekKategorie() }}</p>
                                     @if($p->smazana)
                                         <span class="brand-pill bg-red-100 text-red-700">Smazaná</span>
+                                    @elseif($canEdit)
+                                        <span class="brand-pill bg-[#ecf5ef] text-[#2f5e45]">Kliknutím upravit</span>
                                     @endif
                                 </div>
                                 <div class="grid gap-2 text-sm text-gray-600 md:grid-cols-2">
@@ -102,7 +114,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex w-[170px] flex-col items-start gap-3 xl:items-stretch">
+                            <div class="relative z-20 flex w-[170px] flex-col items-start gap-3 xl:items-stretch">
                                 <form method="POST" action="{{ route('admin.reports.start-cislo.update', [$udalost, $p]) }}" class="flex w-full flex-col items-start gap-3 xl:items-stretch">
                                     @csrf
                                     @method('PUT')

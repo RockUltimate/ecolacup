@@ -9,7 +9,7 @@
     <div class="py-10">
         <div class="mx-auto max-w-6xl space-y-4">
             <div>
-                <a href="{{ route('prihlasky.index') }}" class="button-secondary">← Zpět na přihlášky</a>
+                <a href="{{ $backRoute ?? route('prihlasky.index') }}" class="button-secondary">← {{ $backLabel ?? 'Zpět na přihlášky' }}</a>
             </div>
             @include('prihlasky._form', [
                 'prihlaska' => $prihlaska,

@@ -1,0 +1,47 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "Ecola Equestrian" [ref=e5]
+    - paragraph [ref=e6]: ECOLAKONĚ
+    - heading "Přihlášky na koňské závody bez chaotických tabulek a ručního přepisování." [level=1] [ref=e7]
+    - paragraph [ref=e8]: Účet drží pohromadě osoby, koně i registrace. Přihlášení účastníci pak řeší další závody během pár kroků.
+    - generic [ref=e9]:
+      - link "Zobrazit události" [ref=e10] [cursor=pointer]:
+        - /url: http://localhost:8086/udalosti
+      - link "GDPR informace" [ref=e11] [cursor=pointer]:
+        - /url: http://localhost:8086/gdpr
+  - generic [ref=e12]:
+    - link "Ecola Equestrian ECOLAKONĚ Registrace na koňské závody" [ref=e14] [cursor=pointer]:
+      - /url: http://localhost:8086/udalosti
+      - img "Ecola Equestrian" [ref=e15]
+      - generic [ref=e16]:
+        - generic [ref=e17]: ECOLAKONĚ
+        - generic [ref=e18]: Registrace na koňské závody
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - paragraph [ref=e21]: Přihlášení
+        - heading "Vraťte se do svého účtu" [level=1] [ref=e22]
+        - paragraph [ref=e23]: Po přihlášení navážete na uložené osoby, koně i rozpracované přihlášky.
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: E-mail
+          - textbox "E-mail" [active] [ref=e27]: admin@koneakce.cz
+          - list [ref=e28]:
+            - listitem [ref=e29]: Zadaný e-mail nebo heslo není správné. Zkontrolujte prosím přihlašovací údaje a zkuste to znovu.
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: Heslo
+            - link "Zapomenuté heslo?" [ref=e33] [cursor=pointer]:
+              - /url: http://localhost:8086/forgot-password
+          - generic [ref=e34]:
+            - textbox "Heslo" [ref=e35]
+            - button [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+        - generic [ref=e40]:
+          - checkbox "Zůstat přihlášený i při další návštěvě." [ref=e41]
+          - generic [ref=e42]: Zůstat přihlášený i při další návštěvě.
+        - generic [ref=e43]:
+          - paragraph [ref=e44]:
+            - text: Nemáte účet?
+            - link "Vytvořit nový účet" [ref=e45] [cursor=pointer]:
+              - /url: http://localhost:8086/registrace
+          - button "Přihlásit se" [ref=e46] [cursor=pointer]
