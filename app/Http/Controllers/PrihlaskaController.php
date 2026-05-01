@@ -220,7 +220,7 @@ class PrihlaskaController extends Controller
         }
 
         $ownerUserId = (int) $osoba->user_id;
-        if ((int) $kun->user_id !== $ownerUserId) {
+        if (! $isAdmin && (int) $kun->user_id !== $ownerUserId) {
             abort(422, 'Vybraný kůň nepatří k vybrané osobě.');
         }
 
@@ -231,7 +231,7 @@ class PrihlaskaController extends Controller
             }
             $kunTandem = $kunTandemQuery->firstOrFail();
 
-            if ((int) $kunTandem->user_id !== $ownerUserId) {
+            if (! $isAdmin && (int) $kunTandem->user_id !== $ownerUserId) {
                 abort(422, 'Tandem kůň nepatří k vybrané osobě.');
             }
         }
